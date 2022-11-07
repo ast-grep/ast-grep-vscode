@@ -1,0 +1,53 @@
+{
+  "name": "ast-grep-vscode",
+  "version": "0.0.1",
+  "description": "VSCode extension for ast-grep language server",
+  "keywords": [
+    "ast-grep",
+    "vscode",
+    "language-server",
+    "extension"
+  ],
+  "repository": "https://github.com/ast-grep/ast-grep-vscode",
+  "author": "Herrington Darkholme",
+  "license": "MIT",
+  "main": "./dist/src/extension.js",
+  "engines": {
+    "vscode": "^1.65.0"
+  },
+  "categories": [
+    "Linters"
+  ],
+  "activationEvents": [
+    "onLanguage:plaintext"
+  ],
+  "configuration": {
+    "type": "object",
+    "title": "Example configuration",
+    "properties": {
+      "languageServerExample.maxNumberOfProblems": {
+        "scope": "resource",
+        "type": "number",
+        "default": 100,
+        "description": "Controls the maximum number of problems produced by the server."
+      }
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^8.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "@types/vscode": "^1.73.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1"
+  }
+}
