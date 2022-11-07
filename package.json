@@ -11,7 +11,7 @@
   "repository": "https://github.com/ast-grep/ast-grep-vscode",
   "author": "Herrington Darkholme",
   "license": "MIT",
-  "main": "./dist/src/extension.js",
+  "main": "./out/extension.js",
   "engines": {
     "vscode": "^1.65.0"
   },
@@ -34,7 +34,9 @@
     }
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node ./out/test/runTest.js",
+    "compile": "cross-env NODE_ENV=production tsc -b",
+    "watch": "rm -rf dist && tsc -w",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -44,10 +46,18 @@
     "vscode-languageclient": "^8.0.2"
   },
   "devDependencies": {
+    "@types/glob": "^8.0.0",
+    "@types/mocha": "^10.0.0",
     "@types/node": "^18.11.9",
     "@types/vscode": "^1.73.0",
+    "@vscode/test-electron": "^2.2.0",
+    "cross-env": "^7.0.3",
+    "glob": "^8.0.3",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
-    "prettier": "^2.7.1"
+    "mocha": "^10.1.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.4",
+    "vscode-test": "^1.6.1"
   }
 }
