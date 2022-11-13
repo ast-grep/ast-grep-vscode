@@ -8,6 +8,8 @@
     "language-server",
     "extension"
   ],
+  "preview": true,
+  "displayName": "ast-grep VSCode",
   "repository": "https://github.com/ast-grep/ast-grep-vscode",
   "author": "Herrington Darkholme",
   "license": "MIT",
@@ -16,23 +18,33 @@
     "vscode": "^1.65.0"
   },
   "categories": [
-    "Linters"
+    "Linters",
+    "Other"
   ],
   "activationEvents": [
-    "onLanguage:plaintext"
+    "*"
   ],
-  "configuration": {
-    "type": "object",
-    "title": "Example configuration",
-    "properties": {
-      "languageServerExample.maxNumberOfProblems": {
-        "scope": "resource",
-        "type": "number",
-        "default": 100,
-        "description": "Controls the maximum number of problems produced by the server."
+  "contributes": {
+    "commands": [],
+    "configuration": {
+      "type": "object",
+      "title": "ast-grep",
+      "properties": {
+        "astGrep.serverPath": {
+          "scope": "window",
+          "type": "string",
+          "default": "sg",
+          "description": "Specify the language server binary path. Default is `sg`."
+        },
+        "astGrep.configPath": {
+          "scope": "resource",
+          "type": "string",
+          "description": "Customize ast-grep config file path relative. Default is `sgconfig.yml`."
+        }
       }
     }
   },
+  "qna": "https://github.com/ast-grep/ast-grep/discussions",
   "scripts": {
     "test": "node ./out/test/runTest.js",
     "compile": "cross-env NODE_ENV=production tsc -b",

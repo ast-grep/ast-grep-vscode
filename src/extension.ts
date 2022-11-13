@@ -14,8 +14,9 @@ const languageClientId = 'ast-grep-client'
 const languageClientName = 'ast-grep language client'
 
 function getExecutable(isDebug: boolean): Executable {
+  const command = workspace.getConfiguration('astGrep').get('serverPath', 'sg')
   return {
-    command: process.env.SERVER_PATH || 'sg',
+    command,
     args: ['lsp'],
     options: {
       env: {
@@ -26,7 +27,7 @@ function getExecutable(isDebug: boolean): Executable {
   }
 }
 
-export function activate(context: ExtensionContext) {
+function activateLsp() {
   // If the extension is launched in debug mode then the debug server options are used
   // Otherwise the run options are used
   let serverOptions: ServerOptions = {
@@ -54,7 +55,18 @@ export function activate(context: ExtensionContext) {
   client.start()
 }
 
-export function deactivate(): Thenable<void> | undefined {
+export function activate(_context: ExtensionContext) {
+  activateLsp()
+}
+
+workspace.onDidChangeConfiguration(changeEvent => {
+  if (changeEvent.affectsConfiguration('astGrep')) {
+    deactivate()
+    activateLsp()
+  }
+})
+
+export function deactivate(): Promise<void> | undefined {
   if (!client) {
     return undefined
   }
