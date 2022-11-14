@@ -7,7 +7,8 @@ jobs:
     name: Test
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        # os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -20,6 +21,8 @@ jobs:
             - recursive: true
       - name: Install sg
         run: pnpm install @ast-grep/cli -g
+      - name: Debug
+        run: sg1.exe
       - name: Compile
         run: pnpm compile
       - name: Run headless test
