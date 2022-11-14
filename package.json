@@ -8,6 +8,7 @@
     "language-server",
     "extension"
   ],
+  "publisher": "ast-grep",
   "preview": true,
   "displayName": "ast-grep VSCode",
   "repository": "https://github.com/ast-grep/ast-grep-vscode",

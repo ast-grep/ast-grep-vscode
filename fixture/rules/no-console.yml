@@ -1,0 +1,7 @@
+id: no-console-rule
+message: No console.log
+severity: warning
+language: TypeScript
+rule:
+  pattern: console.log($$$)
+note: no console.log

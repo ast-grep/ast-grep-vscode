@@ -1,0 +1,12 @@
+id: test-sg-rule
+message: Test rule for vscode extension
+severity: error
+language: TypeScript
+rule:
+  pattern: class $A { $$$B }
+fix: |
+  const $A = {
+    $$$B
+  }
+note: |
+  Test Rule
