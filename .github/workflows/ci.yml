@@ -19,8 +19,6 @@ jobs:
           node-version: 16
       - name: Install sg
         run: npm install -g @ast-grep/cli
-      - name: Debug
-        run: sg
       - name: Install deps
         run: npm install
       - name: Compile
