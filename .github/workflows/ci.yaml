@@ -17,6 +17,8 @@ jobs:
         with:
           run_install: |
             - recursive: true
+      - name: Install sg
+        run: pnpm install @ast-grep/cli -g
       - name: Compile
         run: pnpm compile
       - name: Run headless test
