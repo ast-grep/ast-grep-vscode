@@ -18,9 +18,9 @@ jobs:
         with:
           node-version: 16
       - name: Install sg
-        run: npm install -g lightningcss-cli
+        run: npm install -g @ast-grep/cli
       - name: Debug
-        run: lightningcss
+        run: sg
       - name: Install deps
         run: npm install
       - name: Compile
