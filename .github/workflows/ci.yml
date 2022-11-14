@@ -13,19 +13,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2.2.4
-        with:
-          version: 7.12.2
-          run_install: |
-            - recursive: true
       - name: Install sg
-        run: pnpm install @ast-grep/cli -g
+        run: npm install @ast-grep/cli -g
       - name: Debug
-        run: C:\Users\runneradmin\AppData\Local\pnpm\global\5\node_modules\@ast-grep\cli\sg.exe
+        run: npm list -g
+      - name: Install deps
+        run: npm install
       - name: Compile
-        run: pnpm compile
+        run: npm run compile
       - name: Run headless test
         uses: GabrielBB/xvfb-action@v1.0
         with:
-          run: pnpm test
+          run: npm test
