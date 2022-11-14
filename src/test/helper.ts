@@ -20,6 +20,9 @@ export async function activate(docUri: vscode.Uri) {
     await vscode.commands.executeCommand('vscode.openFolder', fixtureFolderUri)
     doc = await vscode.workspace.openTextDocument(docUri)
     editor = await vscode.window.showTextDocument(doc)
+    editor.edit(builder => {
+      builder.setEndOfLine(vscode.EndOfLine.LF)
+    })
     await sleep(2000) // Wait for server activation
   } catch (e) {
     console.error(e)
