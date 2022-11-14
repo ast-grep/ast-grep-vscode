@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 16
       - name: Install sg
-        run: yarn add @ast-grep/cli -g
+        run: yarn global add @ast-grep/cli
       - name: Debug
         run: sg.exe
       - name: Install deps
