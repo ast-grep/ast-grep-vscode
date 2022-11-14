@@ -23,6 +23,7 @@ function getExecutable(isDebug: boolean): Executable {
         ...process.env,
         ...(isDebug ? { RUST_LOG: 'debug' } : {})
       },
+      // shell is required for Windows cmd to pick up global npm binary
       shell: true
     }
   }

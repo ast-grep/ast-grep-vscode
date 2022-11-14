@@ -17,9 +17,11 @@ export async function activate(docUri: vscode.Uri) {
   const ext = vscode.extensions.getExtension('ast-grep.ast-grep-vscode')!
   await ext.activate()
   try {
+    // open ast-grep project to locate sgconfig.yml
     await vscode.commands.executeCommand('vscode.openFolder', fixtureFolderUri)
     doc = await vscode.workspace.openTextDocument(docUri)
     editor = await vscode.window.showTextDocument(doc)
+    // enforce unix line endings, otherwise tests fail on windows
     editor.edit(builder => {
       builder.setEndOfLine(vscode.EndOfLine.LF)
     })
