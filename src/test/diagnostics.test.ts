@@ -5,7 +5,7 @@ import { getDocUri, activate } from './helper'
 
 suite('Should get diagnostics', () => {
   const docUri = getDocUri('test.ts')
-  test('Diagnoses uppercase texts', async () => {
+  test('Get ast-grep issues', async () => {
     await testDiagnostics(docUri, [
       {
         message: 'No console.log',

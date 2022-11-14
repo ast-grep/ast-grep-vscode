@@ -14,13 +14,13 @@
       }
     },
     {
-      "name": "Language Server E2E Test",
+      "name": "Language Client E2E Test",
       "type": "extensionHost",
       "request": "launch",
       "runtimeExecutable": "${execPath}",
       "args": [
         "--extensionDevelopmentPath=${workspaceRoot}",
-        "--extensionTestsPath=${workspaceRoot}/client/out/test/index",
+        "--extensionTestsPath=${workspaceRoot}/out/test/index",
         "${workspaceRoot}/client/testFixture"
       ],
       "outFiles": ["${workspaceRoot}/client/out/test/**/*.js"]
