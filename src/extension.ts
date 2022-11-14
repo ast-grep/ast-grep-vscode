@@ -15,9 +15,9 @@ const languageClientName = 'ast-grep language client'
 
 function getExecutable(isDebug: boolean): Executable {
   const defaultExecutable = process.platform === 'win32' ? 'sg.exe' : 'sg'
-  const command = workspace
-    .getConfiguration('astGrep')
-    .get('serverPath', defaultExecutable)
+  const command =
+    workspace.getConfiguration('astGrep').get<string>('serverPath') ||
+    defaultExecutable
   return {
     command,
     args: ['lsp'],

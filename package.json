@@ -16,14 +16,14 @@
   "license": "MIT",
   "main": "./out/extension.js",
   "engines": {
-    "vscode": "^1.65.0"
+    "vscode": "^1.73.0"
   },
   "categories": [
     "Linters",
     "Other"
   ],
   "activationEvents": [
-    "*"
+    "onStartupFinished"
   ],
   "contributes": {
     "commands": [],

@@ -105,3 +105,4 @@ dist
 
 out
 .vscode-test
+*.vsix

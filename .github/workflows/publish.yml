@@ -1,0 +1,35 @@
+name: Release
+
+permissions:
+  contents: write
+
+on:
+  push:
+    tags:
+      - '[0-9]+.*'
+
+jobs:
+  release-extension:
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install deps
+        run: npm install
+      - name: Install vsce
+        run: npm install vsce -g
+      - name: Compile
+        run: npm run compile
+      - name: Publish extension
+        id: publisher
+        uses: sigma/vsce-publish-action@v0.0.2
+        with:
+          vsce_token: ${{ secrets.VSCE_TOKEN }}
+          build_pkg: yes
+      - name: Create GH Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ steps.publisher.ouputs.vsix_path }}
