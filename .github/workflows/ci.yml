@@ -22,7 +22,7 @@ jobs:
       - name: Install sg
         run: pnpm install @ast-grep/cli -g
       - name: Debug
-        run: sg.exe
+        run: pnpm list -g
       - name: Compile
         run: pnpm compile
       - name: Run headless test
