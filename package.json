@@ -34,8 +34,7 @@
         "astGrep.serverPath": {
           "scope": "window",
           "type": "string",
-          "default": "sg",
-          "description": "Specify the language server binary path. Default is `sg`."
+          "description": "Specify the language server binary path."
         },
         "astGrep.configPath": {
           "scope": "resource",
