@@ -22,7 +22,7 @@ jobs:
       - name: Install sg
         run: pnpm install @ast-grep/cli -g
       - name: Debug
-        run: dir C:\Users\runneradmin\AppData\Local\pnpm\global\5\node_modules\@ast-grep\cli
+        run: C:\Users\runneradmin\AppData\Local\pnpm\global\5\node_modules\@ast-grep\cli\sg.exe
       - name: Compile
         run: pnpm compile
       - name: Run headless test
