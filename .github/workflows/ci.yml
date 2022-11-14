@@ -13,10 +13,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
       - name: Install sg
         run: npm install @ast-grep/cli -g
       - name: Debug
-        run: npm list -g
+        run: sg.exe
       - name: Install deps
         run: npm install
       - name: Compile
