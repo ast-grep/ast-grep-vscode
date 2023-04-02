@@ -116,7 +116,6 @@ export class NodeDependenciesProvider
     }
     if (element) {
       let uri = element.item.uri
-      console.log(uri)
       let list = this.scanResultDict[uri].map(item => {
         return new AstGrepScanTreeItem({
           uri: item.uri,
@@ -169,7 +168,6 @@ function activateLsp(context: ExtensionContext) {
     let grouped = groupBy(res, 'uri')
     console.log(grouped)
     for await (let uri of Object.keys(grouped)) {
-      // let doc = await workspace.openTextDocument(uri)
       let scanResultList = grouped[uri]
       for (let element of scanResultList) {
         treeItemList.push(
@@ -198,9 +196,6 @@ function activateLsp(context: ExtensionContext) {
       }
     }
     referenceView.setInput(symbolTreeInput)
-    // if (currentInput) {
-    //   console.log(await currentInput.resolve())
-    // }
   })
 
   context.subscriptions.push(disposable)
