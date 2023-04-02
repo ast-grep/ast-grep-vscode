@@ -10,7 +10,8 @@ import {
   TreeDataProvider,
   Position,
   TextDocumentShowOptions,
-  TextDocument
+  TextDocument,
+  Uri
 } from 'vscode'
 
 import {
@@ -59,7 +60,7 @@ class AstGrepScanTreeItem extends TreeItem {
     if ('source' in item) {
       label = item.source
     } else {
-      label = item.uri
+      label = workspace.asRelativePath(Uri.parse(item.uri))
       collapsibleState = TreeItemCollapsibleState.Expanded
     }
     super(label, collapsibleState)
