@@ -26,7 +26,13 @@
     "onStartupFinished"
   ],
   "contributes": {
-    "commands": [],
+    "commands": [
+      {
+        "command": "ast-grep.reference",
+        "title": "preview current active editor ast",
+        "category": "ast-grep"
+      }
+    ],
     "configuration": {
       "type": "object",
       "title": "ast-grep",
@@ -58,6 +64,8 @@
     "**/*": "prettier --write --ignore-unknown"
   },
   "dependencies": {
+    "@types/lodash.groupby": "^4.6.7",
+    "lodash.groupby": "^4.6.0",
     "vscode-languageclient": "^8.0.2"
   },
   "devDependencies": {
