@@ -20,7 +20,6 @@ import {
   ServerOptions,
   Executable
 } from 'vscode-languageclient/node'
-import groupBy from 'lodash.groupby'
 
 let client: LanguageClient
 const diagnosticCollectionName = 'ast-grep-diagnostics'
@@ -167,8 +166,7 @@ function activateLsp(context: ExtensionContext) {
 
     let treeItemList: AstGrepScanTreeItem[] = []
     let grouped = groupBy(res, 'uri')
-    console.log(grouped)
-    for await (let uri of Object.keys(grouped)) {
+    for (let uri of Object.keys(grouped)) {
       let scanResultList = grouped[uri]
       for (let element of scanResultList) {
         treeItemList.push(
@@ -245,4 +243,15 @@ export function deactivate(): Promise<void> | undefined {
     return undefined
   }
   return client.stop()
+}
+
+function groupBy<T extends object>(obj: T[], key: keyof T) {
+  return obj.reduce((acc, cur) => {
+    let k = cur[key]
+    if (!acc[k]) {
+      acc[k] = []
+    }
+    acc[k].push(cur)
+    return acc
+  }, {} as { [key: string]: T[] })
 }
