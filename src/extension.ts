@@ -98,10 +98,7 @@ type Dictionary<T> = { [key: string]: T }
 export class NodeDependenciesProvider
   implements TreeDataProvider<AstGrepScanTreeItem>
 {
-  constructor(
-    private scanResultDict: Dictionary<ScanResult[]>,
-    private documentMap: Map<string, TextDocument>
-  ) {
+  constructor(private scanResultDict: Dictionary<ScanResult[]>) {
     // @ts-ignore
     this.provider = this
   }
@@ -140,62 +137,63 @@ interface ScanResult {
   content: string
 }
 
-let context
-
 function activateLsp(context: ExtensionContext) {
-  let disposable = commands.registerCommand('ast-grep.reference', async uri => {
-    let curWorkspace = workspace.workspaceFolders?.[0]
-    if (!curWorkspace) {
-      return
-    }
-    const referenceView = await extensions
-      .getExtension('vscode.references-view')
-      ?.activate()
-    let pattern
-    try {
-      pattern = await window.showInputBox({})
-    } catch {
-      return
-    }
-    if (!pattern) {
-      return
-    }
-    let res = await client.sendRequest<ScanResult[]>('ast-grep/search', {
-      pattern: pattern
-    })
-
-    let treeItemList: AstGrepScanTreeItem[] = []
-    let grouped = groupBy(res, 'uri')
-    for (let uri of Object.keys(grouped)) {
-      let scanResultList = grouped[uri]
-      for (let element of scanResultList) {
-        treeItemList.push(
-          new AstGrepScanTreeItem({
-            source: element.content,
-            range: element.position,
-            uri: element.uri
-          })
-        )
+  let disposable = commands.registerCommand(
+    'ast-grep.reference',
+    async _uri => {
+      let curWorkspace = workspace.workspaceFolders?.[0]
+      if (!curWorkspace) {
+        return
       }
-    }
-    let provider = new NodeDependenciesProvider(grouped, new Map())
-
-    let symbolTreeInput = {
-      contextValue: 'ast-grep',
-      title: 'ast-grep',
-      location: {
-        uri: window.activeTextEditor?.document.uri,
-        range: new Range(new Position(0, 0), new Position(0, 0))
-      },
-      resolve() {
-        return provider
-      },
-      with() {
-        return symbolTreeInput
+      const referenceView = await extensions
+        .getExtension('vscode.references-view')
+        ?.activate()
+      let pattern
+      try {
+        pattern = await window.showInputBox({})
+      } catch {
+        return
       }
+      if (!pattern) {
+        return
+      }
+      let res = await client.sendRequest<ScanResult[]>('ast-grep/search', {
+        pattern: pattern
+      })
+
+      let treeItemList: AstGrepScanTreeItem[] = []
+      let grouped = groupBy(res, 'uri')
+      for (let uri of Object.keys(grouped)) {
+        let scanResultList = grouped[uri]
+        for (let element of scanResultList) {
+          treeItemList.push(
+            new AstGrepScanTreeItem({
+              source: element.content,
+              range: element.position,
+              uri: element.uri
+            })
+          )
+        }
+      }
+      let provider = new NodeDependenciesProvider(grouped)
+
+      let symbolTreeInput = {
+        contextValue: 'ast-grep',
+        title: 'ast-grep',
+        location: {
+          uri: window.activeTextEditor?.document.uri,
+          range: new Range(new Position(0, 0), new Position(0, 0))
+        },
+        resolve() {
+          return provider
+        },
+        with() {
+          return symbolTreeInput
+        }
+      }
+      referenceView.setInput(symbolTreeInput)
     }
-    referenceView.setInput(symbolTreeInput)
-  })
+  )
 
   context.subscriptions.push(disposable)
 
@@ -247,11 +245,11 @@ export function deactivate(): Promise<void> | undefined {
 
 function groupBy<T extends object>(obj: T[], key: keyof T) {
   return obj.reduce((acc, cur) => {
-    let k = cur[key]
+    let k = cur[key] as string
     if (!acc[k]) {
       acc[k] = []
     }
     acc[k].push(cur)
     return acc
-  }, {} as { [key: string]: T[] })
+  }, {} as Record<string, T[]>)
 }
