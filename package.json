@@ -26,7 +26,13 @@
     "onStartupFinished"
   ],
   "contributes": {
-    "commands": [],
+    "commands": [
+      {
+        "command": "ast-grep.reference",
+        "title": "preview current active editor ast",
+        "category": "ast-grep"
+      }
+    ],
     "configuration": {
       "type": "object",
       "title": "ast-grep",
