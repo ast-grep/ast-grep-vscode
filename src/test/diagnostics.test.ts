@@ -42,6 +42,9 @@ async function testDiagnostics(
   await activate(docUri)
 
   const actualDiagnostics = vscode.languages.getDiagnostics(docUri)
+  actualDiagnostics.sort((a, b) =>
+    a.message === b.message ? 0 : a.message > b.message ? 1 : -1
+  )
 
   assert.equal(actualDiagnostics.length, expectedDiagnostics.length)
 
