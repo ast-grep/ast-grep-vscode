@@ -11,7 +11,8 @@ import {
   Position,
   TextDocumentShowOptions,
   TextDocument,
-  Uri
+  Uri,
+  ThemeIcon
 } from 'vscode'
 
 import {
@@ -104,6 +105,13 @@ export class NodeDependenciesProvider
   }
 
   getTreeItem(element: AstGrepScanTreeItem): TreeItem {
+    // only add iconPath if the element is not a file item
+    if (!('source' in element.item)) {
+      element.contextValue = 'file-item'
+      element.description = true
+      element.iconPath = ThemeIcon.File
+      element.resourceUri = Uri.parse(element.item.uri)
+    }
     return element
   }
 
