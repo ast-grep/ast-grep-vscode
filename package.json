@@ -28,8 +28,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "ast-grep.reference",
-        "title": "preview current active editor ast",
+        "command": "ast-grep.search",
+        "title": "Search pattern in current document",
         "category": "ast-grep"
       }
     ],
