@@ -64,7 +64,7 @@
     "**/*": "prettier --write --ignore-unknown"
   },
   "dependencies": {
-    "vscode-languageclient": "^8.0.2"
+    "vscode-languageclient": "^9.0.0"
   },
   "devDependencies": {
     "@types/glob": "^8.0.0",
