@@ -2,12 +2,13 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es2020",
-    "lib": ["es2020"],
+    "lib": ["es2020", "DOM"],
     "outDir": "out",
     "rootDir": "src",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "jsx": "react-jsx",
     "sourceMap": true,
     "skipLibCheck": true
   },
