@@ -13,7 +13,6 @@ body {
   font-size: var(--vscode-font-size) !important;
   font-weight: var(--vscode-font-weight) !important;
   font-family: var(--vscode-font-family) !important;
-  background-color: var(--vscode-editor-background) !important;
 }
 
 ol,

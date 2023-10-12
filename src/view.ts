@@ -22,6 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
     })
   )
 }
+vscode.window.createTreeView
 
 class SearchSidebarProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'calicoColors.colorsView'
