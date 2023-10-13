@@ -1,25 +1,29 @@
-import React, { useCallback } from 'react'
-import { VSCodeButton, VSCodeTextField } from '@vscode/webview-ui-toolkit/react'
-import { useEffect, useState } from 'react'
+import { VSCodeTextField } from '@vscode/webview-ui-toolkit/react'
+import { useCallback } from 'react'
 
 interface SearchInputProps {
   value: string
   onChange: (val: string) => void
+  onKeyEnterUp: () => void
 }
 
-
-const SearchInput = ({ value, onChange }: SearchInputProps) => {
-  const [inputValue, setInputValue] = useState(value ?? '')
-
+const SearchInput = ({ value, onChange, onKeyEnterUp }: SearchInputProps) => {
   const handleInput = useCallback((e: { target: { value: string } }) => {
-    setInputValue(e.target.value)
+    const newValue = e.target.value
+    onChange?.(newValue)
   }, [])
 
   return (
-    <div>
+    <div style={{ display: 'flex' }}>
       <VSCodeTextField
-        value={inputValue}
+        style={{ flex: 1 }}
+        value={value}
         onInput={handleInput as any}
+        onKeyUp={event => {
+          if (event.key === 'Enter') {
+            onKeyEnterUp()
+          }
+        }}
       ></VSCodeTextField>
     </div>
   )

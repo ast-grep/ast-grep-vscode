@@ -24,13 +24,13 @@ import {
 
 import { activate as viewActivate } from './view'
 
-let client: LanguageClient
+export let client: LanguageClient
 const diagnosticCollectionName = 'ast-grep-diagnostics'
 const outputChannelName = 'ast-grep'
 const languageClientId = 'ast-grep-client'
 const languageClientName = 'ast-grep language client'
 
-function getExecutable(isDebug: boolean): Executable {
+export function getExecutable(isDebug: boolean): Executable {
   const command = workspace.getConfiguration('astGrep').get('serverPath', 'sg')
   return {
     command,

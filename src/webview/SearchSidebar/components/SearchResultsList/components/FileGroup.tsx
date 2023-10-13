@@ -29,7 +29,7 @@ export function FileGroup({
   removeMatch,
   removeFile,
   hasWorkspace,
-  scrollElRef,
+  scrollElRef
 }: FileGroupProps) {
   const [isExpanded, setIsExpanded] = useState(true)
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -39,7 +39,7 @@ export function FileGroup({
   const preventScrollJump = usePreventScrollJump(
     wrapperRef,
     headingRef,
-    scrollElRef,
+    scrollElRef
   )
 
   const themeType = useThemeType()
@@ -47,14 +47,14 @@ export function FileGroup({
   const highlightTheme = isDarkTheme ? darkTheme : lightTheme
 
   const iconButtonStyleResetProps = getIconButtonProps(
-    highlightTheme.plain.backgroundColor,
+    highlightTheme.plain.backgroundColor
   )
 
   const relativeFilePath = getRelativePath(filePath) ?? ''
   const borderColor = getBorderColor(
     isDarkTheme,
     isResultFocused,
-    highlightTheme,
+    highlightTheme
   )
 
   useEffect(() => {
@@ -108,7 +108,7 @@ export function FileGroup({
         />
         <FileLink
           match={{
-            filePath,
+            filePath
           }}
           relativeFilePath={relativeFilePath}
           onClick={() => {
@@ -125,7 +125,7 @@ export function FileGroup({
           icon={<IoMdClose />}
           confirmText="Click again to remove"
           {...iconButtonStyleResetProps}
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation()
             preventScrollJump()
             removeFile(filePath)
@@ -141,8 +141,8 @@ export function FileGroup({
         gap="4"
         display={isExpanded ? 'flex' : 'none'}
       >
-        {matches.map((match) => {
-          const key = `${match.filePath}-${match.start}-${match.end}`
+        {matches.map(match => {
+          const key = `${match.filePath}-${match.start}-${match.end}-${match.code}-${match.loc.start}-${match.loc.end}`
 
           return (
             <SearchResult

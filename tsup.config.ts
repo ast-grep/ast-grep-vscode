@@ -8,9 +8,10 @@ export default defineConfig({
     ...(process.env.NODE_TEST ? sync('./src/test/**') : [])
   ],
   outDir: 'out',
-  sourcemap: true,
-  clean: true,
+  sourcemap: 'inline',
+  clean: false,
   bundle: true,
+  dts: false,
   external: ['vscode', 'vscode-languageclient'],
   env: {
     NODE_ENV: 'production'

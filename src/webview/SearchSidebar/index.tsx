@@ -1,46 +1,51 @@
 import { useEffect, useState } from 'react'
 import { SearchInput } from './components/SearchInput'
 import { SearchResultsList } from './components/SearchResultsList/components/SearchResultsList'
+import { useDebounceFn } from 'ahooks'
+import { MessageResponse, usePostExtension } from './usePostMessage'
 import { MatchWithFileInfo } from './components/SearchResultsList/types'
+
+const useSearchResult = (inputValue: string) => {
+  const [result, setResult] = useState<Partial<MessageResponse>>({})
+  const postExtension = usePostExtension()
+
+  const { run: refreshResult } = useDebounceFn(() => {
+    ;(async () => {
+      const res = await postExtension({ inputValue })
+      setResult(res)
+    })()
+  })
+
+  useEffect(() => {
+    refreshResult()
+  }, [inputValue])
+
+  return {
+    result,
+    refreshResult
+  }
+}
 
 export const SearchSidebar = () => {
   const [inputValue, setInputValue] = useState('')
+  const { result, refreshResult } = useSearchResult(inputValue)
 
   return (
     <div>
-      <SearchInput value={inputValue} onChange={setInputValue} />
+      <SearchInput
+        value={inputValue}
+        onChange={setInputValue}
+        onKeyEnterUp={refreshResult}
+      />
+      {/* debug here */}
+      <pre style={{ display: 'none' }}>{JSON.stringify(result, null, 2)}</pre>
       <SearchResultsList
-        matches={[
-          {
-            code: `const a = 1;
-            class AstGrepTest {
-              test() {
-                console.log('Hello, world!')
-              }
-            }
-
-            class AnotherCase {
-              get test2() {
-                return 123
-              }
-            }
-            `,
-            filePath: 'file:///Users/bytedance/Documents/codes/github/ast-grep-vscode/fixture/test.ts',
-            end: 10,
-            extendedCodeFrame: { code: 'const a = 1;', startLine: 0 },
-            start: 1,
-            loc: {
-              start: { column: 12, line: 0 },
-              end: { column: 12, line: 0 }
-            },
-            query: 'const'
-          }
-        ]}
+        matches={result.data ? format(result.data, inputValue) : []}
         getRelativePath={function (filePath: string): string | undefined {
-          return ''
+          return filePath
         }}
         getWorkspace={function (filePath: string): string | undefined {
-          return ''
+          return filePath
         }}
         displayLimit={10}
         extendDisplayLimit={function (): void {}}
@@ -73,3 +78,32 @@ export const SearchSidebar = () => {
 //   },
 //   uri: "file:///Users/xxx/Documents/codes/github/ast-grep-vscode/fixture/test.ts",
 // }
+
+function format(
+  res: MessageResponse['data'],
+  pattern: string
+): MatchWithFileInfo[] {
+  return res.map(item => {
+    return {
+      code: item.content,
+      filePath: item.uri,
+      start: item.position.start.character,
+      end: item.position.end.character,
+      extendedCodeFrame: {
+        code: item.content,
+        startLine: item.position.start.line
+      },
+      loc: {
+        start: {
+          column: item.position.start.character,
+          line: item.position.start.line
+        },
+        end: {
+          column: item.position.end.character,
+          line: item.position.end.line
+        }
+      },
+      query: pattern
+    }
+  })
+}

@@ -1,4 +1,7 @@
 import * as vscode from 'vscode'
+import { workspace } from 'vscode'
+import { execa } from 'execa'
+import { ScanResult } from './extension'
 
 export function activate(context: vscode.ExtensionContext) {
   const provider = new SearchSidebarProvider(context.extensionUri)
@@ -6,7 +9,8 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
       SearchSidebarProvider.viewType,
-      provider
+      provider,
+      { webviewOptions: { retainContextWhenHidden: true } }
     )
   )
 
@@ -22,7 +26,39 @@ export function activate(context: vscode.ExtensionContext) {
     })
   )
 }
-vscode.window.createTreeView
+
+async function getPatternRes(pattern: string) {
+  if (!pattern) {
+    return
+  }
+  let command = workspace.getConfiguration('astGrep').get('serverPath', 'sg')
+  const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
+
+  const { stdout } = await execa(
+    command,
+    ['run', '--pattern', pattern, '--json'],
+    { cwd: uris[0] }
+  )
+
+  try {
+    console.log('stdout', stdout)
+    let res = JSON.parse(stdout)
+
+    res = res.map((i: any) => {
+      const range = i.range
+      return {
+        content: i.text,
+        uri: i.file,
+        position: range
+      }
+    })
+    console.log(res)
+    return res
+  } catch (e) {
+    console.error(e)
+    return []
+  }
+}
 
 class SearchSidebarProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'calicoColors.colorsView'
@@ -41,45 +77,20 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
     webviewView.webview.options = {
       // Allow scripts in the webview
       enableScripts: true,
-
       localResourceRoots: [this._extensionUri]
     }
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview)
 
-    webviewView.webview.onDidReceiveMessage(data => {
-      switch (data.type) {
-        case 'colorSelected': {
-          vscode.window.activeTextEditor?.insertSnippet(
-            new vscode.SnippetString(`#${data.value}`)
-          )
-          break
-        }
-      }
+    webviewView.webview.onDidReceiveMessage(async data => {
+      const res = await getPatternRes(data.inputValue)
+      webviewView.webview.postMessage({ ...data, data: res })
     })
-  }
-
-  public addColor() {
-    if (this._view) {
-      this._view.show?.(true) // `show` is not implemented in 1.49 but is for 1.50 insiders
-      this._view.webview.postMessage({ type: 'addColor' })
-    }
-  }
-
-  public clearColors() {
-    if (this._view) {
-      this._view.webview.postMessage({ type: 'clearColors' })
-    }
   }
 
   private _getHtmlForWebview(webview: vscode.Webview) {
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(
-        this._extensionUri,
-        'out',
-        'webview',
-        'index.js'
-      )
+      vscode.Uri.joinPath(this._extensionUri, 'out', 'webview', 'index.js')
     )
 
     const stylesResetUri = webview.asWebviewUri(

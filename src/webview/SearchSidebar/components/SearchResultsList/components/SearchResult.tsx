@@ -31,7 +31,7 @@ const getMatchHighlightStyle = (isDark: boolean) => {
 
   return {
     backgroundColor: highlightColor,
-    boxShadow: `0px 5px 0px ${highlightColor}, 0px -5px 0px ${highlightColor}`,
+    boxShadow: `0px 5px 0px ${highlightColor}, 0px -5px 0px ${highlightColor}`
   }
 }
 
@@ -46,7 +46,7 @@ export const SearchResult = memo(function SearchResult({
   removeMatch,
   hasGroup,
   hasWorkspace,
-  scrollElRef,
+  scrollElRef
 }: SearchResultProps) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const headingRef = useRef<HTMLDivElement>(null)
@@ -67,11 +67,11 @@ export const SearchResult = memo(function SearchResult({
   const borderColor = getBorderColor(
     isDarkTheme,
     isResultFocused,
-    highlightTheme,
+    highlightTheme
   )
 
   const iconButtonStyleResetProps = getIconButtonProps(
-    highlightTheme.plain.backgroundColor,
+    highlightTheme.plain.backgroundColor
   )
 
   useEffect(() => {
@@ -110,27 +110,27 @@ export const SearchResult = memo(function SearchResult({
     {
       start: {
         line: match.loc.start.line,
-        column: match.loc.start.column - highlightColumnChangeDueToDedent,
+        column: match.loc.start.column - highlightColumnChangeDueToDedent
       },
       end: {
         line: match.loc.end.line,
-        column: match.loc.end.column - highlightColumnChangeDueToDedent,
+        column: match.loc.end.column - highlightColumnChangeDueToDedent
       },
-      style: getMatchHighlightStyle(isDarkTheme),
-    },
+      style: getMatchHighlightStyle(isDarkTheme)
+    }
   ]
 
   const preventScrollJump = usePreventScrollJump(
     wrapperRef,
     headingRef,
-    scrollElRef,
+    scrollElRef
   )
 
   const fileExtension = getFileExtension(match.filePath)
 
   return (
     <Flex flexDir="column" width="100%" pl={'4'} ref={wrapperRef}>
-      <Flex
+      {/* <Flex
         alignItems="center"
         px="1"
         position="sticky"
@@ -203,7 +203,7 @@ export const SearchResult = memo(function SearchResult({
           borderRadius="md"
           tooltipPlacement="bottom-end"
         />
-      </Flex>
+      </Flex> */}
       {isExpanded ? (
         <Flex
           padding="5"

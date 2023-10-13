@@ -1,0 +1,7 @@
+id: no-print-rule
+message: No print
+severity: warning
+language: Python
+rule:
+  pattern: print($$$)
+note: no print
