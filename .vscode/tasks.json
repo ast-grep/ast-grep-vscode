@@ -23,7 +23,16 @@
         "panel": "dedicated",
         "reveal": "never"
       },
-      "problemMatcher": ["$tsc-watch"]
+      "problemMatcher": [
+        {
+          "base": "$ts-webpack-watch",
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": "Build start",
+            "endsPattern": "Build success"
+          }
+        }
+      ]
     }
   ]
 }
