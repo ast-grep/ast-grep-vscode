@@ -1,12 +1,7 @@
-import { sync } from 'glob'
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  entry: [
-    'src/extension.ts',
-    'src/webview/index.tsx',
-    ...(process.env.NODE_TEST ? sync('./src/test/**') : [])
-  ],
+  entry: ['src/extension.ts', 'src/webview/index.tsx'],
   outDir: 'out',
   sourcemap: 'inline',
   clean: false,

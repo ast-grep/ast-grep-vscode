@@ -31,17 +31,6 @@
         "command": "ast-grep.search",
         "title": "Search pattern in current document",
         "category": "ast-grep"
-      },
-      {
-        "command": "calicoColors.addColor",
-        "category": "Calico Colors",
-        "title": "Add Color"
-      },
-      {
-        "command": "calicoColors.clearColors",
-        "category": "Calico Colors",
-        "title": "Clear Colors",
-        "icon": "$(clear-all)"
       }
     ],
     "configuration": {
@@ -65,17 +54,8 @@
       "explorer": [
         {
           "type": "webview",
-          "id": "calicoColors.colorsView",
+          "id": "ast-grep.search.panel",
           "name": "ast-grep.search.panel"
-        }
-      ]
-    },
-    "menus": {
-      "view/title": [
-        {
-          "command": "calicoColors.clearColors",
-          "group": "navigation",
-          "when": "view == calicoColors.colorsView"
         }
       ]
     }
@@ -83,8 +63,8 @@
   "qna": "https://github.com/ast-grep/ast-grep/discussions",
   "scripts": {
     "vscode:prepublish": "npm run typecheck && npm run compile",
-    "pretest": "NODE_TEST=true npm run compile",
-    "test": "node ./out/test/runTest.js",
+    "pretest": "npm run compile",
+    "test": "node ./scripts/runTest.mjs",
     "watch": "tsup --watch",
     "compile": "tsup",
     "typecheck": "tsc --noEmit",
@@ -97,6 +77,7 @@
     "vscode-languageclient": "^9.0.0"
   },
   "devDependencies": {
+    "tsx": "4.6.2",
     "execa": "8.0.1",
     "pathe": "^1.1.1",
     "ahooks": "^3.7.8",
@@ -112,7 +93,7 @@
     "@types/react": "^18.2.25",
     "@types/react-dom": "^18.2.11",
     "@types/vscode": "^1.73.0",
-    "@vscode/test-electron": "^2.2.0",
+    "@vscode/test-electron": "^2.3.8",
     "cross-env": "^7.0.3",
     "glob": "^9.0.0",
     "husky": "^8.0.1",

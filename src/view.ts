@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
 import { workspace } from 'vscode'
 import { execa } from 'execa'
-import { ScanResult } from './extension'
 
 export function activate(context: vscode.ExtensionContext) {
   const provider = new SearchSidebarProvider(context.extensionUri)
@@ -13,18 +12,6 @@ export function activate(context: vscode.ExtensionContext) {
       { webviewOptions: { retainContextWhenHidden: true } }
     )
   )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand('calicoColors.addColor', () => {
-      provider.addColor()
-    })
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand('calicoColors.clearColors', () => {
-      provider.clearColors()
-    })
-  )
 }
 
 async function getPatternRes(pattern: string) {
@@ -34,6 +21,7 @@ async function getPatternRes(pattern: string) {
   let command = workspace.getConfiguration('astGrep').get('serverPath', 'sg')
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
 
+  // TODO: use ast-grep lsp to optimize the performance
   const { stdout } = await execa(
     command,
     ['run', '--pattern', pattern, '--json'],
@@ -41,9 +29,8 @@ async function getPatternRes(pattern: string) {
   )
 
   try {
-    console.log('stdout', stdout)
+    console.log('sg output', stdout)
     let res = JSON.parse(stdout)
-
     res = res.map((i: any) => {
       const range = i.range
       return {
@@ -52,7 +39,6 @@ async function getPatternRes(pattern: string) {
         position: range
       }
     })
-    console.log(res)
     return res
   } catch (e) {
     console.error(e)
@@ -61,7 +47,7 @@ async function getPatternRes(pattern: string) {
 }
 
 class SearchSidebarProvider implements vscode.WebviewViewProvider {
-  public static readonly viewType = 'calicoColors.colorsView'
+  public static readonly viewType = 'ast-grep.search.panel'
 
   private _view?: vscode.WebviewView
 

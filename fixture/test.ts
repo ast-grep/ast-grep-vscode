@@ -1,4 +1,3 @@
-const a = 1;
 class AstGrepTest {
   test() {
     console.log('Hello, world!')
