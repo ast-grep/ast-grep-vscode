@@ -1,6 +1,6 @@
+import { execa } from 'execa'
 import * as vscode from 'vscode'
 import { workspace } from 'vscode'
-import { execa } from 'execa'
 
 export function activate(context: vscode.ExtensionContext) {
   const provider = new SearchSidebarProvider(context.extensionUri)

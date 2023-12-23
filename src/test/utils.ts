@@ -1,5 +1,5 @@
-import * as vscode from 'vscode'
 import * as path from 'path'
+import * as vscode from 'vscode'
 
 export let doc: vscode.TextDocument
 export let editor: vscode.TextEditor

@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
 import { SearchInput } from './components/SearchInput'
 import { SearchResultsList } from './components/SearchResultsList/components/SearchResultsList'
-import { useDebounceFn } from 'ahooks'
-import { MessageResponse, usePostExtension } from './usePostMessage'
 import { MatchWithFileInfo } from './components/SearchResultsList/types'
+import { MessageResponse, usePostExtension } from './usePostMessage'
+import { useDebounceFn, useLocalStorageState } from 'ahooks'
+import { useEffect, useState } from 'react'
 
 const useSearchResult = (inputValue: string) => {
   const [result, setResult] = useState<Partial<MessageResponse>>({})
@@ -27,8 +27,17 @@ const useSearchResult = (inputValue: string) => {
 }
 
 export const SearchSidebar = () => {
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue = '', setInputValue] = useLocalStorageState<string>(
+    'ast-grep-search-input-value',
+    {
+      defaultValue: ''
+    }
+  )
   const { result, refreshResult } = useSearchResult(inputValue)
+
+  useEffect(() => {
+    console.log(result)
+  }, [result])
 
   return (
     <div>

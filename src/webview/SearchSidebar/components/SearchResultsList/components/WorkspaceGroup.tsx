@@ -1,12 +1,12 @@
+import { useThemeType } from '../hooks/useThemeType'
+import { darkTheme, lightTheme } from '../utils/codeHighlightThemes'
+import { DoubleClickButton } from './DoubleClickButton'
+import { usePreventScrollJump } from './usePreventScrollJump'
+import { groupHeaderHeight, getIconButtonProps, getBorderColor } from './utils'
 import { Flex, IconButton } from '@chakra-ui/react'
 import { useRef, useState } from 'react'
 import { HiOutlineChevronDown, HiOutlineChevronRight } from 'react-icons/hi'
 import { IoMdClose } from 'react-icons/io'
-import { darkTheme, lightTheme } from '../utils/codeHighlightThemes'
-import { DoubleClickButton } from './DoubleClickButton'
-import { useThemeType } from '../hooks/useThemeType'
-import { usePreventScrollJump } from './usePreventScrollJump'
-import { groupHeaderHeight, getIconButtonProps, getBorderColor } from './utils'
 
 type WorkspaceGroupProps = {
   allCount: number
@@ -21,7 +21,7 @@ export function WorkspaceGroup({
   workspace,
   removeWorkspace,
   children,
-  scrollElRef,
+  scrollElRef
 }: WorkspaceGroupProps) {
   const [isExpanded, setIsExpanded] = useState(true)
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -30,7 +30,7 @@ export function WorkspaceGroup({
   const preventScrollJump = usePreventScrollJump(
     wrapperRef,
     headingRef,
-    scrollElRef,
+    scrollElRef
   )
 
   const themeType = useThemeType()
@@ -38,7 +38,7 @@ export function WorkspaceGroup({
   const highlightTheme = isDarkTheme ? darkTheme : lightTheme
 
   const iconButtonStyleResetProps = getIconButtonProps(
-    highlightTheme.plain.backgroundColor,
+    highlightTheme.plain.backgroundColor
   )
   const borderColor = getBorderColor(isDarkTheme, false, highlightTheme)
 
@@ -81,7 +81,7 @@ export function WorkspaceGroup({
           icon={<IoMdClose />}
           confirmText="Click again to remove"
           {...iconButtonStyleResetProps}
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation()
             preventScrollJump()
             removeWorkspace(workspace)

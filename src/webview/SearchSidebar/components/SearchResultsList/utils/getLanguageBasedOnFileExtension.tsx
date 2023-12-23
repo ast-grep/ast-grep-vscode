@@ -1,7 +1,7 @@
 import { Language } from 'prism-react-renderer'
 
 export const getLanguageBasedOnFileExtension = (
-  fileExtension?: string,
+  fileExtension?: string
 ): Language => {
   if (!fileExtension) {
     return 'tsx'
@@ -17,7 +17,7 @@ export const getLanguageBasedOnFileExtension = (
     'sql',
     'yaml',
     'jsx',
-    'tsx',
+    'tsx'
   ]
 
   if (extensionsSameAsLang.includes(fileExtension as Language)) {

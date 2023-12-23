@@ -1,14 +1,13 @@
-import { useEffect, useState } from 'react'
-import { IoIosWarning } from 'react-icons/io'
-
 import {
   Button,
   ButtonProps,
   IconButton,
   Text,
   Tooltip,
-  TooltipProps,
+  TooltipProps
 } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import { IoIosWarning } from 'react-icons/io'
 
 export function DoubleClickButton({
   confirmText = 'Click second time to confirm',
@@ -62,7 +61,7 @@ export function DoubleClickButton({
             <IoIosWarning />
           ) : (
             icon
-          ),
+          )
         }}
       >
         {children}

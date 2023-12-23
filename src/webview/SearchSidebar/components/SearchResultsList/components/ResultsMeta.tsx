@@ -1,3 +1,5 @@
+import { useThemeType } from '../hooks/useThemeType'
+import { darkTheme, lightTheme } from '../utils/codeHighlightThemes'
 import {
   Button,
   Flex,
@@ -8,14 +10,13 @@ import {
   PopoverHeader,
   PopoverTrigger,
   Text,
-  useTheme,
+  useTheme
 } from '@chakra-ui/react'
 // import { SearchInFileError, SearchResults } from '@codeque/core'
 import { IoMdInformationCircleOutline } from 'react-icons/io'
-import { useThemeType } from '../hooks/useThemeType'
-import { darkTheme, lightTheme } from '../utils/codeHighlightThemes'
+
 // import { openFile } from '../utils'
-type SearchInFileError = any;
+type SearchInFileError = any
 
 type ResultsMetaProps = {
   time: number | string | undefined
@@ -45,11 +46,11 @@ const extractLocationFormErrorText = (errorText: string) => {
       .replace('(', '')
       .replace(')', '')
       .split(/,|:|;/)
-      .map((v) => parseInt(v.trim(), 10))
+      .map(v => parseInt(v.trim(), 10))
 
     return {
       start: { line, column },
-      end: { line, column },
+      end: { line, column }
     }
   }
 
@@ -65,11 +66,12 @@ export function ResultsMeta({
   startSearch,
   searchInProgress,
   stopSearch,
-  getRelativePath,
+  getRelativePath
 }: ResultsMetaProps) {
   const errorsToDisplay: Array<string | SearchInFileError> =
     (errors?.filter(
-      (error: Error | string) => typeof error === 'string' || 'filePath' in error,
+      (error: Error | string) =>
+        typeof error === 'string' || 'filePath' in error
     ) as Array<string | SearchInFileError>) ?? []
 
   const theme = useTheme()
@@ -132,7 +134,7 @@ export function ResultsMeta({
               <Flex maxHeight="70vh" overflowY="auto" flexDirection="column">
                 {errorsToDisplay.map((error, idx) => {
                   const relativePath = getRelativePath(
-                    (error as SearchInFileError)?.filePath,
+                    (error as SearchInFileError)?.filePath
                   )
 
                   return (
@@ -156,7 +158,7 @@ export function ResultsMeta({
                             p={2}
                             onClick={() => {
                               const location = extractLocationFormErrorText(
-                                error.error,
+                                error.error
                               )
 
                               // TODO:

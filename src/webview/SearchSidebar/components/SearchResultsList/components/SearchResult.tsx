@@ -1,17 +1,11 @@
-import { Checkbox, Flex, IconButton } from '@chakra-ui/react'
-// import { MatchWithFileInfo } from '@codeque/core'
-import { memo, useEffect, useRef, useState } from 'react'
-import { HiOutlineChevronDown, HiOutlineChevronRight } from 'react-icons/hi'
-import { IoMdClose } from 'react-icons/io'
-import { CodeBlock } from './CodeBlock'
-import { darkTheme, lightTheme } from '../utils/codeHighlightThemes'
-import { DoubleClickButton } from './DoubleClickButton'
 import { useThemeType } from '../hooks/useThemeType'
-import { CopyPath } from './CopyPath'
-import { FileLink } from './FileLink'
-import { usePreventScrollJump } from './usePreventScrollJump'
-import { getBorderColor, getIconButtonProps, groupHeaderHeight } from './utils'
 import { MatchWithFileInfo } from '../types'
+import { darkTheme, lightTheme } from '../utils/codeHighlightThemes'
+import { CodeBlock } from './CodeBlock'
+import { usePreventScrollJump } from './usePreventScrollJump'
+import { getBorderColor, getIconButtonProps } from './utils'
+import { Flex } from '@chakra-ui/react'
+import { memo, useEffect, useRef, useState } from 'react'
 
 type SearchResultProps = {
   match: MatchWithFileInfo
@@ -130,80 +124,6 @@ export const SearchResult = memo(function SearchResult({
 
   return (
     <Flex flexDir="column" width="100%" pl={'4'} ref={wrapperRef}>
-      {/* <Flex
-        alignItems="center"
-        px="1"
-        position="sticky"
-        top={`calc(${hasGroup ? groupHeaderHeight : '0px'} + ${
-          hasWorkspace ? groupHeaderHeight : '0px'
-        })`}
-        border="1px solid"
-        borderColor={borderColor}
-        transition="border 0.3s ease-in-out"
-        backgroundColor="var(--vscode-editor-background)"
-        maxWidth="100%"
-        ref={headingRef}
-        height={groupHeaderHeight}
-      >
-        <IconButton
-          onClick={() => {
-            if (isExpanded) {
-              preventScrollJump()
-            }
-
-            setIsExpanded(!isExpanded)
-          }}
-          aria-label="expand/collapse button"
-          icon={
-            isExpanded ? <HiOutlineChevronDown /> : <HiOutlineChevronRight />
-          }
-          {...iconButtonStyleResetProps}
-          mr="2"
-        />
-        <FileLink
-          match={match}
-          relativeFilePath={relativeFilePath}
-          onClick={() => {
-            setIsResultFocused(true)
-          }}
-          matchStartCol={matchStartCol}
-          matchStartLine={matchStartLine}
-          maxWidth="calc(100% - 150px)"
-        />
-        <Flex ml="2" mr="auto">
-          <CopyPath fullFilePath={fullFilePath} />
-        </Flex>
-        <Checkbox
-          ml="3"
-          isChecked={isChecked}
-          onChange={(ev) => {
-            const checked = ev.target.checked // changed to checked
-
-            if (checked) {
-              preventScrollJump()
-            }
-
-            setIsChecked(checked)
-            setIsExpanded(!checked)
-          }}
-        >
-          Done
-        </Checkbox>
-        <DoubleClickButton
-          iconButton
-          icon={<IoMdClose />}
-          confirmText="Click again to remove"
-          {...iconButtonStyleResetProps}
-          onClick={(e) => {
-            e.stopPropagation()
-            preventScrollJump()
-            removeMatch(match.filePath, match.start, match.end)
-          }}
-          ml="3"
-          borderRadius="md"
-          tooltipPlacement="bottom-end"
-        />
-      </Flex> */}
       {isExpanded ? (
         <Flex
           padding="5"

@@ -1,12 +1,12 @@
+import type { MatchWithFileInfo } from '../types'
+import { FileGroup } from './FileGroup'
+import { WorkspaceGroup } from './WorkspaceGroup'
 import { Button, Flex, Text, Spinner } from '@chakra-ui/react'
 // import { MatchWithFileInfo, Mode, SearchResults } from '@codeque/core'
 // import { SearchResult } from './SearchResult'
 // import { TextModeNoResults } from './TextModeNoResults'
 // import { StructuralModeNoResults } from './StructuralModeNoResults'
 import { memo, useCallback, useMemo, useRef } from 'react'
-import { FileGroup } from './FileGroup'
-import { WorkspaceGroup } from './WorkspaceGroup'
-import type { MatchWithFileInfo } from '../types'
 
 type SearchResultsListProps = {
   matches: Array<MatchWithFileInfo>

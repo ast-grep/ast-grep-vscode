@@ -1,5 +1,5 @@
-import githubTheme from 'prism-react-renderer/themes/github'
 import { PrismTheme } from 'prism-react-renderer'
+import githubTheme from 'prism-react-renderer/themes/github'
 import nightOwlTheme from 'prism-react-renderer/themes/nightOwl'
 
 export type MyPrismTheme = PrismTheme & {

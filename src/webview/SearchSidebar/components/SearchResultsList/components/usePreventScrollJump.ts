@@ -3,7 +3,7 @@ import { useCallback, MutableRefObject } from 'react'
 export const usePreventScrollJump = (
   wrapperRef: MutableRefObject<HTMLDivElement | null>,
   headingRef: MutableRefObject<HTMLDivElement | null>,
-  scrollElRef: MutableRefObject<HTMLDivElement | null>,
+  scrollElRef: MutableRefObject<HTMLDivElement | null>
 ) => {
   return useCallback(() => {
     if (wrapperRef.current && headingRef.current && scrollElRef.current) {
@@ -15,12 +15,12 @@ export const usePreventScrollJump = (
 
       if (isHeadingSticky) {
         wrapperRef.current.scrollIntoView({
-          block: 'start',
+          block: 'start'
         })
 
         // Correct position for nested sticky headers
         scrollElRef.current.scrollBy({
-          top: -parseInt(headingStickyTop),
+          top: -parseInt(headingStickyTop)
         })
       }
     }

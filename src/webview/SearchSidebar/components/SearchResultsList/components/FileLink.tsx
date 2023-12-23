@@ -1,5 +1,6 @@
-import { Link, LinkProps, Text } from '@chakra-ui/react'
 import { MatchWithFileInfo } from '../types'
+import { Link, LinkProps, Text } from '@chakra-ui/react'
+
 // TODO:
 // import { openFile } from '../utils'
 

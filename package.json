@@ -1,30 +1,34 @@
 {
   "name": "ast-grep-vscode",
+  "displayName": "ast-grep VSCode",
   "version": "0.0.2",
   "description": "VSCode extension for ast-grep language server",
+  "categories": [
+    "Linters",
+    "Other"
+  ],
   "keywords": [
     "ast-grep",
     "vscode",
     "language-server",
     "extension"
   ],
-  "publisher": "ast-grep",
-  "preview": true,
-  "displayName": "ast-grep VSCode",
   "repository": "https://github.com/ast-grep/ast-grep-vscode",
-  "author": "Herrington Darkholme",
   "license": "MIT",
+  "qna": "https://github.com/ast-grep/ast-grep/discussions",
+  "author": "Herrington Darkholme",
+  "publisher": "ast-grep",
   "main": "./out/extension.js",
-  "engines": {
-    "vscode": "^1.73.0"
+  "scripts": {
+    "compile": "tsup",
+    "format": "prettier . --write",
+    "prepare": "husky install",
+    "pretest": "npm run compile",
+    "test": "node ./scripts/runTest.mjs",
+    "typecheck": "tsc --noEmit",
+    "vscode:prepublish": "npm run typecheck && npm run compile",
+    "watch": "tsup --watch"
   },
-  "categories": [
-    "Linters",
-    "Other"
-  ],
-  "activationEvents": [
-    "onStartupFinished"
-  ],
   "contributes": {
     "commands": [
       {
@@ -60,16 +64,9 @@
       ]
     }
   },
-  "qna": "https://github.com/ast-grep/ast-grep/discussions",
-  "scripts": {
-    "vscode:prepublish": "npm run typecheck && npm run compile",
-    "pretest": "npm run compile",
-    "test": "node ./scripts/runTest.mjs",
-    "watch": "tsup --watch",
-    "compile": "tsup",
-    "typecheck": "tsc --noEmit",
-    "prepare": "husky install"
-  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
   },
@@ -77,33 +74,40 @@
     "vscode-languageclient": "^9.0.0"
   },
   "devDependencies": {
-    "tsx": "4.6.2",
-    "execa": "8.0.1",
-    "pathe": "^1.1.1",
-    "ahooks": "^3.7.8",
-    "prism-react-renderer": "^1.3.5",
-    "react-icons": "^4.11.0",
-    "copy-to-clipboard": "^3.3.3",
     "@chakra-ui/react": "^2.2.4",
-    "tslib": "^2.6.2",
-    "tsup": "^7.2.0",
+    "@trivago/prettier-plugin-sort-imports": "4.3.0",
     "@types/glob": "^8.0.0",
     "@types/mocha": "^10.0.0",
     "@types/node": "^18.11.9",
     "@types/react": "^18.2.25",
     "@types/react-dom": "^18.2.11",
     "@types/vscode": "^1.73.0",
+    "@vscode-use/utils": "^0.0.69",
     "@vscode/test-electron": "^2.3.8",
+    "@vscode/webview-ui-toolkit": "^1.2.2",
+    "ahooks": "^3.7.8",
+    "copy-to-clipboard": "^3.3.3",
     "cross-env": "^7.0.3",
+    "execa": "8.0.1",
     "glob": "^9.0.0",
     "husky": "^8.0.1",
     "lint-staged": "^14.0.0",
     "mocha": "^10.1.0",
+    "pathe": "^1.1.1",
     "prettier": "^3.0.0",
+    "prettier-plugin-packagejson": "2.4.7",
+    "prism-react-renderer": "^1.3.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.11.0",
+    "tslib": "^2.6.2",
+    "tsup": "^7.2.0",
+    "tsx": "4.6.2",
     "typescript": "^5.0.0",
-    "vscode-test": "^1.6.1",
-    "@vscode/webview-ui-toolkit": "^1.2.2"
-  }
+    "vscode-test": "^1.6.1"
+  },
+  "engines": {
+    "vscode": "^1.73.0"
+  },
+  "preview": true
 }

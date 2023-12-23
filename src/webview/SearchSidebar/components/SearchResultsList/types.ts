@@ -29,4 +29,3 @@ export type MatchWithFileInfo = Omit<Match, 'node'> & {
   extendedCodeFrame: ExtendedCodeFrame
   indentationBase?: number
 }
-

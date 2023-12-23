@@ -7,13 +7,13 @@ type Options = {
 
 export function useCopyToClipboard(
   text: string,
-  { timeout = 1500 }: Options = {},
+  { timeout = 1500 }: Options = {}
 ) {
   const [hasCopied, setHasCopied] = React.useState(false)
 
   const onCopy = React.useCallback(() => {
     const didCopy = copy(text, {
-      format: 'text/plain',
+      format: 'text/plain'
     })
     setHasCopied(didCopy)
   }, [text])

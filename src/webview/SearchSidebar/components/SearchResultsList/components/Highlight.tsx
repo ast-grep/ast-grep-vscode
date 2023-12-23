@@ -1,8 +1,8 @@
+import { darkTheme } from '../utils/codeHighlightThemes'
+import { getLanguageBasedOnFileExtension } from '../utils/getLanguageBasedOnFileExtension'
 import PrismHighlight from 'prism-react-renderer'
 import { defaultProps, PrismTheme } from 'prism-react-renderer'
 import React from 'react'
-import { darkTheme } from '../utils/codeHighlightThemes'
-import { getLanguageBasedOnFileExtension } from '../utils/getLanguageBasedOnFileExtension'
 
 type Token = { types: string[]; content: string }
 
@@ -42,7 +42,7 @@ export function Highlight({
   customHighlight,
   highlight,
   startLineNumber,
-  fileExtension,
+  fileExtension
 }: HighlightProps) {
   const safeStartLineNumber = startLineNumber ?? 0
 
@@ -71,7 +71,7 @@ export function Highlight({
             const lineNumToCompareHighlight = lineIdx + safeStartLineNumber
 
             let lineCurrentChar = 0
-            const customLineStyle = customHighlight?.find((highlight) => {
+            const customLineStyle = customHighlight?.find(highlight => {
               const wholeLineHighlight = highlight.line !== undefined
 
               return (
@@ -99,7 +99,7 @@ export function Highlight({
                       width:
                         (tokens.length + showLineNumber).toString().length * 8 +
                         10 +
-                        'px',
+                        'px'
                     }}
                   >
                     {showLineNumber}
@@ -109,7 +109,7 @@ export function Highlight({
                   const maybeSplitTokens = maybeSplitJSXToken(token, children)
 
                   const tokensToRender = maybeSplitTokens
-                    .map((token) => {
+                    .map(token => {
                       let customHighlightResult: CustomHighlightResults = []
 
                       for (const highlight of customHighlight ?? []) {
@@ -130,8 +130,8 @@ export function Highlight({
                             customHighlightResult = [
                               {
                                 style: undefined,
-                                token,
-                              },
+                                token
+                              }
                             ]
 
                             break
@@ -146,8 +146,8 @@ export function Highlight({
                               {
                                 style: highlight.style,
                                 token,
-                                reason: 'center line, whole line',
-                              },
+                                reason: 'center line, whole line'
+                              }
                             ]
 
                             break
@@ -195,8 +195,8 @@ export function Highlight({
                                 [
                                   {
                                     token,
-                                    style: highlight.style,
-                                  },
+                                    style: highlight.style
+                                  }
                                 ]
 
                               if (shouldBeSplit) {
@@ -204,7 +204,7 @@ export function Highlight({
                                   const [customHighlight] =
                                     localCustomHighlightResult.splice(
                                       localCustomHighlightResult.length - 1,
-                                      1,
+                                      1
                                     )
                                   const leftSplitIndex =
                                     startCol - lineCurrentChar
@@ -212,29 +212,29 @@ export function Highlight({
                                   const leftContent =
                                     customHighlight.token.content.substring(
                                       0,
-                                      leftSplitIndex,
+                                      leftSplitIndex
                                     )
                                   const restContent =
                                     customHighlight.token.content.substring(
-                                      leftSplitIndex,
+                                      leftSplitIndex
                                     )
 
                                   localCustomHighlightResult.push({
                                     token: {
                                       types: customHighlight.token.types,
-                                      content: leftContent,
+                                      content: leftContent
                                     },
                                     reason: 'split left',
-                                    style: null,
+                                    style: null
                                   })
 
                                   localCustomHighlightResult.push({
                                     token: {
                                       types: token.types,
-                                      content: restContent,
+                                      content: restContent
                                     },
                                     style: highlight.style,
-                                    reason: 'split left',
+                                    reason: 'split left'
                                   })
                                 }
 
@@ -242,7 +242,7 @@ export function Highlight({
                                   const [customHighlight] =
                                     localCustomHighlightResult.splice(
                                       localCustomHighlightResult.length - 1,
-                                      1,
+                                      1
                                     )
                                   const rightSplitIndex =
                                     endCol -
@@ -253,29 +253,29 @@ export function Highlight({
                                   const leftContent =
                                     customHighlight.token.content.substring(
                                       0,
-                                      rightSplitIndex,
+                                      rightSplitIndex
                                     )
                                   const restContent =
                                     customHighlight.token.content.substring(
-                                      rightSplitIndex,
+                                      rightSplitIndex
                                     )
 
                                   localCustomHighlightResult.push({
                                     token: {
                                       types: token.types,
-                                      content: leftContent,
+                                      content: leftContent
                                     },
                                     reason: 'split right',
-                                    style: highlight.style,
+                                    style: highlight.style
                                   })
 
                                   localCustomHighlightResult.push({
                                     token: {
                                       types: token.types,
-                                      content: restContent,
+                                      content: restContent
                                     },
                                     reason: 'split right',
-                                    style: undefined,
+                                    style: undefined
                                   })
                                 }
                               }
@@ -302,9 +302,9 @@ export function Highlight({
                         const props = customGetTokenProps(
                           {
                             token,
-                            key: `${key}.${i}`,
+                            key: `${key}.${i}`
                           },
-                          getTokenProps,
+                          getTokenProps
                         )
 
                         return (
@@ -312,7 +312,7 @@ export function Highlight({
                             {...props}
                             style={{
                               ...props.style,
-                              ...style,
+                              ...style
                             }}
                           />
                         )
@@ -343,18 +343,18 @@ const maybeSplitJSXToken = (token: Token, match: any) => {
 
     tokens.push({
       types: ['plain-text'],
-      content: initialWhitespace,
+      content: initialWhitespace
     })
 
     if (trimmed.includes('</')) {
       tokens.push({
         types: ['tag', 'punctuation'],
-        content: '</',
+        content: '</'
       })
     } else if (trimmed.includes('<')) {
       tokens.push({
         types: ['tag', 'punctuation'],
-        content: '<',
+        content: '<'
       })
     }
 
@@ -365,18 +365,18 @@ const maybeSplitJSXToken = (token: Token, match: any) => {
 
     tokens.push({
       types: ['tag', ...(isIdentifierUppercase ? ['class-name'] : [])],
-      content: identifier,
+      content: identifier
     })
 
     if (trimmed.includes('/>')) {
       tokens.push({
         types: ['tag', 'punctuation'],
-        content: '/>',
+        content: '/>'
       })
     } else if (trimmed.includes('>')) {
       tokens.push({
         types: ['tag', 'punctuation'],
-        content: '>',
+        content: '>'
       })
     }
 
@@ -391,10 +391,10 @@ const customGetTokenProps = (
   defaultGetTokenProps: (input: { token: Token; key: number }) => {
     children: React.ReactNode
     style?: Record<string, unknown>
-  },
+  }
 ) => {
   const defaultProps = defaultGetTokenProps(
-    input as { token: Token; key: number },
+    input as { token: Token; key: number }
   )
 
   let isWildcard = false
@@ -414,9 +414,9 @@ const customGetTokenProps = (
       ...(isWildcard
         ? {
             color: codeRed,
-            fontWeight: 'bold',
+            fontWeight: 'bold'
           }
-        : {}),
-    },
+        : {})
+    }
   }
 }

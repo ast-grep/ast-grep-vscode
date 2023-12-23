@@ -1,8 +1,8 @@
+import { darkTheme } from './codeHighlightThemes'
+import { getLanguageBasedOnFileExtension } from './getLanguageBasedOnFileExtension'
 import PrismHighlight from 'prism-react-renderer'
 import { defaultProps, PrismTheme } from 'prism-react-renderer'
 import React from 'react'
-import { darkTheme } from './codeHighlightThemes'
-import { getLanguageBasedOnFileExtension } from './getLanguageBasedOnFileExtension'
 
 type Token = { types: string[]; content: string }
 

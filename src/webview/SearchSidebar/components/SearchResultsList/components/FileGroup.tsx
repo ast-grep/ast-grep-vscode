@@ -1,16 +1,13 @@
-import { Flex, IconButton } from '@chakra-ui/react'
-import { SearchResult } from './SearchResult'
-import { FileLink } from './FileLink'
-import { useState, useCallback, useRef, useEffect } from 'react'
-import { HiOutlineChevronDown, HiOutlineChevronRight } from 'react-icons/hi'
-import { darkTheme, lightTheme } from '../utils/codeHighlightThemes'
 import { useThemeType } from '../hooks/useThemeType'
-import { getIconButtonProps, groupHeaderHeight, getBorderColor } from './utils'
-import { IoMdClose } from 'react-icons/io'
-import { DoubleClickButton } from './DoubleClickButton'
-import { CopyPath } from './CopyPath'
-import { usePreventScrollJump } from './usePreventScrollJump'
 import { MatchWithFileInfo } from '../types'
+import { darkTheme, lightTheme } from '../utils/codeHighlightThemes'
+import { FileLink } from './FileLink'
+import { SearchResult } from './SearchResult'
+import { usePreventScrollJump } from './usePreventScrollJump'
+import { getIconButtonProps, groupHeaderHeight } from './utils'
+import { Flex, IconButton } from '@chakra-ui/react'
+import { useRef, useState } from 'react'
+import { HiOutlineChevronDown, HiOutlineChevronRight } from 'react-icons/hi'
 
 type FileGroupProps = {
   matches: MatchWithFileInfo[]
@@ -34,7 +31,7 @@ export function FileGroup({
   const [isExpanded, setIsExpanded] = useState(true)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const headingRef = useRef<HTMLDivElement>(null)
-  const [isResultFocused, setIsResultFocused] = useState(false)
+  // const [isResultFocused, setIsResultFocused] = useState(false)
 
   const preventScrollJump = usePreventScrollJump(
     wrapperRef,
@@ -51,23 +48,23 @@ export function FileGroup({
   )
 
   const relativeFilePath = getRelativePath(filePath) ?? ''
-  const borderColor = getBorderColor(
-    isDarkTheme,
-    isResultFocused,
-    highlightTheme
-  )
+  // const borderColor = getBorderColor(
+  //   isDarkTheme,
+  //   isResultFocused,
+  //   highlightTheme
+  // )
 
-  useEffect(() => {
-    const handleWindowFocus = () => {
-      setIsResultFocused(false)
-    }
+  // useEffect(() => {
+  //   const handleWindowFocus = () => {
+  //     // setIsResultFocused(false)
+  //   }
 
-    window.addEventListener('focus', handleWindowFocus)
+  //   window.addEventListener('focus', handleWindowFocus)
 
-    return () => {
-      window.removeEventListener('focus', handleWindowFocus)
-    }
-  }, [])
+  //   return () => {
+  //     window.removeEventListener('focus', handleWindowFocus)
+  //   }
+  // }, [])
 
   return (
     <Flex
@@ -84,14 +81,13 @@ export function FileGroup({
         transition="border 0.3s ease-in-out"
         zIndex="1"
         px="1"
-        border="1px solid"
-        borderColor={borderColor}
         height={groupHeaderHeight}
         alignItems="center"
         ref={headingRef}
         maxWidth="100%"
       >
         <IconButton
+          variant="customIconButton"
           onClick={() => {
             if (isExpanded) {
               preventScrollJump()
@@ -112,28 +108,14 @@ export function FileGroup({
           }}
           relativeFilePath={relativeFilePath}
           onClick={() => {
-            setIsResultFocused(true)
+            // setIsResultFocused(true)
           }}
           maxWidth="calc(100% - 110px)"
         />
-        <Flex ml="2" mr="auto">
+        {/* <Flex ml="2" mr="auto">
           <CopyPath fullFilePath={relativeFilePath} />
-        </Flex>
+        </Flex> */}
         <Flex ml="2">({matches.length})</Flex>
-        <DoubleClickButton
-          iconButton
-          icon={<IoMdClose />}
-          confirmText="Click again to remove"
-          {...iconButtonStyleResetProps}
-          onClick={e => {
-            e.stopPropagation()
-            preventScrollJump()
-            removeFile(filePath)
-          }}
-          ml="3"
-          borderRadius="md"
-          tooltipPlacement="bottom-end"
-        />
       </Flex>
       <Flex
         width="100%"
