@@ -11,7 +11,7 @@ const useSearchResult = (inputValue: string) => {
 
   const { run: refreshResult } = useDebounceFn(() => {
     ;(async () => {
-      const res = await postExtension({ inputValue })
+      const res = await postExtension({ inputValue, command: 'search' })
       setResult(res)
     })()
   })
@@ -94,22 +94,22 @@ function format(
 ): MatchWithFileInfo[] {
   return res.map(item => {
     return {
-      code: item.content,
-      filePath: item.uri,
-      start: item.position.start.character,
-      end: item.position.end.character,
+      code: item.lines,
+      filePath: item.file,
+      start: item.range.byteOffset.start,
+      end: item.range.byteOffset.end,
       extendedCodeFrame: {
-        code: item.content,
-        startLine: item.position.start.line
+        code: item.lines,
+        startLine: item.range.start.line
       },
       loc: {
         start: {
-          column: item.position.start.character,
-          line: item.position.start.line
+          column: item.range.start.column,
+          line: item.range.start.line
         },
         end: {
-          column: item.position.end.character,
-          line: item.position.end.line
+          column: item.range.end.column,
+          line: item.range.end.line
         }
       },
       query: pattern

@@ -1,3 +1,4 @@
+import { SgSearch } from '../../types'
 import { useCallback, useEffect, useRef } from 'react'
 
 const vscode =
@@ -6,44 +7,25 @@ const vscode =
 // @ts-ignore
 window.vscode = vscode
 
-export interface MessageRequest {
+export type MessageRequest = {
   inputValue: string
+  command: 'search'
 }
 
 export interface MessageResponse {
-  data: {
-    uri: string
-    // Same as vscode.Range but all zero-based
-    position: {
-      start: {
-        character: number
-        line: number
-      }
-      end: {
-        character: number
-        line: number
-      }
-    }
-    content: string
-  }[]
+  data: SgSearch[]
 }
 
-const noop = (arg: any) => arg
-
-const usePostMessage = <Req, Res>({
-  deserialize = noop
-}: {
-  deserialize: (arg: unknown) => Res
-}) => {
-  const resolveMap = useRef<
-    Record<string, (val: any | PromiseLike<any>) => void>
-  >({})
+const usePostMessage = <Req, Res>() => {
+  const resolveMap = useRef(
+    new Map<string, (val: any | PromiseLike<any>) => void>()
+  )
 
   const post = useCallback((req: Req) => {
-    let id = Math.random().toString()
+    let id = Math.random().toString() // TODO: nanoid
     vscode.postMessage({ ...req, id })
     return new Promise<Res>(resolve => {
-      resolveMap.current[id] = resolve
+      resolveMap.current.set(id, resolve)
     })
   }, [])
 
@@ -51,9 +33,8 @@ const usePostMessage = <Req, Res>({
     const subscribe = (event: { data: Res & { id: string } }) => {
       const response = event.data
       const { id } = response
-      const deserializedResponse = deserialize(response)
-      resolveMap.current[id]?.(deserializedResponse)
-      delete resolveMap.current[id]
+      resolveMap.current.get(id)?.(response)
+      resolveMap.current.delete(id)
     }
     window.addEventListener('message', subscribe)
     return () => {
@@ -64,16 +45,6 @@ const usePostMessage = <Req, Res>({
   return post
 }
 
-const usePostExtension = () =>
-  usePostMessage<MessageRequest, MessageResponse>({
-    deserialize: (arg: unknown) => {
-      return {
-        ...(arg as MessageResponse),
-        data: (arg as MessageResponse)?.data?.map(item => {
-          return item
-        })
-      }
-    }
-  })
+const usePostExtension = () => usePostMessage<MessageRequest, MessageResponse>()
 
 export { usePostExtension }

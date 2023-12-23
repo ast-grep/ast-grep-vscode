@@ -7,7 +7,7 @@ export default defineConfig({
   clean: false,
   bundle: true,
   dts: false,
-  external: ['vscode', 'vscode-languageclient'],
+  external: ['vscode'],
   env: {
     NODE_ENV: 'production'
   }
