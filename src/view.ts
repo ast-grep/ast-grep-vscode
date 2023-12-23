@@ -1,8 +1,14 @@
+import {
+  getMatchHighlightStyle,
+  getMatchHighlightStyleSecondary
+} from './codeHighlightSettings'
 import type { ParentPort, SgSearch } from './types'
 import { execa } from 'execa'
 import { Unport, ChannelMessage } from 'unport'
 import * as vscode from 'vscode'
 import { workspace } from 'vscode'
+
+type Match = any
 
 export function activate(context: vscode.ExtensionContext) {
   const provider = new SearchSidebarProvider(context.extensionUri)
@@ -24,6 +30,7 @@ async function getPatternRes(pattern: string) {
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
 
   // TODO: use ast-grep lsp to optimize the performance
+  // TODO: multi-workspaces support
   const { stdout } = await execa(
     command,
     ['run', '--pattern', pattern, '--json'],
@@ -59,7 +66,7 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [this._extensionUri]
     }
 
-    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview)
+    webviewView.webview.html = this.getHtmlForWebview(webviewView.webview)
 
     const parentPort: ParentPort = new Unport()
 
@@ -84,9 +91,11 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
       const res = (await getPatternRes(payload.inputValue)) ?? []
       parentPort.postMessage('search', { ...payload, searchResult: res })
     })
+
+    parentPort.onMessage('openfile', async payload => this.openFile(payload))
   }
 
-  private _getHtmlForWebview(webview: vscode.Webview) {
+  private getHtmlForWebview(webview: vscode.Webview) {
     const localPort = 3000
     const localServerUrl = `http://localhost:${localPort}/index.js`
 
@@ -125,6 +134,123 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
         <script id="main-script" type="module" src="${scriptUri}" nonce="${nonce}">
       </body>
     </html>`
+  }
+
+  private getPositionsFromMatchLocation = (matchLocation: Match['loc']) => {
+    const startPos = new vscode.Position(
+      matchLocation.start.line - 1, // API has 0-based indexes
+      matchLocation.start.column
+    )
+    const endPos = new vscode.Position(
+      matchLocation.end.line - 1, // API has 0-based indexes
+      matchLocation.end.column
+    )
+
+    return [startPos, endPos] as const
+  }
+
+  private openFile = ({
+    filePath,
+    locationsToSelect,
+    locationsToDecorate
+  }: {
+    filePath: string
+    locationsToSelect?: Array<Match['loc']>
+    locationsToDecorate?: Array<Match['loc']>
+  }) => {
+    // TODO: multi workspaces support
+    const uris = workspace.workspaceFolders
+    const { joinPath } = vscode.Uri
+
+    if (!uris?.length) {
+      return
+    }
+
+    const setting: vscode.Uri = joinPath(uris?.[0].uri, filePath)
+
+    vscode.workspace.openTextDocument(setting).then(
+      async (textDoc: vscode.TextDocument) => {
+        let mainSelection = undefined
+
+        if (locationsToSelect?.[0]) {
+          mainSelection = {
+            selection: new vscode.Range(
+              ...this.getPositionsFromMatchLocation(locationsToSelect?.[0])
+            )
+          }
+        }
+
+        const selectLikeCodeDecoration =
+          vscode.window.createTextEditorDecorationType({
+            light: getMatchHighlightStyle(false),
+            dark: getMatchHighlightStyle(true)
+          })
+
+        const selectLikeCodeDecorationSecondary =
+          vscode.window.createTextEditorDecorationType({
+            light: getMatchHighlightStyleSecondary(false),
+            dark: getMatchHighlightStyleSecondary(true)
+          })
+
+        return vscode.window
+          .showTextDocument(textDoc, mainSelection)
+          .then(() => {
+            if (vscode.window.activeTextEditor) {
+              const selections = locationsToSelect
+                ? locationsToSelect.map(
+                    locationToSelect =>
+                      new vscode.Selection(
+                        ...this.getPositionsFromMatchLocation(locationToSelect)
+                      )
+                  )
+                : []
+
+              const selectionDecorations: vscode.DecorationOptions[] = []
+              const secondaryDecorations: vscode.DecorationOptions[] = []
+
+              locationsToDecorate?.forEach(locationToDecorate => {
+                const rangeToDecorate = new vscode.Range(
+                  ...this.getPositionsFromMatchLocation(locationToDecorate)
+                )
+                const hasMatchingSelection = selections.some(selection =>
+                  selection.isEqual(rangeToDecorate)
+                )
+
+                if (hasMatchingSelection) {
+                  selectionDecorations.push({
+                    range: rangeToDecorate
+                  })
+                } else {
+                  secondaryDecorations.push({ range: rangeToDecorate })
+                }
+              })
+
+              if (secondaryDecorations.length > 0) {
+                vscode.window.activeTextEditor.setDecorations(
+                  selectLikeCodeDecorationSecondary,
+                  secondaryDecorations
+                )
+              }
+
+              // Apply selectionDecorations after secondary, so selection overlaps in case of intersection of ranges
+              if (selectionDecorations.length > 0) {
+                vscode.window.activeTextEditor.setDecorations(
+                  selectLikeCodeDecoration,
+                  selectionDecorations
+                )
+              }
+
+              if (locationsToSelect && locationsToSelect.length > 1) {
+                vscode.window.activeTextEditor.selections = selections
+              }
+            }
+          })
+      },
+      (error: any) => {
+        console.error('error opening file', filePath)
+        console.error(error)
+      }
+    )
   }
 }
 

@@ -1,5 +1,11 @@
 import { Unport } from 'unport'
 
+export type Position = {
+  line: number
+  column: number
+  index?: number
+}
+
 export type SgSearch = {
   text: string
   range: {
@@ -7,14 +13,8 @@ export type SgSearch = {
       start: number
       end: number
     }
-    start: {
-      line: number
-      column: number
-    }
-    end: {
-      line: number
-      column: number
-    }
+    start: Position
+    end: Position
   }
   file: string
   lines: string
@@ -35,6 +35,11 @@ export type Definition = {
     }
     reload: {
       id: string
+    }
+    openfile: {
+      filePath: string
+      locationsToSelect?: Array<Omit<SgSearch['range'], 'byteOffset'>>
+      locationsToDecorate?: Array<Omit<SgSearch['range'], 'byteOffset'>>
     }
   }
 }

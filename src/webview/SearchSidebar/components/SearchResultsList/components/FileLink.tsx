@@ -1,8 +1,6 @@
+import { openFile } from '../../../postMessage'
 import { MatchWithFileInfo } from '../types'
 import { Link, LinkProps, Text } from '@chakra-ui/react'
-
-// TODO:
-// import { openFile } from '../utils'
 
 type FileLinkProps = LinkProps & {
   match: {
@@ -35,17 +33,18 @@ export function FileLink({
         ev.stopPropagation()
         onClick?.()
 
+        console.log(22222222222, match)
         openFile({
           filePath: match.filePath,
+          // @ts-ignore
           location: match.loc
         })
       }}
       fontWeight="500"
       display="inline-flex"
+      cursor="pointer"
       {...rest}
     >
-      {/** workaround for a problem with initial dot being moved to the end of string when using rtl */}
-      {filePathStartsWithDot && <Text as="span">.</Text>}
       <Text
         as="div"
         style={{

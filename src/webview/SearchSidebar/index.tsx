@@ -2,7 +2,7 @@ import type { SgSearch } from '../../types'
 import { SearchInput } from './components/SearchInput'
 import { SearchResultsList } from './components/SearchResultsList/components/SearchResultsList'
 import { MatchWithFileInfo } from './components/SearchResultsList/types'
-import { useSgSearch } from './useSgSearch'
+import { useSgSearch } from './postMessage'
 import { useDebounceFn, useLocalStorageState } from 'ahooks'
 import { useEffect, useState } from 'react'
 

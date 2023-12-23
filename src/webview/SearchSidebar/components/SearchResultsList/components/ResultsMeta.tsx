@@ -1,3 +1,4 @@
+import { openFile } from '../../../postMessage'
 import { useThemeType } from '../hooks/useThemeType'
 import { darkTheme, lightTheme } from '../utils/codeHighlightThemes'
 import {
@@ -12,10 +13,8 @@ import {
   Text,
   useTheme
 } from '@chakra-ui/react'
-// import { SearchInFileError, SearchResults } from '@codeque/core'
 import { IoMdInformationCircleOutline } from 'react-icons/io'
 
-// import { openFile } from '../utils'
 type SearchInFileError = any
 
 type ResultsMetaProps = {
@@ -161,11 +160,11 @@ export function ResultsMeta({
                                 error.error
                               )
 
-                              // TODO:
-                              // openFile({
-                              //   filePath: error.filePath,
-                              //   location: location,
-                              // })
+                              openFile({
+                                filePath: error.filePath,
+                                // @ts-ignore
+                                location: location
+                              })
                             }}
                           >
                             {relativePath}

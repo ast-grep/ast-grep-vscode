@@ -27,7 +27,7 @@ childPort.implementChannel({
   }
 })
 
-const useSgSearch = () => {
+export const useSgSearch = () => {
   const resolveMap = useRef(
     new Map<string, (val: any | PromiseLike<any>) => void>()
   )
@@ -51,4 +51,10 @@ const useSgSearch = () => {
   return post
 }
 
-export { useSgSearch }
+export const openFile = (data: {
+  filePath: string
+  locationsToSelect?: Array<Omit<SgSearch['range'], 'byteOffset'>>
+  locationsToDecorate?: Array<Omit<SgSearch['range'], 'byteOffset'>>
+}) => {
+  childPort.postMessage('openfile', data)
+}
