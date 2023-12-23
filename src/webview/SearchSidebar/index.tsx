@@ -47,7 +47,6 @@ export const SearchSidebar = () => {
         onKeyEnterUp={refreshResult}
       />
       {/* debug here */}
-      <pre style={{ display: 'none' }}>{JSON.stringify(result, null, 2)}</pre>
       <SearchResultsList
         matches={result.data ? format(result.data, inputValue) : []}
         getRelativePath={function (filePath: string): string | undefined {

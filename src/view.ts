@@ -81,9 +81,20 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
   }
 
   private _getHtmlForWebview(webview: vscode.Webview) {
-    const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'out', 'webview', 'index.js')
-    )
+    const localPort = 3000
+    const localServerUrl = `http://localhost:${localPort}/index.js`
+
+    const scriptUri =
+      process.env.NODE_ENV !== 'production'
+        ? localServerUrl
+        : webview.asWebviewUri(
+            vscode.Uri.joinPath(
+              this._extensionUri,
+              'out',
+              'webview',
+              'index.js'
+            )
+          )
 
     const stylesResetUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, 'media', 'reset.css')
@@ -99,7 +110,6 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
     <html lang="en">
       <head>
         <meta charset="UTF-8">
-        <meta http-equiv="Content-Security-Policy" content="img-src https: data:; style-src 'unsafe-inline' ${webview.cspSource}; script-src 'nonce-${nonce}' 'wasm-unsafe-eval' ;">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="${stylesResetUri}" rel="stylesheet">
         <link href="${stylesMainUri}" rel="stylesheet">

@@ -11,7 +11,7 @@ async function run() {
   })
   mocha.timeout(100000)
 
-  const testsRoot = path.join(__dirname, '../src/test')
+  const testsRoot = path.join(__dirname, '../../src/test')
 
   try {
     let files = await glob('**.test.ts', { cwd: testsRoot })

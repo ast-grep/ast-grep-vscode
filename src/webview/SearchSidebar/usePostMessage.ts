@@ -1,11 +1,17 @@
 import { SgSearch } from '../../types'
 import { useCallback, useEffect, useRef } from 'react'
 
-const vscode =
+let vscode: any
+try {
+  vscode =
+    // @ts-ignore
+    acquireVsCodeApi()
   // @ts-ignore
-  acquireVsCodeApi()
-// @ts-ignore
-window.vscode = vscode
+  window.vscode = vscode
+} catch (e) {
+  // @ts-ignore
+  vscode = window.vscode
+}
 
 export type MessageRequest = {
   inputValue: string

@@ -11,10 +11,7 @@
         // "--disable-extensions"
       ],
       "outFiles": ["${workspaceRoot}/client/out/**/*.js"],
-      "preLaunchTask": {
-        "type": "npm",
-        "script": "watch"
-      }
+      "preLaunchTask": "tasks: dev"
     },
     {
       "name": "Language Client E2E Test",
@@ -25,8 +22,7 @@
         "--extensionDevelopmentPath=${workspaceRoot}",
         "--extensionTestsPath=${workspaceRoot}/out/test/index",
         "${workspaceRoot}/client/testFixture"
-      ],
-      "outFiles": ["${workspaceRoot}/client/out/test/**/*.js"]
+      ]
     }
   ]
 }
