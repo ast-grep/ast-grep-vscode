@@ -1,5 +1,6 @@
-import type { SgSearch } from './types'
+import type { ParentPort, SgSearch } from './types'
 import { execa } from 'execa'
+import { Unport, ChannelMessage } from 'unport'
 import * as vscode from 'vscode'
 import { workspace } from 'vscode'
 
@@ -30,7 +31,6 @@ async function getPatternRes(pattern: string) {
   )
 
   try {
-    console.log('sg output', stdout)
     let res: SgSearch[] = JSON.parse(stdout)
     return res
   } catch (e) {
@@ -61,22 +61,28 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview)
 
-    webviewView.webview.onDidReceiveMessage(async message => {
-      switch (message.command) {
-        case 'reload':
-          // 方法一：
-          // 需要修改 html 内容才会 relaod，所以每次都替换了 script 的 nonce 为一个随机字符串
-          webviewView.webview.html = webviewView.webview.html.replace(
-            /nonce="\w+?"/,
-            `nonce="${getNonce()}"`
-          )
-          // 方法二：注意使用这个命令会刷新所有打开的 webview
-          // vscode.commands.executeCommand('workbench.action.webview.reloadWebviewAction');
-          // https://stackoverflow.com/questions/38634125/how-to-refresh-images-in-html-preview
-          return
+    const parentPort: ParentPort = new Unport()
+
+    parentPort.implementChannel({
+      async send(message) {
+        webviewView.webview.postMessage(message)
+      },
+      accept(pipe) {
+        webviewView.webview.onDidReceiveMessage((message: ChannelMessage) => {
+          pipe(message)
+        })
       }
-      const res = await getPatternRes(message.inputValue)
-      webviewView.webview.postMessage({ ...message, data: res })
+    })
+    parentPort.onMessage('reload', _payload => {
+      webviewView.webview.html = webviewView.webview.html.replace(
+        /nonce="\w+?"/,
+        `nonce="${getNonce()}"`
+      )
+    })
+
+    parentPort.onMessage('search', async payload => {
+      const res = (await getPatternRes(payload.inputValue)) ?? []
+      parentPort.postMessage('search', { ...payload, searchResult: res })
     })
   }
 

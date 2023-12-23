@@ -1,17 +1,18 @@
+import type { SgSearch } from '../../types'
 import { SearchInput } from './components/SearchInput'
 import { SearchResultsList } from './components/SearchResultsList/components/SearchResultsList'
 import { MatchWithFileInfo } from './components/SearchResultsList/types'
-import { MessageResponse, usePostExtension } from './usePostMessage'
+import { useSgSearch } from './useSgSearch'
 import { useDebounceFn, useLocalStorageState } from 'ahooks'
 import { useEffect, useState } from 'react'
 
 const useSearchResult = (inputValue: string) => {
-  const [result, setResult] = useState<Partial<MessageResponse>>({})
-  const postExtension = usePostExtension()
+  const [result, setResult] = useState<SgSearch[]>([])
+  const postExtension = useSgSearch()
 
   const { run: refreshResult } = useDebounceFn(() => {
     ;(async () => {
-      const res = await postExtension({ inputValue, command: 'search' })
+      const res = await postExtension(inputValue)
       setResult(res)
     })()
   })
@@ -48,7 +49,7 @@ export const SearchSidebar = () => {
       />
       {/* debug here */}
       <SearchResultsList
-        matches={result.data ? format(result.data, inputValue) : []}
+        matches={result ? format(result, inputValue) : []}
         getRelativePath={function (filePath: string): string | undefined {
           return filePath
         }}
@@ -87,10 +88,7 @@ export const SearchSidebar = () => {
 //   uri: "file:///Users/xxx/Documents/codes/github/ast-grep-vscode/fixture/test.ts",
 // }
 
-function format(
-  res: MessageResponse['data'],
-  pattern: string
-): MatchWithFileInfo[] {
+function format(res: SgSearch[], pattern: string): MatchWithFileInfo[] {
   return res.map(item => {
     return {
       code: item.lines,

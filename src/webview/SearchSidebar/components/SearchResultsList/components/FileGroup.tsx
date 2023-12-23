@@ -110,7 +110,7 @@ export function FileGroup({
           onClick={() => {
             // setIsResultFocused(true)
           }}
-          maxWidth="calc(100% - 110px)"
+          maxWidth="100%"
         />
         {/* <Flex ml="2" mr="auto">
           <CopyPath fullFilePath={relativeFilePath} />

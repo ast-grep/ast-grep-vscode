@@ -35,10 +35,10 @@ export function FileLink({
         ev.stopPropagation()
         onClick?.()
 
-        // openFile({
-        //   filePath: match.filePath,
-        //   location: match.loc,
-        // })
+        openFile({
+          filePath: match.filePath,
+          location: match.loc
+        })
       }}
       fontWeight="500"
       display="inline-flex"
