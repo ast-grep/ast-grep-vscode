@@ -6,9 +6,8 @@ export const getIconButtonProps = (themeBackgroundColor: string) => {
     minWidth: '18px',
     width: '18px',
     minHeight: '18px',
-    _hover: { background: themeBackgroundColor },
-    _active: { background: themeBackgroundColor },
-    size: 'sm'
+    size: 'sm',
+    outline: 'none'
   }
 }
 

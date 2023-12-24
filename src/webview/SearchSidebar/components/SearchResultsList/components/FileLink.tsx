@@ -21,10 +21,10 @@ export function FileLink({
   onClick,
   ...rest
 }: FileLinkProps) {
-  const filePathStartsWithDot = relativeFilePath?.startsWith('.')
+  const filePathStartsWithDot = relativeFilePath?.startsWith('./')
 
   const displayRelativePath = filePathStartsWithDot
-    ? relativeFilePath?.substring(1)
+    ? relativeFilePath?.substring(2)
     : relativeFilePath
 
   return (
@@ -32,8 +32,6 @@ export function FileLink({
       onClick={ev => {
         ev.stopPropagation()
         onClick?.()
-
-        console.log(22222222222, match)
         openFile({
           filePath: match.filePath,
           // @ts-ignore
@@ -49,13 +47,12 @@ export function FileLink({
         as="div"
         style={{
           textAlign: 'left',
-          direction: 'rtl',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
           overflow: 'hidden'
         }}
       >
-        <Text as="span">{displayRelativePath}</Text>
+        <span>{displayRelativePath}</span>
         {matchStartLine !== undefined && matchStartCol !== undefined && (
           <>
             <Text as="span">:</Text>

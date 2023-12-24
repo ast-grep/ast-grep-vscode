@@ -1,8 +1,10 @@
 import type { SgSearch } from '../../types'
-import { SearchInput } from './components/SearchInput'
 import { SearchResultsList } from './components/SearchResultsList/components/SearchResultsList'
 import { MatchWithFileInfo } from './components/SearchResultsList/types'
+import SearchWidgetContainer from './components/SearchWidget'
+import { SearchInput } from './components/SearchWidget/SearchInput'
 import { useSgSearch } from './postMessage'
+import { HStack, VStack } from '@chakra-ui/react'
 import { useDebounceFn, useLocalStorageState } from 'ahooks'
 import { useEffect, useState } from 'react'
 
@@ -42,11 +44,12 @@ export const SearchSidebar = () => {
 
   return (
     <div>
-      <SearchInput
-        value={inputValue}
-        onChange={setInputValue}
-        onKeyEnterUp={refreshResult}
+      <SearchWidgetContainer
+        inputValue={inputValue}
+        refreshResult={refreshResult}
+        setInputValue={setInputValue}
       />
+
       {/* debug here */}
       <SearchResultsList
         matches={result ? format(result, inputValue) : []}

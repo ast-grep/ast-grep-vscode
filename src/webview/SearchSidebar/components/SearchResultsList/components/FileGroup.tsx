@@ -77,7 +77,6 @@ export function FileGroup({
       <Flex
         position="sticky"
         top={hasWorkspace ? groupHeaderHeight : '0px'}
-        backgroundColor="var(--vscode-editor-background)"
         transition="border 0.3s ease-in-out"
         zIndex="1"
         px="1"
@@ -85,17 +84,22 @@ export function FileGroup({
         alignItems="center"
         ref={headingRef}
         maxWidth="100%"
+        cursor="pointer"
+        _hover={{
+          background: 'var(--vscode-list-inactiveSelectionBackground)'
+        }}
+        onClick={() => {
+          if (isExpanded) {
+            preventScrollJump()
+          }
+
+          setIsExpanded(!isExpanded)
+        }}
       >
         <IconButton
-          variant="customIconButton"
-          onClick={() => {
-            if (isExpanded) {
-              preventScrollJump()
-            }
-
-            setIsExpanded(!isExpanded)
-          }}
+          background="transparent"
           aria-label="expand/collapse button"
+          pointerEvents="none"
           icon={
             isExpanded ? <HiOutlineChevronDown /> : <HiOutlineChevronRight />
           }
@@ -107,14 +111,8 @@ export function FileGroup({
             filePath
           }}
           relativeFilePath={relativeFilePath}
-          onClick={() => {
-            // setIsResultFocused(true)
-          }}
           maxWidth="100%"
         />
-        {/* <Flex ml="2" mr="auto">
-          <CopyPath fullFilePath={relativeFilePath} />
-        </Flex> */}
         <Flex ml="2">({matches.length})</Flex>
       </Flex>
       <Flex

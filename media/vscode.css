@@ -1,5 +1,4 @@
 :root {
-  --container-paddding: 20px;
   --input-padding-vertical: 6px;
   --input-padding-horizontal: 4px;
   --input-margin-vertical: 4px;
@@ -7,7 +6,6 @@
 }
 
 body {
-  padding: 0 var(--container-paddding);
   /** Use important to override chakra styles */
   color: var(--vscode-foreground) !important;
   font-size: var(--vscode-font-size) !important;
@@ -26,9 +24,9 @@ form > * {
   margin-block-end: var(--input-margin-vertical);
 }
 
-*:focus {
+/* *:focus {
   outline-color: var(--vscode-focusBorder) !important;
-}
+} */
 
 a {
   color: var(--vscode-textLink-foreground);
@@ -49,29 +47,27 @@ button {
   padding: var(--input-padding-vertical) var(--input-padding-horizontal);
   width: 100%;
   text-align: center;
-  outline: 1px solid transparent;
-  outline-offset: 2px !important;
   color: var(--vscode-button-foreground);
   background: var(--vscode-button-background);
 }
 
-button:hover {
+/* button:hover {
   cursor: pointer;
   background: var(--vscode-button-hoverBackground);
 }
 
 button:focus {
   outline-color: var(--vscode-focusBorder);
-}
+} */
 
-button.secondary {
+/* button.secondary {
   color: var(--vscode-button-secondaryForeground);
   background: var(--vscode-button-secondaryBackground);
-}
+} */
 
-button.secondary:hover {
+/* button.secondary:hover {
   background: var(--vscode-button-secondaryHoverBackground);
-}
+} */
 
 input:not([type='checkbox']),
 textarea {

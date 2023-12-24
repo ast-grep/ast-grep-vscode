@@ -76,7 +76,7 @@ export function WorkspaceGroup({
           {workspace}
         </Flex>
         <Flex>({allCount})</Flex>
-        <DoubleClickButton
+        {/* <DoubleClickButton
           iconButton
           icon={<IoMdClose />}
           confirmText="Click again to remove"
@@ -89,7 +89,7 @@ export function WorkspaceGroup({
           ml="3"
           borderRadius="md"
           tooltipPlacement="bottom-end"
-        />
+        /> */}
       </Flex>
       <Flex
         width="100%"

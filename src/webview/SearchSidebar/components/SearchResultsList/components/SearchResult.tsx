@@ -127,6 +127,7 @@ export const SearchResult = memo(function SearchResult({
       {isExpanded ? (
         <Flex
           padding="5"
+          mx="20"
           background={highlightTheme.plain.backgroundColor}
           overflowX="auto"
           border={themeType !== 'dark' ? '1px solid' : ''}

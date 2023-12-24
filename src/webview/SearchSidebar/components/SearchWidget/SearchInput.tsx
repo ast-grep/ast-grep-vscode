@@ -1,3 +1,4 @@
+import { Box, Flex } from '@chakra-ui/react'
 import { VSCodeTextField } from '@vscode/webview-ui-toolkit/react'
 import { useCallback } from 'react'
 
@@ -14,7 +15,7 @@ const SearchInput = ({ value, onChange, onKeyEnterUp }: SearchInputProps) => {
   }, [])
 
   return (
-    <div style={{ display: 'flex' }}>
+    <Flex w="100%">
       <VSCodeTextField
         style={{ flex: 1 }}
         value={value}
@@ -25,7 +26,7 @@ const SearchInput = ({ value, onChange, onKeyEnterUp }: SearchInputProps) => {
           }
         }}
       ></VSCodeTextField>
-    </div>
+    </Flex>
   )
 }
 
