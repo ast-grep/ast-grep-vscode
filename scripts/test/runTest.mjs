@@ -1,6 +1,8 @@
-import * as path from 'path'
-
 import { runTests } from '@vscode/test-electron'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 async function main() {
   try {
@@ -10,12 +12,16 @@ async function main() {
 
     // The path to test runner
     // Passed to --extensionTestsPath
-    const extensionTestsPath = path.resolve(__dirname, './index')
+    const extensionTestsPath = path.resolve(__dirname, './integration-test.cjs')
 
     // Download VS Code, unzip it and run the integration test
-    await runTests({ extensionDevelopmentPath, extensionTestsPath })
+    await runTests({
+      extensionDevelopmentPath,
+      extensionTestsPath,
+      launchArgs: ['--disable-extensions']
+    })
   } catch (err) {
-    console.error('Failed to run tests')
+    console.error('Failed to run tests', err)
     process.exit(1)
   }
 }
