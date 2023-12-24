@@ -8,8 +8,18 @@
       "presentation": {
         "panel": "dedicated",
         "reveal": "never"
+      }
+    },
+    {
+      "type": "npm",
+      "script": "watch:webview",
+      "problemMatcher": "$ts-webpack-watch",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "never",
+        "group": "watchers"
       },
-      "problemMatcher": ["$tsc"]
+      "group": "build"
     },
     {
       "type": "npm",
@@ -23,7 +33,21 @@
         "panel": "dedicated",
         "reveal": "never"
       },
-      "problemMatcher": ["$tsc-watch"]
+      "problemMatcher": [
+        {
+          "base": "$ts-webpack-watch",
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": "Build start",
+            "endsPattern": "Build success"
+          }
+        }
+      ]
+    },
+    {
+      "label": "tasks: dev",
+      "dependsOn": ["npm: watch", "npm: watch:webview"],
+      "problemMatcher": []
     }
   ]
 }

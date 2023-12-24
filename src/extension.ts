@@ -22,6 +22,8 @@ import {
   Executable
 } from 'vscode-languageclient/node'
 
+import { activate as activateWebview } from './view'
+
 let client: LanguageClient
 const diagnosticCollectionName = 'ast-grep-diagnostics'
 const outputChannelName = 'ast-grep'
@@ -232,6 +234,7 @@ function activateLsp(context: ExtensionContext) {
 
 export function activate(context: ExtensionContext) {
   activateLsp(context)
+  activateWebview(context)
 }
 
 workspace.onDidChangeConfiguration(changeEvent => {
@@ -249,12 +252,15 @@ export function deactivate(): Promise<void> | undefined {
 }
 
 function groupBy<T extends object>(obj: T[], key: keyof T) {
-  return obj.reduce((acc, cur) => {
-    let k = cur[key] as string
-    if (!acc[k]) {
-      acc[k] = []
-    }
-    acc[k].push(cur)
-    return acc
-  }, {} as Record<string, T[]>)
+  return obj.reduce(
+    (acc, cur) => {
+      let k = cur[key] as string
+      if (!acc[k]) {
+        acc[k] = []
+      }
+      acc[k].push(cur)
+      return acc
+    },
+    {} as Record<string, T[]>
+  )
 }
