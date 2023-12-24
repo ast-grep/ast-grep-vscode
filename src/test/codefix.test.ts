@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import * as assert from 'assert'
 
-import { getDocUri, activate } from './helper'
+import { getDocUri, activate } from './utils'
 
 suite('Should get code action', () => {
   const docUri = getDocUri('test.ts')
