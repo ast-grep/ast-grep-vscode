@@ -87,6 +87,46 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
       const res = (await getPatternRes(payload.inputValue)) ?? []
       parentPort.postMessage('search', { ...payload, searchResult: res })
     })
+
+    parentPort.onMessage('openFile', async payload => this.openFile(payload))
+  }
+
+  private openFile = ({
+    filePath,
+    locationsToSelect
+  }: {
+    filePath: string
+    locationsToSelect?: {
+      start: {
+        column: number
+        line: number
+      }
+      end: {
+        column: number
+        line: number
+      }
+    }
+  }) => {
+    const uris = workspace.workspaceFolders
+    const { joinPath } = vscode.Uri
+
+    if (!uris?.length) {
+      return
+    }
+
+    const setting: vscode.Uri = joinPath(uris?.[0].uri, filePath)
+
+    vscode.workspace.openTextDocument(setting).then(
+      async (textDoc: vscode.TextDocument) => {
+        let mainSelection = undefined
+
+        return vscode.window.showTextDocument(textDoc, mainSelection)
+      },
+      (error: any) => {
+        console.error('error opening file', filePath)
+        console.error(error)
+      }
+    )
   }
 
   private getHtmlForWebview(webview: vscode.Webview) {

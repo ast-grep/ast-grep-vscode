@@ -271,15 +271,12 @@ export function deactivate(): Promise<void> | undefined {
 }
 
 function groupBy<T extends object>(obj: T[], key: keyof T) {
-  return obj.reduce(
-    (acc, cur) => {
-      let k = cur[key] as string
-      if (!acc[k]) {
-        acc[k] = []
-      }
-      acc[k].push(cur)
-      return acc
-    },
-    {} as Record<string, T[]>
-  )
+  return obj.reduce((acc, cur) => {
+    let k = cur[key] as string
+    if (!acc[k]) {
+      acc[k] = []
+    }
+    acc[k].push(cur)
+    return acc
+  }, {} as Record<string, T[]>)
 }

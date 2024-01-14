@@ -2,11 +2,14 @@ import type { SgSearch, ChildPort } from '../../types'
 import { useCallback, useEffect, useRef } from 'react'
 import { Unport } from 'unport'
 
-const vscode =
-  // @ts-ignore
-  acquireVsCodeApi()
 // @ts-ignore
-window.vscode = vscode
+let vscode = window.vscode
+if (!vscode) {
+  // @ts-ignore
+  vscode = acquireVsCodeApi()
+  // @ts-ignore
+  window.vscode = vscode
+}
 
 const childPort: ChildPort = new Unport()
 
@@ -51,4 +54,8 @@ export const useSgSearch = () => {
   }, [])
 
   return post
+}
+
+export const openFile = (data: { filePath: string }) => {
+  childPort.postMessage('openFile', data)
 }

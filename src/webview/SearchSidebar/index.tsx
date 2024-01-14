@@ -39,7 +39,7 @@ export const SearchSidebar = () => {
         refreshResult={refreshSearchResult}
         setInputValue={setInputValue}
       />
-      <SearchResultsList matches={searchResult} />
+      <SearchResultsList matches={searchResult} pattern={inputValue} />
     </div>
   )
 }

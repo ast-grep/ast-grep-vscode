@@ -34,6 +34,19 @@ export type Definition = {
       id: string
     }
     reload: {}
+    openFile: {
+      filePath: string
+      locationsToSelect?: {
+        start: {
+          column: number
+          line: number
+        }
+        end: {
+          column: number
+          line: number
+        }
+      }
+    }
   }
 }
 
