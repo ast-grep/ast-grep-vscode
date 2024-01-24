@@ -79,7 +79,7 @@
   },
   "devDependencies": {
     "tsx": "4.7.0",
-    "webpack": "5.89.0",
+    "webpack": "5.90.0",
     "webpack-dev-server": "4.15.1",
     "react-use": "^17.4.2",
     "tsup": "^8.0.1",
