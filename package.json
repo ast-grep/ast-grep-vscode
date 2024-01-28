@@ -91,7 +91,7 @@
     "react-dom": "^18.2.0",
     "@vscode/webview-ui-toolkit": "^1.4.0",
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.11",
-    "@swc/core": "1.3.101",
+    "@swc/core": "1.3.107",
     "swc-loader": "0.2.3",
     "@types/react": "18.2.45",
     "@types/react-dom": "18.2.18",
