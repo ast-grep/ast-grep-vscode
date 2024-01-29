@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import * as assert from 'assert'
 
-import { getDocUri, activate } from './utils'
+import { getDocUri } from './utils'
 
 suite('Should get diagnostics', () => {
   const docUri = getDocUri('test.ts')
@@ -39,8 +39,6 @@ async function testDiagnostics(
   docUri: vscode.Uri,
   expectedDiagnostics: vscode.Diagnostic[]
 ) {
-  await activate(docUri)
-
   const actualDiagnostics = vscode.languages.getDiagnostics(docUri)
   actualDiagnostics.sort((a, b) =>
     a.message === b.message ? 0 : a.message > b.message ? 1 : -1

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import * as assert from 'assert'
 
-import { getDocUri, activate } from './utils'
+import { getDocUri } from './utils'
 
 suite('Should get code action', () => {
   const docUri = getDocUri('test.ts')
@@ -37,8 +37,6 @@ async function testCodeFix(
   range: vscode.Range,
   expectedCodeActions: vscode.CodeAction[]
 ) {
-  await activate(docUri)
-
   const actualCodeActions = (await vscode.commands.executeCommand(
     'vscode.executeCodeActionProvider',
     docUri,

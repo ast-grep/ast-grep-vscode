@@ -6,20 +6,24 @@ export let editor: vscode.TextEditor
 export let documentEol: string
 export let platformEol: string
 
-const fixtureFolderUri = vscode.Uri.file(
-  path.resolve(__dirname, '../../fixture')
-)
 /**
- * Activates the vscode.lsp-sample extension
+ * Prepare the vscode environment for testing by opening the fixture folder
+ * and activating the extension.
+ *
+ * This function must be called before any tests are run.
+ * And it should only be called once
  */
-export async function activate(docUri: vscode.Uri) {
+export async function activate() {
   // The extensionId is `publisher.name` from package.json
   const ext = vscode.extensions.getExtension('ast-grep.ast-grep-vscode')!
+  const fixtureFolderUri = vscode.Uri.file(
+    path.resolve(__dirname, '../../fixture')
+  )
   await ext.activate()
   try {
     // open ast-grep project to locate sgconfig.yml
     await vscode.commands.executeCommand('vscode.openFolder', fixtureFolderUri)
-    doc = await vscode.workspace.openTextDocument(docUri)
+    doc = await vscode.workspace.openTextDocument(getDocUri('test.ts'))
     editor = await vscode.window.showTextDocument(doc)
     // enforce unix line endings, otherwise tests fail on windows
     editor.edit(builder => {
