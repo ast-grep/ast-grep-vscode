@@ -7,9 +7,10 @@ async function run() {
   // Create the mocha test
   const mocha = new Mocha({
     ui: 'tdd',
-    color: true
+    color: true,
+    timeout: 100000,
+    slow: 1000
   })
-  mocha.timeout(100000)
 
   /**
     Before any other tests, run the testSetup.ts file 
