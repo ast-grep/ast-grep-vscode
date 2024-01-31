@@ -9,3 +9,11 @@ class AnotherCase {
     return 123
   }
 }
+
+const NoProblemHere = {
+  test() {
+    if (Math.random() > 3) {
+      throw new Error('This is not an error')
+    }
+  }
+}
