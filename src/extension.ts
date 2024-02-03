@@ -238,7 +238,7 @@ function activateLsp(context: ExtensionContext) {
   client.start()
 }
 
-async function restartOnEdits(context: ExtensionContext) {
+async function watchEditsToRestartLanguageClient(context: ExtensionContext) {
   // TODO: handle case where sgconfig.yml is not in root
   // TODO: handle case where configPath is not set to sgconfig.yml
   // TODO: handle case where no workspace folder is open and then we open one
@@ -321,13 +321,12 @@ async function restartOnEdits(context: ExtensionContext) {
 }
 
 export function activate(context: ExtensionContext) {
-  restartOnEdits(context)
+  watchEditsToRestartLanguageClient(context)
   activateLsp(context)
   activateWebview(context)
 }
 
 async function restart() {
-  // console.log("RESTARTING");
   await deactivate()
   return await client.start()
 }
