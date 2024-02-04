@@ -11,15 +11,21 @@ import {
   Position,
   TextDocumentShowOptions,
   TextDocument,
+  Disposable,
   Uri,
-  ThemeIcon
+  ThemeIcon,
+  FileSystemWatcher,
+  RelativePattern
 } from 'vscode'
 
+import * as yaml from 'js-yaml'
+import path from 'path'
 import {
   LanguageClient,
   LanguageClientOptions,
   ServerOptions,
-  Executable
+  Executable,
+  State
 } from 'vscode-languageclient/node'
 
 import { activate as activateWebview } from './view'
@@ -232,9 +238,97 @@ function activateLsp(context: ExtensionContext) {
   client.start()
 }
 
+async function watchEditsToRestartLanguageClient(context: ExtensionContext) {
+  // TODO: handle case where sgconfig.yml is not in root
+  // TODO: handle case where configPath is not set to sgconfig.yml
+  // TODO: handle case where no workspace folder is open and then we open one
+  // TODO: make sure dispose actually does what it should do
+  // TODO: handle more than 1 element in ruleDirs
+
+  if (!workspace.workspaceFolders || !workspace.workspaceFolders[0]) {
+    return
+  }
+
+  let ruleWatcher: FileSystemWatcher | undefined
+  let disposables: Disposable[] = []
+  async function getRuleDirs(configPath: string): Promise<string[]> {
+    try {
+      // get the absolute URI to this relative path
+      let configUri = Uri.file(
+        workspace.workspaceFolders![0].uri.fsPath + '/' + configPath
+      )
+      // read the config file
+      let configText = await workspace.fs.readFile(configUri)
+      // parse the config file
+      let config = yaml.load(configText.toString()) as { ruleDirs: string[] }
+      // get the rules dir
+      let ruleDirs = config['ruleDirs']
+      return ruleDirs
+    } catch (e) {
+      console.error('Error parsing config file to find ruleDirs', e)
+      return ['rules']
+    }
+  }
+  async function updateRuleDirsWatcher() {
+    /* Assume that we have an open workspace folder, otherwise we won't be able to run anyway */
+    if (!workspace.workspaceFolders || !workspace.workspaceFolders[0]) {
+      return
+    }
+    let ruleDirsPath = await getRuleDirs('sgconfig.yml')
+    if (ruleWatcher !== undefined) {
+      let idx = context.subscriptions.findIndex(item => item === ruleWatcher)
+      context.subscriptions.splice(idx, 1)
+      disposables.forEach(item => item.dispose())
+      disposables = []
+    }
+    let rel = path.join(ruleDirsPath[0], '*.yml')
+    ruleWatcher = workspace.createFileSystemWatcher(
+      new RelativePattern(workspace.workspaceFolders[0].uri.fsPath, rel)
+    )
+    disposables = [
+      ruleWatcher.onDidChange(uri => {
+        console.log(`File changed: ${uri.fsPath}`)
+        restart()
+      }),
+      ruleWatcher.onDidCreate(uri => {
+        console.log(`File created: ${uri.fsPath}`)
+        restart()
+      }),
+      ruleWatcher.onDidDelete(uri => {
+        console.log(`File deleted: ${uri.fsPath}`)
+        restart()
+      })
+    ]
+    disposables.push(ruleWatcher)
+    context.subscriptions.push(ruleWatcher)
+  }
+
+  const configFileWatcher = workspace.createFileSystemWatcher(
+    new RelativePattern(
+      workspace.workspaceFolders[0].uri.fsPath,
+      'sgconfig.yml'
+    )
+  )
+
+  configFileWatcher.onDidChange(uri => {
+    console.log(`File changed: ${uri.fsPath}`)
+    updateRuleDirsWatcher()
+    restart()
+  })
+
+  context.subscriptions.push(configFileWatcher)
+  updateRuleDirsWatcher()
+}
+
 export function activate(context: ExtensionContext) {
+  watchEditsToRestartLanguageClient(context)
   activateLsp(context)
   activateWebview(context)
+}
+
+async function restart() {
+  await deactivate()
+  return await client.start()
 }
 
 workspace.onDidChangeConfiguration(changeEvent => {
