@@ -8,7 +8,8 @@ import {
   assertDiagnosticsEqual
 } from './utils'
 
-const TOO_LONG_TO_WAIT_FOR_UPDATE_AFTER_FILE_CHANGE = 5000 // ms
+const MAX_WAIT_TIME_FOR_UPDATE = 5000 // ms
+const MAX_WAIT_TIME_FOR_INITIAL_DIAGNOSTICS = 10000 // ms
 
 const docUri = getDocUri('test.ts')
 const diagnosticss = getExpectedDiagnosticss()
@@ -53,13 +54,38 @@ async function setRuleDirs(newRuleDirs: string[]) {
 }
 
 suite('Should update when files change', () => {
+  /**
+   * Before changing any files, we need to be certain that the extension is reporting the correct initial diagnostics.
+   * Locally, this test could probably be simplified to one line, but in the CI environment, the initial diagnostics may not be ready immediately.
+   */
+  test('Ensure initial diagnostics are correct', async () => {
+    try {
+      assertDiagnosticsEqual(
+        vscode.languages.getDiagnostics(docUri),
+        diagnosticss[0]
+      )
+    } catch (e) {
+      console.warn(
+        "We are testing how the extension reacts to file modifications, but the initial diagnostics are not as expected. Let's wait briefly for them to update."
+      )
+      console.warn(e)
+      try {
+        await waitForDiagnosticChange(MAX_WAIT_TIME_FOR_INITIAL_DIAGNOSTICS)
+      } catch (timeout) {
+        console.warn(
+          'Diagnostics did not update within the expected time frame.'
+        )
+        // Even though waitForDiagnosticChange timed out, let's continue and see if the diagnostics are correct now.
+      }
+      assertDiagnosticsEqual(
+        vscode.languages.getDiagnostics(docUri),
+        diagnosticss[0]
+      )
+    }
+  })
   test('Update on new rule creation', async () => {
-    assertDiagnosticsEqual(
-      vscode.languages.getDiagnostics(docUri),
-      diagnosticss[0]
-    )
     writeNewRule()
-    await waitForDiagnosticChange(TOO_LONG_TO_WAIT_FOR_UPDATE_AFTER_FILE_CHANGE)
+    await waitForDiagnosticChange(MAX_WAIT_TIME_FOR_UPDATE)
     assertDiagnosticsEqual(
       vscode.languages.getDiagnostics(docUri),
       diagnosticss[1]
@@ -67,7 +93,7 @@ suite('Should update when files change', () => {
   })
   test('Update on rule deletion', async () => {
     deleteNewRule()
-    await waitForDiagnosticChange(TOO_LONG_TO_WAIT_FOR_UPDATE_AFTER_FILE_CHANGE)
+    await waitForDiagnosticChange(MAX_WAIT_TIME_FOR_UPDATE)
     assertDiagnosticsEqual(
       vscode.languages.getDiagnostics(docUri),
       diagnosticss[2]
@@ -75,12 +101,12 @@ suite('Should update when files change', () => {
   })
   test('Update on ruleDirs change to nonexistent path', async () => {
     await setRuleDirs(['NoRules'])
-    await waitForDiagnosticChange(TOO_LONG_TO_WAIT_FOR_UPDATE_AFTER_FILE_CHANGE)
+    await waitForDiagnosticChange(MAX_WAIT_TIME_FOR_UPDATE)
     assertDiagnosticsEqual(vscode.languages.getDiagnostics(docUri), [])
   })
   test('Update on ruleDirs change back to real path', async () => {
     await setRuleDirs(['rules'])
-    await waitForDiagnosticChange(TOO_LONG_TO_WAIT_FOR_UPDATE_AFTER_FILE_CHANGE)
+    await waitForDiagnosticChange(MAX_WAIT_TIME_FOR_UPDATE)
     assertDiagnosticsEqual(
       vscode.languages.getDiagnostics(docUri),
       diagnosticss[0]
