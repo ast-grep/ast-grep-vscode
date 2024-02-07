@@ -209,10 +209,21 @@ function activateLsp(context: ExtensionContext) {
   )
 
   context.subscriptions.push(
-    workspace.onDidChangeConfiguration(changeEvent => {
+    commands.registerCommand('ast-grep.restartLanguageServer', async () => {
+      console.log(
+        'Restart the ast-grep language server by ast-grep.restart command'
+      )
+      await restart()
+    })
+  )
+
+  context.subscriptions.push(
+    workspace.onDidChangeConfiguration(async changeEvent => {
       if (changeEvent.affectsConfiguration('astGrep')) {
-        deactivate()
-        client.start()
+        console.log(
+          'Restart the ast-grep language server due to modification of vscode settings'
+        )
+        await restart()
       }
     })
   )
