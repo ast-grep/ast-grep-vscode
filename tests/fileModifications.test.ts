@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import * as yaml from 'js-yaml'
+import path from 'path'
 
 import {
   getDocUri,
@@ -16,8 +17,11 @@ const diagnosticss = getExpectedDiagnosticss()
 
 async function writeNewRule() {
   let vscodeuri = vscode.Uri.file(
-    vscode.workspace.workspaceFolders![0].uri.fsPath +
-      '/rules/no-math-random.yml'
+    path.join(
+      vscode.workspace.workspaceFolders![0].uri.fsPath,
+      'rules',
+      'no-math-random.yml'
+    )
   )
   await vscode.workspace.fs.writeFile(
     vscodeuri,
@@ -34,14 +38,17 @@ note: no Math.random()`)
 }
 async function deleteNewRule() {
   let vscodeuri = vscode.Uri.file(
-    vscode.workspace.workspaceFolders![0].uri.fsPath +
-      '/rules/no-math-random.yml'
+    path.join(
+      vscode.workspace.workspaceFolders![0].uri.fsPath,
+      'rules',
+      'no-math-random.yml'
+    )
   )
   await vscode.workspace.fs.delete(vscodeuri)
 }
 async function setRuleDirs(newRuleDirs: string[]) {
   let vscodeuri = vscode.Uri.file(
-    vscode.workspace.workspaceFolders![0].uri.fsPath + '/sgconfig.yml'
+    path.join(vscode.workspace.workspaceFolders![0].uri.fsPath, 'sgconfig.yml')
   )
   let content = await vscode.workspace.fs.readFile(vscodeuri)
   let configText = new TextDecoder().decode(content)
