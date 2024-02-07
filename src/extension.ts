@@ -154,61 +154,70 @@ interface ScanResult {
 }
 
 function activateLsp(context: ExtensionContext) {
-  let disposable = commands.registerCommand('ast-grep.search', async _uri => {
-    let curWorkspace = workspace.workspaceFolders?.[0]
-    if (!curWorkspace) {
-      return
-    }
-    const referenceView = await extensions
-      .getExtension('vscode.references-view')
-      ?.activate()
-    let pattern
-    try {
-      pattern = await window.showInputBox({})
-    } catch {
-      return
-    }
-    if (!pattern) {
-      return
-    }
-    let res = await client.sendRequest<ScanResult[]>('ast-grep/search', {
-      pattern: pattern
+  context.subscriptions.push(
+    commands.registerCommand('ast-grep.search', async _uri => {
+      let curWorkspace = workspace.workspaceFolders?.[0]
+      if (!curWorkspace) {
+        return
+      }
+      const referenceView = await extensions
+        .getExtension('vscode.references-view')
+        ?.activate()
+      let pattern
+      try {
+        pattern = await window.showInputBox({})
+      } catch {
+        return
+      }
+      if (!pattern) {
+        return
+      }
+      let res = await client.sendRequest<ScanResult[]>('ast-grep/search', {
+        pattern: pattern
+      })
+
+      let treeItemList: AstGrepScanTreeItem[] = []
+      let grouped = groupBy(res, 'uri')
+      for (let uri of Object.keys(grouped)) {
+        let scanResultList = grouped[uri]
+        for (let element of scanResultList) {
+          treeItemList.push(
+            new AstGrepScanTreeItem({
+              source: element.content,
+              range: element.position,
+              uri: element.uri
+            })
+          )
+        }
+      }
+      let provider = new NodeDependenciesProvider(grouped)
+
+      let symbolTreeInput = {
+        contextValue: 'ast-grep',
+        title: 'ast-grep',
+        location: {
+          uri: window.activeTextEditor?.document.uri,
+          range: new Range(new Position(0, 0), new Position(0, 0))
+        },
+        resolve() {
+          return provider
+        },
+        with() {
+          return symbolTreeInput
+        }
+      }
+      referenceView.setInput(symbolTreeInput)
     })
+  )
 
-    let treeItemList: AstGrepScanTreeItem[] = []
-    let grouped = groupBy(res, 'uri')
-    for (let uri of Object.keys(grouped)) {
-      let scanResultList = grouped[uri]
-      for (let element of scanResultList) {
-        treeItemList.push(
-          new AstGrepScanTreeItem({
-            source: element.content,
-            range: element.position,
-            uri: element.uri
-          })
-        )
+  context.subscriptions.push(
+    workspace.onDidChangeConfiguration(changeEvent => {
+      if (changeEvent.affectsConfiguration('astGrep')) {
+        deactivate()
+        client.start()
       }
-    }
-    let provider = new NodeDependenciesProvider(grouped)
-
-    let symbolTreeInput = {
-      contextValue: 'ast-grep',
-      title: 'ast-grep',
-      location: {
-        uri: window.activeTextEditor?.document.uri,
-        range: new Range(new Position(0, 0), new Position(0, 0))
-      },
-      resolve() {
-        return provider
-      },
-      with() {
-        return symbolTreeInput
-      }
-    }
-    referenceView.setInput(symbolTreeInput)
-  })
-
-  context.subscriptions.push(disposable)
+    })
+  )
 
   // instantiate and set input which updates the view
   // If the extension is launched in debug mode then the debug server options are used
@@ -330,13 +339,6 @@ async function restart() {
   await deactivate()
   return await client.start()
 }
-
-workspace.onDidChangeConfiguration(changeEvent => {
-  if (changeEvent.affectsConfiguration('astGrep')) {
-    deactivate()
-    client.start()
-  }
-})
 
 export function deactivate(): Promise<void> | undefined {
   if (!client) {
