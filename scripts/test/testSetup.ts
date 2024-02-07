@@ -1,4 +1,4 @@
-import { activate } from '../../src/test/utils'
+import { activate } from '../../tests/utils'
 /**
  * This initialization runs once, before the rest of the tests.
  * It is used to open the test fixture folder and activate the extension.

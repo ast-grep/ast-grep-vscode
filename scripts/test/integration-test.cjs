@@ -2,6 +2,8 @@ const path = require('node:path')
 const Mocha = require('mocha')
 const glob = require('glob')
 
+const TESTS_ROOT = path.join(__dirname, '../../tests')
+
 async function run() {
   await import('tsx')
   // Create the mocha test
@@ -13,7 +15,7 @@ async function run() {
   })
 
   /**
-    Before any other tests, run the testSetup.ts file 
+    Before any other tests, run the testSetup.ts file
     This will set up the test environment necessary for the other tests to run
   */
   mocha.addFile(path.join(__dirname, 'testSetup.ts'))
@@ -25,14 +27,13 @@ async function run() {
    * So you could play with sort order on the tests to investigate
    */
   try {
-    const testsRoot = path.join(__dirname, '../../src/test')
-    let files = await glob('**.test.ts', { cwd: testsRoot })
+    let files = await glob('**.test.ts', { cwd: TESTS_ROOT })
     // Add files to the test suite
     files.sort((a, b) => {
       return a.localeCompare(b)
     })
     files.forEach(f => {
-      mocha.addFile(path.resolve(testsRoot, f))
+      mocha.addFile(path.resolve(TESTS_ROOT, f))
     })
 
     return new Promise((resolve, reject) => {
