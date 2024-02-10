@@ -59,61 +59,9 @@ export const assertDiagnosticsEqual = (
 }
 
 /**
- * Generic function that takes a callback-based function and converts it to a Promise-based function
- * It would also be reasonable to import this from a library like util.promisify
- * @param func The callback-based function to be converted (think 'setTimeout')
- * @param optionalTimeout The optional timeout in milliseconds to wait for the callback to be called
- * @param errorText The optional error text to throw if the timeout is reached
- */
-const promisify =
-  (func: Function, optionalTimeout?: number, errorText: string = 'Timeout') =>
-  (...args: any[]) => {
-    const mainPromise = new Promise((resolve, _) =>
-      func(...args, (result: any) => resolve(result))
-    )
-    if (optionalTimeout !== undefined) {
-      return Promise.race([
-        mainPromise,
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error(errorText)), optionalTimeout)
-        )
-      ])
-    } else {
-      return mainPromise
-    }
-  }
-
-/**
- * Helper function allowing us to wait for a vscode.DiagnosticChangeEvent to be fired
- * This is useful for tests where we modify a file and then want to wait for the diagnostics to be updated
- * @param optionalTimeout The optional timeout in milliseconds to wait for the callback to be called. If no timeout is provided, the function will wait indefinitely.
- *
- */
-export const waitForDiagnosticChange = async (optionalTimeout?: number) => {
-  let disposable: vscode.Disposable | undefined
-  try {
-    return await promisify(
-      (handler: (e: vscode.DiagnosticChangeEvent) => vscode.Disposable) => {
-        disposable = vscode.languages.onDidChangeDiagnostics(handler)
-        return disposable
-      },
-      optionalTimeout,
-      'Took too long waiting for diagnostics to change. Limit was set at ' +
-        optionalTimeout +
-        'ms'
-    )()
-  } finally {
-    if (disposable) {
-      disposable.dispose()
-    }
-  }
-}
-
-/**
  * @param ms The number of milliseconds to sleep
- * @returns
  */
-async function sleep(ms: number) {
+export async function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
