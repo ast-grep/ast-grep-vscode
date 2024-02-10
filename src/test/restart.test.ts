@@ -11,13 +11,13 @@ suite('ast-grep.restartLanguageServer should work', () => {
     // remove configFile should receive no diagnostics
     await vscode.workspace.fs.rename(sgConfigYml, tempSgConfigYml)
     await vscode.commands.executeCommand('ast-grep.restartLanguageServer')
-    await sleep(2000)
+    await sleep(3000)
     await testDiagnostics(docUri, [])
 
     // should receive diagnostics after add configFile
     await vscode.workspace.fs.rename(tempSgConfigYml, sgConfigYml)
     await vscode.commands.executeCommand('ast-grep.restartLanguageServer')
-    await sleep(2000)
+    await sleep(3000)
     await testDiagnostics(docUri, [
       {
         message: 'No console.log',
