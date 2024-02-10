@@ -67,6 +67,7 @@
     "test": "node ./scripts/test/runTest.mjs",
     "compile": "cross-env NODE_ENV=production tsup",
     "typecheck": "tsc --noEmit",
+    "prettier:check": "prettier --check .",
     "watch": "cross-env NODE_ENV=development tsup --watch",
     "watch:webview": "cross-env NODE_ENV=development node ./scripts/dev/start.js",
     "prepare": "husky install"
