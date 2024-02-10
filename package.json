@@ -101,7 +101,7 @@
     "@types/js-yaml": "4.0.9",
     "@types/mocha": "10.0.0",
     "@types/node": "20.0.0",
-    "@types/vscode": "1.73.0",
+    "@types/vscode": "1.86.0",
     "@vscode/test-electron": "2.3.9",
     "cross-env": "7.0.3",
     "tslib": "2.6.2",
