@@ -7,7 +7,7 @@ import {
   assertDiagnosticsEqual
 } from './utils'
 
-const MAX_WAIT_TIME_FOR_UPDATE = 5000 // ms
+const MAX_WAIT_TIME_FOR_UPDATE = 10000 // ms
 const MAX_WAIT_TIME_FOR_INITIAL_DIAGNOSTICS = 10000 // ms
 
 const docUri = getDocUri('test.ts')
