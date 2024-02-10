@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
-import * as assert from 'assert'
 
-import { getDocUri } from './utils'
+import { getDocUri, testDiagnostics, toRange } from './utils'
 
 suite('Should get diagnostics', () => {
   const docUri = getDocUri('test.ts')
@@ -28,28 +27,3 @@ suite('Should get diagnostics', () => {
     ])
   })
 })
-
-function toRange(sLine: number, sChar: number, eLine: number, eChar: number) {
-  const start = new vscode.Position(sLine, sChar)
-  const end = new vscode.Position(eLine, eChar)
-  return new vscode.Range(start, end)
-}
-
-async function testDiagnostics(
-  docUri: vscode.Uri,
-  expectedDiagnostics: vscode.Diagnostic[]
-) {
-  const actualDiagnostics = vscode.languages.getDiagnostics(docUri)
-  actualDiagnostics.sort((a, b) =>
-    a.message === b.message ? 0 : a.message > b.message ? 1 : -1
-  )
-
-  assert.equal(actualDiagnostics.length, expectedDiagnostics.length)
-
-  expectedDiagnostics.forEach((expectedDiagnostic, i) => {
-    const actualDiagnostic = actualDiagnostics[i]
-    assert.equal(actualDiagnostic.message, expectedDiagnostic.message)
-    assert.deepEqual(actualDiagnostic.range, expectedDiagnostic.range)
-    assert.equal(actualDiagnostic.severity, expectedDiagnostic.severity)
-  })
-}
