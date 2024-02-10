@@ -1,17 +1,15 @@
 import * as vscode from 'vscode'
 import * as yaml from 'js-yaml'
 
-import {
-  getDocUri,
-  waitForDiagnosticChange,
-  assertDiagnosticsEqual
-} from './utils'
-
-const MAX_WAIT_TIME_FOR_UPDATE = 30000 // ms
-const MAX_WAIT_TIME_FOR_INITIAL_DIAGNOSTICS = 10000 // ms
+import { getDocUri, sleep, assertDiagnosticsEqual } from './utils'
 
 const docUri = getDocUri('test.ts')
-const diagnosticss = getExpectedDiagnosticss()
+const diagnostics = getExpectedDiagnosticss()
+
+// Code cannot guarantee file change event is propagated to host system.
+// Thus watching new diagnostics is not reliable.
+// We should look at eventual consistency. Just Wait.
+const WAIT_FOR_FS_CHANGE = 300
 
 async function writeNewRule() {
   let vscodeuri = vscode.Uri.file(
@@ -58,57 +56,39 @@ suite('Should update when files change', () => {
    * Locally, this test could probably be simplified to one line, but in the CI environment, the initial diagnostics may not be ready immediately.
    */
   test('Ensure initial diagnostics are correct', async () => {
-    try {
-      assertDiagnosticsEqual(
-        vscode.languages.getDiagnostics(docUri),
-        diagnosticss[0]
-      )
-    } catch (e) {
-      console.warn(
-        "We are testing how the extension reacts to file modifications, but the initial diagnostics are not as expected. Let's wait briefly for them to update."
-      )
-      console.warn(e)
-      try {
-        await waitForDiagnosticChange(MAX_WAIT_TIME_FOR_INITIAL_DIAGNOSTICS)
-      } catch (timeout) {
-        console.warn(
-          'Diagnostics did not update within the expected time frame.'
-        )
-        // Even though waitForDiagnosticChange timed out, let's continue and see if the diagnostics are correct now.
-      }
-      assertDiagnosticsEqual(
-        vscode.languages.getDiagnostics(docUri),
-        diagnosticss[0]
-      )
-    }
+    await sleep(WAIT_FOR_FS_CHANGE)
+    assertDiagnosticsEqual(
+      vscode.languages.getDiagnostics(docUri),
+      diagnostics[0]
+    )
   })
   test('Update on new rule creation', async () => {
     writeNewRule()
-    await waitForDiagnosticChange(MAX_WAIT_TIME_FOR_UPDATE)
+    await sleep(WAIT_FOR_FS_CHANGE)
     assertDiagnosticsEqual(
       vscode.languages.getDiagnostics(docUri),
-      diagnosticss[1]
+      diagnostics[1]
     )
   })
   test('Update on rule deletion', async () => {
     deleteNewRule()
-    await waitForDiagnosticChange(MAX_WAIT_TIME_FOR_UPDATE)
+    await sleep(WAIT_FOR_FS_CHANGE)
     assertDiagnosticsEqual(
       vscode.languages.getDiagnostics(docUri),
-      diagnosticss[2]
+      diagnostics[2]
     )
   })
   test('Update on ruleDirs change to nonexistent path', async () => {
     await setRuleDirs(['NoRules'])
-    await waitForDiagnosticChange(MAX_WAIT_TIME_FOR_UPDATE)
+    await sleep(WAIT_FOR_FS_CHANGE)
     assertDiagnosticsEqual(vscode.languages.getDiagnostics(docUri), [])
   })
   test('Update on ruleDirs change back to real path', async () => {
     await setRuleDirs(['rules'])
-    await waitForDiagnosticChange(MAX_WAIT_TIME_FOR_UPDATE)
+    await sleep(WAIT_FOR_FS_CHANGE)
     assertDiagnosticsEqual(
       vscode.languages.getDiagnostics(docUri),
-      diagnosticss[0]
+      diagnostics[0]
     )
   })
 })
