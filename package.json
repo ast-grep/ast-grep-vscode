@@ -107,7 +107,7 @@
     "tslib": "2.6.2",
     "glob": "9.3.5",
     "husky": "9.0.10",
-    "lint-staged": "15.0.0",
+    "lint-staged": "15.2.2",
     "mocha": "10.1.0",
     "prettier": "3.2.5",
     "typescript": "5.3.3"
