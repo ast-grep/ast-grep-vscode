@@ -4,7 +4,7 @@
     "target": "es2020",
     "lib": ["es2020", "DOM"],
     "outDir": "out",
-    "rootDir": "src",
+    "rootDir": ".",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -12,6 +12,6 @@
     "skipLibCheck": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"],
+  "include": ["src", "tests"],
   "exclude": ["node_modules", ".vscode-test"]
 }

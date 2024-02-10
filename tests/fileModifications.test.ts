@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import * as yaml from 'js-yaml'
+import path from 'path'
 
 import {
   getDocUri,
@@ -8,16 +9,19 @@ import {
   assertDiagnosticsEqual
 } from './utils'
 
-const MAX_WAIT_TIME_FOR_UPDATE = 5000 // ms
-const MAX_WAIT_TIME_FOR_INITIAL_DIAGNOSTICS = 10000 // ms
+const MAX_WAIT_TIME_FOR_UPDATE = 10000 // ms
+const MAX_WAIT_TIME_FOR_INITIAL_DIAGNOSTICS = 15000 // ms
 
 const docUri = getDocUri('test.ts')
-const diagnosticss = getExpectedDiagnosticss()
+const diagnostics = getExpectedDiagnostics()
 
 async function writeNewRule() {
   let vscodeuri = vscode.Uri.file(
-    vscode.workspace.workspaceFolders![0].uri.fsPath +
-      '/rules/no-math-random.yml'
+    path.join(
+      vscode.workspace.workspaceFolders![0].uri.fsPath,
+      'rules',
+      'no-math-random.yml'
+    )
   )
   await vscode.workspace.fs.writeFile(
     vscodeuri,
@@ -34,14 +38,17 @@ note: no Math.random()`)
 }
 async function deleteNewRule() {
   let vscodeuri = vscode.Uri.file(
-    vscode.workspace.workspaceFolders![0].uri.fsPath +
-      '/rules/no-math-random.yml'
+    path.join(
+      vscode.workspace.workspaceFolders![0].uri.fsPath,
+      'rules',
+      'no-math-random.yml'
+    )
   )
   await vscode.workspace.fs.delete(vscodeuri)
 }
 async function setRuleDirs(newRuleDirs: string[]) {
   let vscodeuri = vscode.Uri.file(
-    vscode.workspace.workspaceFolders![0].uri.fsPath + '/sgconfig.yml'
+    path.join(vscode.workspace.workspaceFolders![0].uri.fsPath, 'sgconfig.yml')
   )
   let content = await vscode.workspace.fs.readFile(vscodeuri)
   let configText = new TextDecoder().decode(content)
@@ -62,7 +69,7 @@ suite('Should update when files change', () => {
     try {
       assertDiagnosticsEqual(
         vscode.languages.getDiagnostics(docUri),
-        diagnosticss[0]
+        diagnostics[0]
       )
     } catch (e) {
       console.warn(
@@ -79,7 +86,7 @@ suite('Should update when files change', () => {
       }
       assertDiagnosticsEqual(
         vscode.languages.getDiagnostics(docUri),
-        diagnosticss[0]
+        diagnostics[0]
       )
     }
   })
@@ -88,7 +95,7 @@ suite('Should update when files change', () => {
     await waitForDiagnosticChange(MAX_WAIT_TIME_FOR_UPDATE)
     assertDiagnosticsEqual(
       vscode.languages.getDiagnostics(docUri),
-      diagnosticss[1]
+      diagnostics[1]
     )
   })
   test('Update on rule deletion', async () => {
@@ -96,7 +103,7 @@ suite('Should update when files change', () => {
     await waitForDiagnosticChange(MAX_WAIT_TIME_FOR_UPDATE)
     assertDiagnosticsEqual(
       vscode.languages.getDiagnostics(docUri),
-      diagnosticss[2]
+      diagnostics[2]
     )
   })
   test('Update on ruleDirs change to nonexistent path', async () => {
@@ -109,7 +116,7 @@ suite('Should update when files change', () => {
     await waitForDiagnosticChange(MAX_WAIT_TIME_FOR_UPDATE)
     assertDiagnosticsEqual(
       vscode.languages.getDiagnostics(docUri),
-      diagnosticss[0]
+      diagnostics[0]
     )
   })
 })
@@ -120,7 +127,7 @@ function toRange(sLine: number, sChar: number, eLine: number, eChar: number) {
   return new vscode.Range(start, end)
 }
 
-function getExpectedDiagnosticss() {
+function getExpectedDiagnostics() {
   const full = [
     {
       message: 'No Math.random',

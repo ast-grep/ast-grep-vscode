@@ -5,6 +5,8 @@ import * as assert from 'assert'
 export let doc: vscode.TextDocument
 export let editor: vscode.TextEditor
 
+const FIXTURE_PATH = path.resolve(__dirname, '../fixture')
+
 /**
  * Prepare the vscode environment for testing by opening the fixture folder
  * and activating the extension.
@@ -15,9 +17,7 @@ export let editor: vscode.TextEditor
 export async function activate() {
   // The extensionId is `publisher.name` from package.json
   const ext = vscode.extensions.getExtension('ast-grep.ast-grep-vscode')!
-  const fixtureFolderUri = vscode.Uri.file(
-    path.resolve(__dirname, '../../fixture')
-  )
+  const fixtureFolderUri = vscode.Uri.file(FIXTURE_PATH)
   await ext.activate()
   try {
     // open ast-grep project to locate sgconfig.yml
@@ -118,7 +118,7 @@ async function sleep(ms: number) {
 }
 
 export const getDocPath = (p: string) => {
-  return path.resolve(__dirname, '../../fixture', p)
+  return path.resolve(FIXTURE_PATH, p)
 }
 export const getDocUri = (p: string) => {
   return vscode.Uri.file(getDocPath(p))

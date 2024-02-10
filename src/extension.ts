@@ -264,7 +264,7 @@ async function watchEditsToRestartLanguageClient(context: ExtensionContext) {
     try {
       // get the absolute URI to this relative path
       let configUri = Uri.file(
-        workspace.workspaceFolders![0].uri.fsPath + '/' + configPath
+        path.join(workspace.workspaceFolders![0].uri.fsPath, configPath)
       )
       // read the config file
       let configText = await workspace.fs.readFile(configUri)
