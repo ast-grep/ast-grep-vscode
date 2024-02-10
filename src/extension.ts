@@ -344,9 +344,11 @@ export function activate(context: ExtensionContext) {
   activateWebview(context)
 }
 
-async function restart() {
+async function restart(): Promise<void> {
   await deactivate()
-  return await client.start()
+  if (client) {
+    await client.start()
+  }
 }
 
 export function deactivate(): Promise<void> | undefined {
