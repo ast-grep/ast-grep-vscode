@@ -13,7 +13,7 @@ async function run() {
   })
 
   /**
-    Before any other tests, run the testSetup.ts file 
+    Before any other tests, run the testSetup.ts file
     This will set up the test environment necessary for the other tests to run
   */
   mocha.addFile(path.join(__dirname, 'testSetup.ts'))
@@ -24,30 +24,26 @@ async function run() {
    * But side effects are possible and therefore test order could matter
    * So you could play with sort order on the tests to investigate
    */
-  try {
-    const testsRoot = path.join(__dirname, '../../src/test')
-    let files = await glob('**.test.ts', { cwd: testsRoot })
-    // Add files to the test suite
-    files.sort((a, b) => {
-      return a.localeCompare(b)
-    })
-    files.forEach(f => {
-      mocha.addFile(path.resolve(testsRoot, f))
-    })
+  const testsRoot = path.join(__dirname, '../../src/test')
+  let files = await glob('**.test.ts', { cwd: testsRoot })
+  // Add files to the test suite
+  files.sort((a, b) => {
+    return a.localeCompare(b)
+  })
+  files.forEach(f => {
+    mocha.addFile(path.resolve(testsRoot, f))
+  })
 
-    return new Promise((resolve, reject) => {
-      // Run the mocha test
-      mocha.run(failures => {
-        if (failures > 0) {
-          reject(new Error(`${failures} tests failed.`))
-        } else {
-          resolve()
-        }
-      })
+  return new Promise((resolve, reject) => {
+    // Run the mocha test
+    mocha.run(failures => {
+      if (failures > 0) {
+        reject(new Error(`${failures} tests failed.`))
+      } else {
+        resolve()
+      }
     })
-  } catch (err) {
-    console.error(err)
-  }
+  })
 }
 
 module.exports.run = run
