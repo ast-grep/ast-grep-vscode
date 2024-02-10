@@ -15,17 +15,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v3
         with:
-          node-version: 18
+          version: 8
       - name: Install sg
-        run: npm install -g @ast-grep/cli
+        run: pnpm install -g @ast-grep/cli
       - name: Install deps
-        run: npm install
+        run: pnpm install
       - name: Compile
-        run: npm run compile
+        run: pnpm run compile
       - name: Run headless test
         uses: GabrielBB/xvfb-action@v1.6
         with:
-          run: npm test
+          run: pnpm test
