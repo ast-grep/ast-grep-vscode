@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import * as yaml from 'js-yaml'
 
-import { getDocUri, sleep, assertDiagnosticsEqual } from './utils'
+import { getDocUri, sleep, assertDiagnosticsEqual, toRange } from './utils'
 
 const docUri = getDocUri('test.ts')
 const diagnostics = getExpectedDiagnosticss()
@@ -92,12 +92,6 @@ suite('Should update when files change', () => {
     )
   })
 })
-
-function toRange(sLine: number, sChar: number, eLine: number, eChar: number) {
-  const start = new vscode.Position(sLine, sChar)
-  const end = new vscode.Position(eLine, eChar)
-  return new vscode.Range(start, end)
-}
 
 function getExpectedDiagnosticss() {
   const full = [
