@@ -1,6 +1,6 @@
 const path = require('node:path')
 const Mocha = require('mocha')
-const glob = require('glob')
+const { glob } = require('fast-glob')
 
 async function run() {
   await import('tsx')
