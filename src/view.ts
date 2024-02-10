@@ -43,13 +43,14 @@ async function getPatternRes(pattern: string) {
 class SearchSidebarProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'ast-grep.search.panel'
 
+  // @ts-expect-error
   private _view?: vscode.WebviewView
 
   constructor(private readonly _extensionUri: vscode.Uri) {}
 
   public resolveWebviewView(
     webviewView: vscode.WebviewView,
-    context: vscode.WebviewViewResolveContext,
+    _context: vscode.WebviewViewResolveContext,
     _token: vscode.CancellationToken
   ) {
     this._view = webviewView

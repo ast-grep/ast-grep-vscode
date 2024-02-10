@@ -1,5 +1,5 @@
 import { SearchInput } from './comps/SearchInput'
-import { Center, HStack, IconButton, VStack } from '@chakra-ui/react'
+import { Center, HStack, VStack } from '@chakra-ui/react'
 import { useBoolean } from 'react-use'
 import { HiOutlineChevronDown, HiOutlineChevronRight } from 'react-icons/hi'
 

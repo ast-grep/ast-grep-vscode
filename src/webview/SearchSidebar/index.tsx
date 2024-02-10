@@ -1,9 +1,9 @@
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import type { SgSearch } from '../../types'
 import SearchResultsList from './SearchResultList'
 import SearchWidgetContainer from './SearchWidgetContainer'
 import { useSgSearch } from './postMessage'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useDebounce, useLocalStorage } from 'react-use'
 
 const useSearchResult = (inputValue: string) => {

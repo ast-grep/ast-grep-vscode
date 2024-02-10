@@ -10,7 +10,6 @@ import {
   TreeDataProvider,
   Position,
   TextDocumentShowOptions,
-  TextDocument,
   Disposable,
   Uri,
   ThemeIcon,
@@ -24,8 +23,7 @@ import {
   LanguageClient,
   LanguageClientOptions,
   ServerOptions,
-  Executable,
-  State
+  Executable
 } from 'vscode-languageclient/node'
 
 import { activate as activateWebview } from './view'

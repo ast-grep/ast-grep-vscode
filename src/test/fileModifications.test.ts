@@ -3,7 +3,6 @@ import * as yaml from 'js-yaml'
 
 import {
   getDocUri,
-  activate,
   waitForDiagnosticChange,
   assertDiagnosticsEqual
 } from './utils'

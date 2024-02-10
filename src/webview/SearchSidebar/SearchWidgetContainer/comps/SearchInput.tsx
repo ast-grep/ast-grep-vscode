@@ -1,4 +1,4 @@
-import { Box, Flex } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { VSCodeTextField } from '@vscode/webview-ui-toolkit/react'
 import { useCallback } from 'react'
 
