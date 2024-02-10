@@ -18,7 +18,6 @@ const SearchInput = ({ value, onChange, onKeyEnterUp }: SearchInputProps) => {
   )
 
   return (
-    // @ts-expect-error
     <Flex w="100%">
       <VSCodeTextField
         style={{ flex: 1 }}
