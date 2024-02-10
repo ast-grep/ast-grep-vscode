@@ -9,7 +9,7 @@ const diagnostics = getExpectedDiagnosticss()
 // Code cannot guarantee file change event is propagated to host system.
 // Thus watching new diagnostics is not reliable.
 // We should look at eventual consistency. Just Wait.
-const WAIT_FOR_FS_CHANGE = 300
+const WAIT_FOR_FS_CHANGE = 400
 
 async function writeNewRule() {
   let vscodeuri = vscode.Uri.file(
