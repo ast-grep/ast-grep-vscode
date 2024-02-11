@@ -23,14 +23,6 @@ childPort.implementChannel({
   }
 })
 
-if (process.env.NODE_ENV !== 'production') {
-  // @ts-ignore
-  window.__reload__ = function () {
-    console.log('post message to vscode to reload!')
-    childPort.postMessage('reload', {})
-  }
-}
-
 export const useSgSearch = () => {
   const resolveMap = useRef(
     new Map<string, (val: any | PromiseLike<any>) => void>()
