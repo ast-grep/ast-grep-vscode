@@ -55,17 +55,29 @@
         }
       }
     },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "ast-grep-sidebar-view",
+          "title": "ast-grep",
+          "icon": "media/favicon.svg"
+        }
+      ]
+    },
     "views": {
-      "explorer": [
+      "ast-grep-sidebar-view": [
         {
           "type": "webview",
           "id": "ast-grep.search.panel",
-          "name": "ast-grep.search.panel"
+          "name": "Structural Search"
         }
       ]
     }
   },
   "qna": "https://github.com/ast-grep/ast-grep/discussions",
+  "sponsor": {
+    "url": "https://github.com/sponsors/HerringtonDarkholme"
+  },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "pretest": "npm run compile",
