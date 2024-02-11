@@ -28,7 +28,7 @@ export async function activate() {
     await editor.edit(builder => {
       builder.setEndOfLine(vscode.EndOfLine.LF)
     })
-    await sleep(2000) // Wait for server activation
+    await sleep(1000) // Wait for server activation
   } catch (e) {
     console.error(e)
   }
