@@ -9,7 +9,17 @@
         "panel": "dedicated",
         "reveal": "never"
       },
-      "problemMatcher": []
+      "problemMatcher": [
+        {
+          // custom pattern to match error, e.g.
+          // ✘ [ERROR] Expected "}" but found "TreeItem"
+          "owner": "tsup",
+          "pattern": {
+            "regexp": "\\[ERROR\\]\\s(.+)$",
+            "message": 1
+          }
+        }
+      ]
     },
     {
       "type": "npm",
@@ -23,7 +33,20 @@
         "panel": "dedicated",
         "reveal": "never"
       },
-      "problemMatcher": []
+      "problemMatcher": [
+        {
+          "owner": "tsup",
+          "pattern": {
+            "regexp": "\\[ERROR\\]\\s(.+)$",
+            "message": 1
+          },
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": "Build start",
+            "endsPattern": "Build success"
+          }
+        }
+      ]
     }
   ]
 }
