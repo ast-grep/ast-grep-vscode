@@ -90,20 +90,9 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
   }
 
   private getHtmlForWebview(webview: vscode.Webview) {
-    const localPort = 3000
-    const localServerUrl = `http://localhost:${localPort}/index.js`
-
-    const scriptUri =
-      process.env.NODE_ENV !== 'production'
-        ? localServerUrl
-        : webview.asWebviewUri(
-            vscode.Uri.joinPath(
-              this._extensionUri,
-              'out',
-              'webview',
-              'index.js'
-            )
-          )
+    const scriptUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, 'out', 'webview', 'index.js')
+    )
 
     const stylesResetUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, 'media', 'reset.css')
