@@ -2,11 +2,13 @@ import type { SgSearch, ChildPort } from '../../types'
 import { useCallback, useEffect, useRef } from 'react'
 import { Unport } from 'unport'
 
-const vscode =
-  // @ts-ignore
-  acquireVsCodeApi()
 // @ts-ignore
-window.vscode = vscode
+if (!window.vscode) {
+  // @ts-ignore
+  window.vscode = acquireVsCodeApi()
+}
+// @ts-ignore
+let vscode = window.vscode
 
 const childPort: ChildPort = new Unport()
 

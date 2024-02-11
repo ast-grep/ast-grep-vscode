@@ -15,7 +15,7 @@ const useSearchResult = (inputValue: string) => {
       const res = await postExtension(inputValue)
       setResult(res)
     })()
-  }, [postExtension, setResult])
+  }, [postExtension, setResult, inputValue])
 
   useDebounce(refreshSearchResult, 400, [inputValue])
 
