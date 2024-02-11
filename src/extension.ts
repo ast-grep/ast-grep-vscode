@@ -100,10 +100,8 @@ type Dictionary<T> = { [key: string]: T }
 export class NodeDependenciesProvider
   implements TreeDataProvider<AstGrepScanTreeItem>
 {
-  constructor(private scanResultDict: Dictionary<ScanResult[]>) {
-    // @ts-ignore
-    this.provider = this
-  }
+  provider = this
+  constructor(private scanResultDict: Dictionary<ScanResult[]>) {}
 
   getTreeItem(element: AstGrepScanTreeItem): TreeItem {
     // only add iconPath if the element is not a file item
@@ -200,19 +198,13 @@ function activateLsp(context: ExtensionContext) {
         }
       }
       referenceView.setInput(symbolTreeInput)
-    })
-  )
-
-  context.subscriptions.push(
+    }),
     commands.registerCommand('ast-grep.restartLanguageServer', async () => {
       console.log(
         'Restart the ast-grep language server by ast-grep.restart command'
       )
       await restart()
-    })
-  )
-
-  context.subscriptions.push(
+    }),
     workspace.onDidChangeConfiguration(async changeEvent => {
       if (changeEvent.affectsConfiguration('astGrep')) {
         console.log(
