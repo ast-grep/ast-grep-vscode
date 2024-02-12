@@ -78,20 +78,8 @@ class AstGrepScanTreeItem extends TreeItem {
     }
   }
 
-  static isFileItem(item?: FileItem | SearchItem): item is FileItem {
-    if (item) {
-      return 'uri' in item
-    } else {
-      return false
-    }
-  }
-
-  static isSearchItem(item?: FileItem | SearchItem): item is SearchItem {
-    if (item) {
-      return 'source' in item
-    } else {
-      return false
-    }
+  static isSearchItem(item: FileItem | SearchItem): item is SearchItem {
+    return 'source' in item
   }
 }
 
@@ -115,25 +103,24 @@ class NodeDependenciesProvider
   }
 
   getChildren(element?: AstGrepScanTreeItem): Thenable<AstGrepScanTreeItem[]> {
-    if (AstGrepScanTreeItem.isSearchItem(element?.item)) {
+    if (!element) {
+      let list = Object.keys(this.scanResultDict).map(uri => {
+        return new AstGrepScanTreeItem({ uri })
+      })
+      return Promise.resolve(list)
+    }
+    if (AstGrepScanTreeItem.isSearchItem(element.item)) {
       return Promise.resolve([])
     }
-    if (element) {
-      let uri = element.item.uri
-      let list = this.scanResultDict[uri].map(item => {
-        return new AstGrepScanTreeItem({
-          uri: item.uri,
-          source: item.content,
-          range: item.position
-        })
+    let uri = element.item.uri
+    let list = this.scanResultDict[uri].map(item => {
+      return new AstGrepScanTreeItem({
+        uri: item.uri,
+        source: item.content,
+        range: item.position
       })
-      return Promise.resolve(list)
-    } else {
-      let list = Object.keys(this.scanResultDict).map(key => {
-        return new AstGrepScanTreeItem({ uri: key })
-      })
-      return Promise.resolve(list)
-    }
+    })
+    return Promise.resolve(list)
   }
 
   updateResult(res: ScanResult[]) {
