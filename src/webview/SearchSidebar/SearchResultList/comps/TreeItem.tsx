@@ -56,6 +56,9 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
                 w="100%"
                 justifyContent="flex-start"
                 key={file + range.start.line + range.start.column}
+                _hover={{
+                  background: 'var(--vscode-list-inactiveSelectionBackground)'
+                }}
               >
                 <Box w="20px" />
                 <CodeBlock match={match} />

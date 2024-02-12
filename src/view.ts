@@ -120,17 +120,9 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
       )
     }
 
-    vscode.workspace.openTextDocument(fileUri).then(
-      async (textDoc: vscode.TextDocument) => {
-        return vscode.window.showTextDocument(textDoc, {
-          selection: range
-        })
-      },
-      (error: any) => {
-        console.error('error opening file', filePath)
-        console.error(error)
-      }
-    )
+    vscode.commands.executeCommand('vscode.open', fileUri, {
+      selection: range
+    })
   }
 
   private getHtmlForWebview(webview: vscode.Webview) {
