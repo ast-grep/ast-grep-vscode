@@ -10,7 +10,8 @@ import {
   TextDocumentShowOptions,
   Uri,
   ThemeIcon,
-  EventEmitter
+  EventEmitter,
+  Position
 } from 'vscode'
 
 import {
@@ -21,6 +22,7 @@ import {
 } from 'vscode-languageclient/node'
 
 import { activate as activateWebview } from './view'
+import { SgSearch } from './types'
 
 let client: LanguageClient
 const diagnosticCollectionName = 'ast-grep-diagnostics'
@@ -45,11 +47,11 @@ function getExecutable(isDebug: boolean): Executable {
 }
 
 interface FileItem {
-  uri: string
+  file: string
 }
 
 interface SearchItem {
-  uri: string
+  file: string
   source: string
   range: Range
 }
@@ -60,7 +62,7 @@ class AstGrepScanTreeItem extends TreeItem {
     if ('source' in item) {
       label = item.source
     } else {
-      label = workspace.asRelativePath(Uri.parse(item.uri))
+      label = item.file
       collapsibleState = TreeItemCollapsibleState.Expanded
     }
     super(label, collapsibleState)
@@ -69,7 +71,7 @@ class AstGrepScanTreeItem extends TreeItem {
         title: 'ast-grep',
         command: 'vscode.open',
         arguments: [
-          item.uri,
+          this.uri,
           <TextDocumentShowOptions>{
             selection: item.range
           }
@@ -78,16 +80,24 @@ class AstGrepScanTreeItem extends TreeItem {
     }
   }
 
+  get uri() {
+    // Get the current workspace folder
+    const workspaceFolder = workspace.workspaceFolders![0]
+    // Join the workspace folder path with the relative path
+    const filePath = Uri.joinPath(workspaceFolder.uri, this.item.file)
+    return filePath
+  }
+
   static isSearchItem(item: FileItem | SearchItem): item is SearchItem {
     return 'source' in item
   }
 }
 
 type Dictionary<T> = { [key: string]: T }
-class NodeDependenciesProvider
+export class AstGrepSearchResultProvider
   implements TreeDataProvider<AstGrepScanTreeItem>
 {
-  private scanResultDict: Dictionary<ScanResult[]> = {}
+  private scanResultDict: Dictionary<SgSearch[]> = {}
   private emitter = new EventEmitter<undefined>()
   onDidChangeTreeData = this.emitter.event
 
@@ -97,48 +107,45 @@ class NodeDependenciesProvider
       element.contextValue = 'file-item'
       element.description = true
       element.iconPath = ThemeIcon.File
-      element.resourceUri = Uri.parse(element.item.uri)
+      element.resourceUri = element.uri
     }
     return element
   }
 
   getChildren(element?: AstGrepScanTreeItem): Thenable<AstGrepScanTreeItem[]> {
     if (!element) {
-      let list = Object.keys(this.scanResultDict).map(uri => {
-        return new AstGrepScanTreeItem({ uri })
+      let list = Object.keys(this.scanResultDict).map(file => {
+        return new AstGrepScanTreeItem({ file })
       })
       return Promise.resolve(list)
     }
     if (AstGrepScanTreeItem.isSearchItem(element.item)) {
       return Promise.resolve([])
     }
-    let uri = element.item.uri
-    let list = this.scanResultDict[uri].map(item => {
+    let file = element.item.file
+    let list = this.scanResultDict[file].map(item => {
+      const { start, end } = item.range
       return new AstGrepScanTreeItem({
-        uri: item.uri,
-        source: item.content,
-        range: item.position
+        file: item.file,
+        source: item.text,
+        range: new Range(
+          new Position(start.line, start.column),
+          new Position(end.line, end.column)
+        )
       })
     })
     return Promise.resolve(list)
   }
 
-  updateResult(res: ScanResult[]) {
-    let grouped = groupBy(res, 'uri')
+  updateResult(res: SgSearch[]) {
+    let grouped = groupBy(res, 'file')
     this.scanResultDict = grouped
     this.emitter.fire(undefined)
   }
 }
 
-interface ScanResult {
-  uri: string
-  // Same as vscode.Range but all zero-based
-  position: Range
-  content: string
-}
-
 function activateLsp(context: ExtensionContext) {
-  let provider = new NodeDependenciesProvider()
+  let provider = new AstGrepSearchResultProvider()
 
   window.createTreeView('ast-grep.search.result', {
     treeDataProvider: provider,
@@ -146,23 +153,24 @@ function activateLsp(context: ExtensionContext) {
   })
   context.subscriptions.push(
     commands.registerCommand('ast-grep.search', async _uri => {
-      let curWorkspace = workspace.workspaceFolders?.[0]
-      if (!curWorkspace) {
-        return
-      }
-      let pattern
-      try {
-        pattern = await window.showInputBox({})
-      } catch {
-        return
-      }
-      if (!pattern) {
-        return
-      }
-      let res = await client.sendRequest<ScanResult[]>('ast-grep/search', {
-        pattern: pattern
-      })
-      provider.updateResult(res)
+      // TODO: change impl
+      // let curWorkspace = workspace.workspaceFolders?.[0]
+      // if (!curWorkspace) {
+      //   return
+      // }
+      // let pattern
+      // try {
+      //   pattern = await window.showInputBox({})
+      // } catch {
+      //   return
+      // }
+      // if (!pattern) {
+      //   return
+      // }
+      // let res = await client.sendRequest<ScanResult[]>('ast-grep/search', {
+      //   pattern: pattern
+      // })
+      // provider.updateResult(res)
     }),
     commands.registerCommand('ast-grep.restartLanguageServer', async () => {
       console.log(
@@ -206,11 +214,15 @@ function activateLsp(context: ExtensionContext) {
 
   // Start the client. This will also launch the server
   client.start()
+
+  // TODO: fix shit code
+  return provider
 }
 
 export function activate(context: ExtensionContext) {
-  activateLsp(context)
-  activateWebview(context)
+  const provider = activateLsp(context)
+  // TODO: fix shit code
+  activateWebview(context, provider)
 }
 
 async function restart(): Promise<void> {

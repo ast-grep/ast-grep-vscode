@@ -3,9 +3,13 @@ import { execa } from 'execa'
 import { Unport, ChannelMessage } from 'unport'
 import * as vscode from 'vscode'
 import { workspace } from 'vscode'
+import { AstGrepSearchResultProvider } from './extension'
 
-export function activate(context: vscode.ExtensionContext) {
-  const provider = new SearchSidebarProvider(context.extensionUri)
+export function activate(
+  context: vscode.ExtensionContext,
+  search: AstGrepSearchResultProvider
+) {
+  const provider = new SearchSidebarProvider(context.extensionUri, search)
 
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
@@ -46,7 +50,10 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
   // @ts-expect-error
   private _view?: vscode.WebviewView
 
-  constructor(private readonly _extensionUri: vscode.Uri) {}
+  constructor(
+    private readonly _extensionUri: vscode.Uri,
+    private search: AstGrepSearchResultProvider
+  ) {}
 
   public resolveWebviewView(
     webviewView: vscode.WebviewView,
@@ -85,6 +92,7 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
 
     parentPort.onMessage('search', async payload => {
       const res = (await getPatternRes(payload.inputValue)) ?? []
+      this.search.updateResult(res)
       parentPort.postMessage('search', { ...payload, searchResult: res })
     })
   }
