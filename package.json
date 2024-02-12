@@ -69,8 +69,14 @@
       "ast-grep-sidebar-view": [
         {
           "type": "webview",
-          "id": "ast-grep.search.panel",
-          "name": "Structural Search"
+          "id": "ast-grep.search.input",
+          "name": "Pattern Input"
+        },
+        {
+          "name": "Structural Search Result",
+          "id": "ast-grep.search.result",
+          "icon": "media/favicon.svg",
+          "contextualTitle": "Package Explorer"
         }
       ]
     }
