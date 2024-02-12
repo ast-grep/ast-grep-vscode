@@ -1,4 +1,4 @@
-import type { SgSearch, ChildPort } from '../../types'
+import type { SgSearch, ChildPort, Definition } from '../../types'
 import { useCallback, useEffect, useRef } from 'react'
 import { Unport } from 'unport'
 
@@ -45,4 +45,8 @@ export const useSgSearch = () => {
   }, [])
 
   return post
+}
+
+export const openFile = (data: Definition['child2parent']['openFile']) => {
+  childPort.postMessage('openFile', data)
 }

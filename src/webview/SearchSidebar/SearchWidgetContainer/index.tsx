@@ -18,13 +18,16 @@ const SearchWidgetContainer = ({
   return (
     <HStack position="relative">
       <Center
-        _hover={{
-          background: 'var(--vscode-list-inactiveSelectionBackground)'
-        }}
         w={16}
         h="100%"
         cursor="pointer"
+        position="absolute"
+        top="0"
+        left="0"
         onClick={toggleIsExpanded}
+        _hover={{
+          background: 'var(--vscode-list-inactiveSelectionBackground)'
+        }}
       >
         {isExpanded ? (
           <HiOutlineChevronDown pointerEvents="none" />
@@ -32,7 +35,7 @@ const SearchWidgetContainer = ({
           <HiOutlineChevronRight pointerEvents="none" />
         )}
       </Center>
-      <VStack gap={6} flex={1}>
+      <VStack gap={6} flex={1} ml="18px">
         <SearchInput
           value={inputValue}
           onChange={setInputValue}
