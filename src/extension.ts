@@ -5,6 +5,7 @@ import {
   commands,
   Range,
   TreeItem,
+  TreeItemLabel,
   TreeItemCollapsibleState,
   TreeDataProvider,
   TextDocumentShowOptions,
@@ -57,10 +58,14 @@ interface SearchItem {
 }
 class AstGrepScanTreeItem extends TreeItem {
   constructor(public item: FileItem | SearchItem) {
-    let label = ''
+    let label
     let collapsibleState = TreeItemCollapsibleState.None
     if ('source' in item) {
-      label = item.source
+      const { start, end } = item.range
+      label = {
+        label: item.source,
+        highlights: [[start.character, end.character]]
+      } as TreeItemLabel
     } else {
       label = item.file
       collapsibleState = TreeItemCollapsibleState.Expanded
@@ -127,7 +132,7 @@ export class AstGrepSearchResultProvider
       const { start, end } = item.range
       return new AstGrepScanTreeItem({
         file: item.file,
-        source: item.text,
+        source: item.lines,
         range: new Range(
           new Position(start.line, start.column),
           new Position(end.line, end.column)
