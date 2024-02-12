@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import type { SgSearch } from '../../types'
-import SearchResultsList from './SearchResultList'
+// import SearchResultsList from './SearchResultList'
 import SearchWidgetContainer from './SearchWidgetContainer'
 import { useSgSearch } from './postMessage'
 import { useState } from 'react'
@@ -30,7 +30,8 @@ export const SearchSidebar = () => {
     'ast-grep-search-panel-input-value',
     ''
   )
-  const { searchResult, refreshSearchResult } = useSearchResult(inputValue)
+  // const { searchResult, refreshSearchResult } = useSearchResult(inputValue)
+  const { refreshSearchResult } = useSearchResult(inputValue)
 
   return (
     <div>
@@ -39,7 +40,9 @@ export const SearchSidebar = () => {
         refreshResult={refreshSearchResult}
         setInputValue={setInputValue}
       />
-      <SearchResultsList matches={searchResult} />
+      {/* // TODO: add customized tree result
+        <SearchResultsList matches={searchResult} />
+      */}
     </div>
   )
 }

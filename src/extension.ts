@@ -137,20 +137,7 @@ class NodeDependenciesProvider
   }
 
   updateResult(res: ScanResult[]) {
-    let treeItemList: AstGrepScanTreeItem[] = []
     let grouped = groupBy(res, 'uri')
-    for (let uri of Object.keys(grouped)) {
-      let scanResultList = grouped[uri]
-      for (let element of scanResultList) {
-        treeItemList.push(
-          new AstGrepScanTreeItem({
-            source: element.content,
-            range: element.position,
-            uri: element.uri
-          })
-        )
-      }
-    }
     this.scanResultDict = grouped
     this.emitter.fire(undefined)
   }
