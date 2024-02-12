@@ -1,10 +1,11 @@
 import { useCallback } from 'react'
 import type { SgSearch } from '../../types'
-// import SearchResultsList from './SearchResultList'
+import SearchResultList from './SearchResultList'
 import SearchWidgetContainer from './SearchWidgetContainer'
 import { useSgSearch } from './postMessage'
 import { useState } from 'react'
 import { useDebounce, useLocalStorage } from 'react-use'
+import { UseDarkContextProvider } from './hooks/useDark'
 
 const useSearchResult = (inputValue: string) => {
   const [searchResult, setResult] = useState<SgSearch[]>([])
@@ -30,19 +31,16 @@ export const SearchSidebar = () => {
     'ast-grep-search-panel-input-value',
     ''
   )
-  // const { searchResult, refreshSearchResult } = useSearchResult(inputValue)
-  const { refreshSearchResult } = useSearchResult(inputValue)
+  const { searchResult, refreshSearchResult } = useSearchResult(inputValue)
 
   return (
-    <div>
+    <UseDarkContextProvider>
       <SearchWidgetContainer
         inputValue={inputValue}
         refreshResult={refreshSearchResult}
         setInputValue={setInputValue}
       />
-      {/* // TODO: add customized tree result
-        <SearchResultsList matches={searchResult} />
-      */}
-    </div>
+      <SearchResultList matches={searchResult} pattern={inputValue} />
+    </UseDarkContextProvider>
   )
 }

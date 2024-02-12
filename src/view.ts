@@ -1,4 +1,4 @@
-import type { ParentPort, SgSearch } from './types'
+import type { Definition, ParentPort, SgSearch } from './types'
 import { execa } from 'execa'
 import { Unport, ChannelMessage } from 'unport'
 import * as vscode from 'vscode'
@@ -95,6 +95,42 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
       this.search.updateResult(res)
       parentPort.postMessage('search', { ...payload, searchResult: res })
     })
+
+    parentPort.onMessage('openFile', async payload => this.openFile(payload))
+  }
+
+  private openFile = ({
+    filePath,
+    locationsToSelect
+  }: Definition['child2parent']['openFile']) => {
+    const uris = workspace.workspaceFolders
+    const { joinPath } = vscode.Uri
+
+    if (!uris?.length) {
+      return
+    }
+
+    const fileUri: vscode.Uri = joinPath(uris?.[0].uri, filePath)
+    let range: undefined | vscode.Range
+    if (locationsToSelect) {
+      const { start, end } = locationsToSelect
+      range = new vscode.Range(
+        new vscode.Position(start.line, start.column),
+        new vscode.Position(end.line, end.column)
+      )
+    }
+
+    vscode.workspace.openTextDocument(fileUri).then(
+      async (textDoc: vscode.TextDocument) => {
+        return vscode.window.showTextDocument(textDoc, {
+          selection: range
+        })
+      },
+      (error: any) => {
+        console.error('error opening file', filePath)
+        console.error(error)
+      }
+    )
   }
 
   private getHtmlForWebview(webview: vscode.Webview) {
