@@ -98,10 +98,8 @@
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
   },
-  "dependencies": {
-    "vscode-languageclient": "9.0.1"
-  },
   "devDependencies": {
+    "vscode-languageclient": "9.0.1",
     "tsx": "4.7.1",
     "react-use": "17.5.0",
     "tsup": "8.0.2",
