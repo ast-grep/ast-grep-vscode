@@ -4,13 +4,11 @@ VSCode extension package for ast-grep language server
 
 ## Features
 
-- Code linting
-- Code actions
-- Code search in opened documents
+- Code search
+- Code linting(\*)
+- Code actions(\*)
 
-## Commands
-
-- `ast-grep.search`
+Note, code linting and code actions requires [setting up `sgconfig.yml`](https://ast-grep.github.io/guide/scan-project.html) in your workspace root.
 
 ## Requirements
 
@@ -32,4 +30,3 @@ brew install ast-grep
 This extension contributes the following settings:
 
 - `astGrep.serverPath`: Specify the language server binary path.
-- `astGrep.configPath`: Customize ast-grep config file path relative. Default is `sgconfig.yml`.
