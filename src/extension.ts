@@ -1,19 +1,4 @@
-import {
-  workspace,
-  ExtensionContext,
-  window,
-  commands,
-  Range,
-  TreeItem,
-  TreeItemLabel,
-  TreeItemCollapsibleState,
-  TreeDataProvider,
-  TextDocumentShowOptions,
-  Uri,
-  ThemeIcon,
-  EventEmitter,
-  Position
-} from 'vscode'
+import { workspace, ExtensionContext, window, commands } from 'vscode'
 
 import {
   LanguageClient,
@@ -23,7 +8,6 @@ import {
 } from 'vscode-languageclient/node'
 
 import { activate as activateWebview } from './view'
-import { SgSearch } from './types'
 
 let client: LanguageClient
 const diagnosticCollectionName = 'ast-grep-diagnostics'
@@ -44,108 +28,6 @@ function getExecutable(isDebug: boolean): Executable {
       // shell is required for Windows cmd to pick up global npm binary
       shell: true
     }
-  }
-}
-
-interface FileItem {
-  file: string
-}
-
-interface SearchItem {
-  file: string
-  source: string
-  range: Range
-}
-class AstGrepScanTreeItem extends TreeItem {
-  constructor(public item: FileItem | SearchItem) {
-    let label
-    let collapsibleState = TreeItemCollapsibleState.None
-    if ('source' in item) {
-      const { start, end } = item.range
-      label = {
-        label: item.source,
-        highlights: [[start.character, end.character]]
-      } as TreeItemLabel
-    } else {
-      label = item.file
-      collapsibleState = TreeItemCollapsibleState.Expanded
-    }
-    super(label, collapsibleState)
-    if ('source' in item) {
-      this.command = {
-        title: 'ast-grep',
-        command: 'vscode.open',
-        arguments: [
-          this.uri,
-          <TextDocumentShowOptions>{
-            selection: item.range
-          }
-        ]
-      }
-    }
-  }
-
-  get uri() {
-    // Get the current workspace folder
-    const workspaceFolder = workspace.workspaceFolders![0]
-    // Join the workspace folder path with the relative path
-    const filePath = Uri.joinPath(workspaceFolder.uri, this.item.file)
-    return filePath
-  }
-
-  static isSearchItem(item: FileItem | SearchItem): item is SearchItem {
-    return 'source' in item
-  }
-}
-
-type Dictionary<T> = { [key: string]: T }
-export class AstGrepSearchResultProvider
-  implements TreeDataProvider<AstGrepScanTreeItem>
-{
-  private scanResultDict: Dictionary<SgSearch[]> = {}
-  private emitter = new EventEmitter<undefined>()
-  onDidChangeTreeData = this.emitter.event
-
-  getTreeItem(element: AstGrepScanTreeItem): TreeItem {
-    // only add iconPath if the element is not a file item
-    if (!('source' in element.item)) {
-      element.contextValue = 'file-item'
-      element.description = true
-      element.iconPath = ThemeIcon.File
-      element.resourceUri = element.uri
-    }
-    return element
-  }
-
-  getChildren(element?: AstGrepScanTreeItem): Thenable<AstGrepScanTreeItem[]> {
-    if (!element) {
-      let list = Object.keys(this.scanResultDict).map(file => {
-        return new AstGrepScanTreeItem({ file })
-      })
-      return Promise.resolve(list)
-    }
-    if (AstGrepScanTreeItem.isSearchItem(element.item)) {
-      return Promise.resolve([])
-    }
-    let file = element.item.file
-    let list = this.scanResultDict[file].map(item => {
-      const { start, end } = item.range
-      return new AstGrepScanTreeItem({
-        file: item.file,
-        source: item.lines,
-        range: new Range(
-          new Position(start.line, start.column),
-          new Position(end.line, end.column)
-        )
-      })
-    })
-    return Promise.resolve(list)
-  }
-
-  updateResult(res: SgSearch[]) {
-    let grouped = groupBy(res, 'file')
-    this.scanResultDict = grouped
-    this.emitter.fire(undefined)
   }
 }
 
@@ -196,10 +78,8 @@ function activateLsp(context: ExtensionContext) {
 }
 
 export function activate(context: ExtensionContext) {
-  let provider = new AstGrepSearchResultProvider()
   activateLsp(context)
-  // TODO: fix shit code
-  activateWebview(context, provider)
+  activateWebview(context)
 }
 
 async function restart(): Promise<void> {
@@ -214,18 +94,4 @@ export function deactivate(): Promise<void> | undefined {
     return undefined
   }
   return client.stop()
-}
-
-function groupBy<T extends object>(obj: T[], key: keyof T) {
-  return obj.reduce(
-    (acc, cur) => {
-      let k = cur[key] as string
-      if (!acc[k]) {
-        acc[k] = []
-      }
-      acc[k].push(cur)
-      return acc
-    },
-    {} as Record<string, T[]>
-  )
 }

@@ -65,7 +65,7 @@
         {
           "type": "webview",
           "id": "ast-grep.search.input",
-          "name": "Pattern Input"
+          "name": "Structural Search"
         }
       ]
     }
