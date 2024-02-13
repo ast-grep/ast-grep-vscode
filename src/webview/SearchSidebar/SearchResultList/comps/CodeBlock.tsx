@@ -9,15 +9,17 @@ const style = {
 
 function splitByHighLightToken(search: SgSearch) {
   const { start, end } = search.range
-  // TODO: multilines highlight
-  const { column: startColumn } = start
-  const { column: endColumn } = end
-
-  const startIdx = startColumn
-  const endIdx = endColumn
-
+  let startIdx = start.column
+  let endIdx = end.column
+  let displayLine = search.lines
+  // multiline matches!
+  if (start.line < end.line) {
+    displayLine = search.lines.split(/\r?\n/, 1)[0]
+    endIdx = displayLine.length
+  }
   return {
-    index: [startIdx, endIdx]
+    index: [startIdx, endIdx],
+    displayLine
   }
 }
 
