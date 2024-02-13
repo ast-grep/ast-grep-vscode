@@ -7,15 +7,24 @@ const style = {
   border: '1px solid var(--vscode-editor-findMatchHighlightBackground)'
 }
 
+const LEADING_SPACES_RE = /^\s*/
+
 function splitByHighLightToken(search: SgSearch) {
   const { start, end } = search.range
   let startIdx = start.column
   let endIdx = end.column
   let displayLine = search.lines
-  // multiline matches!
+  // multiline matches! only display the first line!
   if (start.line < end.line) {
     displayLine = search.lines.split(/\r?\n/, 1)[0]
     endIdx = displayLine.length
+  }
+  // strip leading spaces
+  const leadingSpaces = displayLine.match(LEADING_SPACES_RE)?.[0].length
+  if (leadingSpaces) {
+    displayLine = displayLine.substring(leadingSpaces)
+    startIdx -= leadingSpaces
+    endIdx -= leadingSpaces
   }
   return {
     index: [startIdx, endIdx],
@@ -27,9 +36,8 @@ interface CodeBlockProps {
   match: SgSearch
 }
 export const CodeBlock = ({ match }: CodeBlockProps) => {
-  const { file, lines } = match
-
-  const { index } = splitByHighLightToken(match)
+  const { file } = match
+  const { index, displayLine } = splitByHighLightToken(match)
 
   const startIdx = index[0]
   const endIdx = index[1]
@@ -47,9 +55,9 @@ export const CodeBlock = ({ match }: CodeBlockProps) => {
         openFile({ filePath: file, locationsToSelect: match.range })
       }}
     >
-      {startIdx <= 0 ? '' : lines.slice(0, startIdx)}
-      <span style={style}>{lines.slice(startIdx, endIdx)}</span>
-      {endIdx >= lines.length ? '' : lines.slice(endIdx)}
+      {displayLine.slice(0, startIdx)}
+      <span style={style}>{displayLine.slice(startIdx, endIdx)}</span>
+      {displayLine.slice(endIdx)}
     </Box>
   )
 }
