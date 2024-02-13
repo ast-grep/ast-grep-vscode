@@ -1,84 +1,36 @@
 import { Box } from '@chakra-ui/react'
-import React, { useMemo } from 'react'
 import type { SgSearch } from '../../../../types'
 import { openFile } from '../../postMessage'
 
-type HighLightToken = {
-  start: {
-    line: number
-    column: number
-  }
-  end: {
-    line: number
-    column: number
-  }
-  style: React.CSSProperties
+const style = {
+  backgroundColor: 'var(--vscode-editor-findMatchHighlightBackground)',
+  border: '1px solid var(--vscode-editor-findMatchHighlightBackground)'
 }
 
-function splitByHighLightTokens(tokens: HighLightToken[]) {
-  const codeSegments = tokens
-    .map(({ start, end, style }) => {
-      // TODO: multilines highlight
-      const { column: startColumn } = start
-      const { column: endColumn } = end
+function splitByHighLightToken(search: SgSearch) {
+  const { start, end } = search.range
+  // TODO: multilines highlight
+  const { column: startColumn } = start
+  const { column: endColumn } = end
 
-      const startIdx = startColumn
-      const endIdx = endColumn
+  const startIdx = startColumn
+  const endIdx = endColumn
 
-      return {
-        range: [startIdx, endIdx],
-        style
-      }
-    })
-    .sort((a, b) => a.range[0] - b.range[0])
-
-  return codeSegments
+  return {
+    index: [startIdx, endIdx]
+  }
 }
 
 interface CodeBlockProps {
   match: SgSearch
 }
 export const CodeBlock = ({ match }: CodeBlockProps) => {
-  const { file, lines, range } = match
-  const matchHighlight = [
-    {
-      start: {
-        line: range.start.line,
-        column: range.start.column
-      },
-      end: {
-        line: range.end.line,
-        column: range.end.column
-      },
-      style: {
-        backgroundColor: 'var(--vscode-editor-findMatchHighlightBackground)',
-        border: '1px solid var(--vscode-editor-findMatchHighlightBackground)'
-      }
-    }
-  ]
+  const { file, lines } = match
 
-  const codeSegments = useMemo(() => {
-    return splitByHighLightTokens(matchHighlight)
-  }, [lines, matchHighlight])
+  const { index } = splitByHighLightToken(match)
 
-  if (codeSegments.length === 0) {
-    return (
-      <Box
-        flex="1"
-        textOverflow="ellipsis"
-        overflow="hidden"
-        whiteSpace="pre"
-        fontSize="13px"
-        lineHeight="22px"
-        height="22px"
-      >
-        {lines}
-      </Box>
-    )
-  }
-
-  const highlightStartIdx = codeSegments[0].range[0]
-  const highlightEndIdx = codeSegments[codeSegments.length - 1].range[1]
+  const startIdx = index[0]
+  const endIdx = index[1]
   return (
     <Box
       flex="1"
@@ -93,16 +45,9 @@ export const CodeBlock = ({ match }: CodeBlockProps) => {
         openFile({ filePath: file, locationsToSelect: match.range })
       }}
     >
-      {highlightStartIdx <= 0 ? '' : lines.slice(0, highlightStartIdx)}
-      {codeSegments.map(({ range, style }) => {
-        const [start, end] = range
-        return (
-          <span style={style} key={`${start}-${end}`}>
-            {lines.slice(start, end)}
-          </span>
-        )
-      })}
-      {highlightEndIdx >= lines.length ? '' : lines.slice(highlightEndIdx)}
+      {startIdx <= 0 ? '' : lines.slice(0, startIdx)}
+      <span style={style}>{lines.slice(startIdx, endIdx)}</span>
+      {endIdx >= lines.length ? '' : lines.slice(endIdx)}
     </Box>
   )
 }
