@@ -4,6 +4,7 @@ import { useBoolean } from 'react-use'
 import type { SgSearch } from '../../../../types'
 import { CodeBlock } from './CodeBlock'
 import { FileLink } from './FileLink'
+import { VSCodeBadge } from '@vscode/webview-ui-toolkit/react'
 
 interface TreeItemProps {
   filePath: string
@@ -39,11 +40,12 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
           gap="4"
           px="2"
           alignItems="center"
+          justifyContent="space-between"
           h="22px"
           lineHeight="22px"
         >
           <FileLink filePath={filePath} />
-          <div>{matches.length.toString()}</div>
+          <VSCodeBadge>{matches.length}</VSCodeBadge>
         </HStack>
       </HStack>
 
