@@ -150,33 +150,7 @@ export class AstGrepSearchResultProvider
 }
 
 function activateLsp(context: ExtensionContext) {
-  let provider = new AstGrepSearchResultProvider()
-
-  window.createTreeView('ast-grep.search.result', {
-    treeDataProvider: provider,
-    showCollapseAll: false
-  })
   context.subscriptions.push(
-    commands.registerCommand('ast-grep.search', async _uri => {
-      // TODO: change impl
-      // let curWorkspace = workspace.workspaceFolders?.[0]
-      // if (!curWorkspace) {
-      //   return
-      // }
-      // let pattern
-      // try {
-      //   pattern = await window.showInputBox({})
-      // } catch {
-      //   return
-      // }
-      // if (!pattern) {
-      //   return
-      // }
-      // let res = await client.sendRequest<ScanResult[]>('ast-grep/search', {
-      //   pattern: pattern
-      // })
-      // provider.updateResult(res)
-    }),
     commands.registerCommand('ast-grep.restartLanguageServer', async () => {
       console.log(
         'Restart the ast-grep language server by ast-grep.restart command'
@@ -219,13 +193,11 @@ function activateLsp(context: ExtensionContext) {
 
   // Start the client. This will also launch the server
   client.start()
-
-  // TODO: fix shit code
-  return provider
 }
 
 export function activate(context: ExtensionContext) {
-  const provider = activateLsp(context)
+  let provider = new AstGrepSearchResultProvider()
+  activateLsp(context)
   // TODO: fix shit code
   activateWebview(context, provider)
 }

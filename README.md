@@ -38,6 +38,11 @@ You can also use the [command line tool](https://ast-grep.github.io/reference/cl
 ast-grep new
 ```
 
+## Commands
+
+- `ast-grep.restartLanguageServer`
+  Restart ast-grep langauge server. Useful to reload rule or configuration changes.
+
 ## Extension Settings
 
 This extension contributes the following settings:
