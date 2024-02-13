@@ -27,20 +27,35 @@ function splitByHighLightToken(search: SgSearch) {
     endIdx -= leadingSpaces
   }
   return {
-    index: [startIdx, endIdx],
-    displayLine
+    startIdx,
+    endIdx,
+    displayLine,
+    lineSpan: end.line - start.line
   }
+}
+
+// this is also hardcoded in vscode
+const lineIndicatorStyle = {
+  margin: '0 7px 4px',
+  opacity: '0.7',
+  fontSize: '0.9em',
+  verticalAlign: 'bottom'
+}
+
+function MultiLineIndicator({ lineSpan }: { lineSpan: number }) {
+  if (lineSpan <= 0) {
+    return null
+  }
+  return <span style={lineIndicatorStyle}>+{lineSpan}</span>
 }
 
 interface CodeBlockProps {
   match: SgSearch
 }
 export const CodeBlock = ({ match }: CodeBlockProps) => {
-  const { file } = match
-  const { index, displayLine } = splitByHighLightToken(match)
+  const { startIdx, endIdx, displayLine, lineSpan } =
+    splitByHighLightToken(match)
 
-  const startIdx = index[0]
-  const endIdx = index[1]
   return (
     <Box
       flex="1"
@@ -52,9 +67,10 @@ export const CodeBlock = ({ match }: CodeBlockProps) => {
       height="22px"
       cursor="pointer"
       onClick={() => {
-        openFile({ filePath: file, locationsToSelect: match.range })
+        openFile({ filePath: match.file, locationsToSelect: match.range })
       }}
     >
+      <MultiLineIndicator lineSpan={lineSpan} />
       {displayLine.slice(0, startIdx)}
       <span style={style}>{displayLine.slice(startIdx, endIdx)}</span>
       {displayLine.slice(endIdx)}
