@@ -16,7 +16,9 @@ const languageClientId = 'ast-grep-client'
 const languageClientName = 'ast-grep language client'
 
 function getExecutable(isDebug: boolean): Executable {
-  const command = workspace.getConfiguration('astGrep').get('serverPath', 'sg')
+  const command = workspace
+    .getConfiguration('astGrep')
+    .get('serverPath', 'ast-grep')
   return {
     command,
     args: ['lsp'],

@@ -20,7 +20,9 @@ async function getPatternRes(pattern: string) {
   if (!pattern) {
     return
   }
-  let command = workspace.getConfiguration('astGrep').get('serverPath', 'sg')
+  let command = workspace
+    .getConfiguration('astGrep')
+    .get('serverPath', 'ast-grep')
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
 
   // TODO: use ast-grep lsp to optimize the performance
