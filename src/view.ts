@@ -2,7 +2,7 @@ import type { Definition, ParentPort, SgSearch } from './types'
 import { Unport, ChannelMessage } from 'unport'
 import * as vscode from 'vscode'
 import { workspace } from 'vscode'
-import { spawn } from 'node:child_process'
+import { type ChildProcessWithoutNullStreams, spawn } from 'node:child_process'
 
 export function activate(context: vscode.ExtensionContext) {
   const provider = new SearchSidebarProvider(context.extensionUri)
@@ -16,6 +16,8 @@ export function activate(context: vscode.ExtensionContext) {
   )
 }
 
+let child: ChildProcessWithoutNullStreams | undefined
+
 async function getPatternRes(pattern: string) {
   if (!pattern) {
     return
@@ -28,17 +30,28 @@ async function getPatternRes(pattern: string) {
   // TODO: multi-workspaces support
   // TODO: the code here is wrong, but we will change it
   let stdout = ''
-  const child = spawn(
-    command,
-    ['run', '--pattern', pattern, '--json=compact'],
-    {
-      cwd: uris[0]
-    }
-  )
+  if (child) {
+    // kill previous search
+    child.kill('SIGTERM')
+  }
+  child = spawn(command, ['run', '--pattern', pattern, '--json=compact'], {
+    cwd: uris[0]
+  })
   child.stdout.on('data', data => {
     stdout += data
   })
-  await new Promise(r => child.on('close', r))
+  await new Promise((resolve, reject) =>
+    child!.on('exit', (code, signal) => {
+      // exit without signal, search ends correctly
+      // TODO: is it correct now?
+      if (!signal && code === 0) {
+        resolve(code)
+      } else {
+        reject([code, signal])
+      }
+    })
+  )
+  child = undefined
 
   try {
     let res: SgSearch[] = JSON.parse(stdout)
