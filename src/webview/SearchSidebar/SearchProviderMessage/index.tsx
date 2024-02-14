@@ -20,11 +20,12 @@ const Empty = memo(({ pattern }: { pattern: string }) => {
   }
   return (
     <div style={style}>
-      No results found for <code>{pattern}</code>. If this is not expected, you
-      can try:
+      No results found for <code>{pattern}</code>.
+      <br />
+      If this is not expected, you can try:
       <ul style={ulStyle}>
         <li>
-          Make sure your query follows the{' '}
+          Ensure the query follows the{' '}
           <VSCodeLink href="https://ast-grep.github.io/guide/pattern-syntax.html">
             Pattern Syntax
           </VSCodeLink>
