@@ -6,7 +6,7 @@ import { postSearch } from './postMessage'
 import { useState } from 'react'
 import { useDebounce, useLocalStorage } from 'react-use'
 import { UseDarkContextProvider } from './hooks/useDark'
-import { VSCodeProgressRing } from '@vscode/webview-ui-toolkit/react'
+import LoadingBar from '../LoadingBar'
 
 const useSearchResult = (inputValue: string) => {
   const [searchResult, setResult] = useState<SgSearch[]>([])
@@ -40,16 +40,13 @@ export const SearchSidebar = () => {
 
   return (
     <UseDarkContextProvider>
+      <LoadingBar loading={searching} />
       <SearchWidgetContainer
         inputValue={inputValue}
         refreshResult={refreshSearchResult}
         setInputValue={setInputValue}
       />
-      {searching ? (
-        <VSCodeProgressRing />
-      ) : (
-        <SearchResultList matches={searchResult} />
-      )}
+      <SearchResultList matches={searchResult} />
     </UseDarkContextProvider>
   )
 }

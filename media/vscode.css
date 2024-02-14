@@ -63,3 +63,28 @@ input::placeholder,
 textarea::placeholder {
   color: var(--vscode-input-placeholderForeground);
 }
+
+@keyframes progress {
+  0% {
+    transform: translateX(0) scaleX(1);
+  }
+
+  50% {
+    transform: translateX(2500%) scaleX(3);
+  }
+
+  to {
+    transform: translateX(4900%) scaleX(1);
+  }
+}
+
+.progressBar {
+  animation-name: progress;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+  transform: translateZ(0);
+  animation-timing-function: linear;
+  background-color: var(--vscode-progressBar-background);
+  width: 2%;
+  height: 2px;
+}
