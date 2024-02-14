@@ -7,7 +7,5 @@
     "out": true // set this to false to include "out" folder in search results
   },
   // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
-  "typescript.tsc.autoDetect": "off",
-  // Use Unix style line endings (otherwise Windows CI will fail tests)
-  "files.eol": "\n"
+  "typescript.tsc.autoDetect": "off"
 }
