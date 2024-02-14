@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import type { SgSearch } from '../../types'
 import SearchResultList from './SearchResultList'
 import SearchWidgetContainer from './SearchWidgetContainer'
@@ -7,7 +7,18 @@ import { useState } from 'react'
 import { useDebounce, useLocalStorage } from 'react-use'
 import { UseDarkContextProvider } from './hooks/useDark'
 import LoadingBar from '../LoadingBar'
-import Empty from './Empty'
+import SearchProviderMessage from './SearchProviderMessage'
+
+function groupBy(matches: SgSearch[]) {
+  const groups = new Map<string, SgSearch[]>()
+  for (const match of matches) {
+    if (!groups.has(match.file)) {
+      groups.set(match.file, [])
+    }
+    groups.get(match.file)?.push(match)
+  }
+  return groups
+}
 
 const useSearchResult = (inputValue: string) => {
   const [searchResult, setResult] = useState<SgSearch[]>([])
@@ -22,11 +33,16 @@ const useSearchResult = (inputValue: string) => {
     })
   }, [postSearch, setResult, inputValue])
 
+  const groupedByFileSearchResult = useMemo(() => {
+    return [...groupBy(searchResult).entries()]
+  }, [searchResult])
+
   useDebounce(refreshSearchResult, 100, [inputValue])
 
   return {
     searching,
     searchResult,
+    groupedByFileSearchResult,
     refreshSearchResult
   }
 }
@@ -36,8 +52,12 @@ export const SearchSidebar = () => {
     'ast-grep-search-panel-input-value',
     ''
   )
-  const { searchResult, refreshSearchResult, searching } =
-    useSearchResult(inputValue)
+  const {
+    searchResult,
+    groupedByFileSearchResult,
+    refreshSearchResult,
+    searching
+  } = useSearchResult(inputValue)
 
   return (
     <UseDarkContextProvider>
@@ -47,8 +67,11 @@ export const SearchSidebar = () => {
         refreshResult={refreshSearchResult}
         setInputValue={setInputValue}
       />
-      {searchResult.length === 0 ? <Empty /> : null}
-      <SearchResultList matches={searchResult} />
+      <SearchProviderMessage
+        resultCount={searchResult.length}
+        fileCount={groupedByFileSearchResult.length}
+      />
+      <SearchResultList matches={groupedByFileSearchResult} />
     </UseDarkContextProvider>
   )
 }

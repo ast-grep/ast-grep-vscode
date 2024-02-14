@@ -7,7 +7,7 @@ const style = {
   lineHeight: '1.4em'
 }
 
-function Empty() {
+const Empty = memo(() => {
   return (
     <div style={style}>
       No results found. Review your patterns and check your gitignore files. -{' '}
@@ -16,6 +16,28 @@ function Empty() {
       </VSCodeLink>
     </div>
   )
+})
+
+interface SearchProviderMessageProps {
+  resultCount: number
+  fileCount: number
 }
 
-export default memo(Empty)
+const SearchProviderMessage = ({
+  resultCount,
+  fileCount
+}: SearchProviderMessageProps) => {
+  return (
+    <>
+      {resultCount === 0 ? (
+        <Empty />
+      ) : (
+        <div
+          style={style}
+        >{`${resultCount} results in ${fileCount} files`}</div>
+      )}
+    </>
+  )
+}
+
+export default SearchProviderMessage
