@@ -42,6 +42,61 @@ async function getPatternRes(pattern: string) {
   }
 }
 
+function openFile({
+  filePath,
+  locationsToSelect
+}: Definition['child2parent']['openFile']) {
+  const uris = workspace.workspaceFolders
+  const { joinPath } = vscode.Uri
+
+  if (!uris?.length) {
+    return
+  }
+
+  const fileUri: vscode.Uri = joinPath(uris?.[0].uri, filePath)
+  let range: undefined | vscode.Range
+  if (locationsToSelect) {
+    const { start, end } = locationsToSelect
+    range = new vscode.Range(
+      new vscode.Position(start.line, start.column),
+      new vscode.Position(end.line, end.column)
+    )
+  }
+
+  vscode.commands.executeCommand('vscode.open', fileUri, {
+    selection: range
+  })
+}
+
+function setupParentPort(webviewView: vscode.WebviewView) {
+  const parentPort: ParentPort = new Unport()
+
+  parentPort.implementChannel({
+    async send(message) {
+      webviewView.webview.postMessage(message)
+    },
+    accept(pipe) {
+      webviewView.webview.onDidReceiveMessage((message: ChannelMessage) => {
+        pipe(message)
+      })
+    }
+  })
+  parentPort.onMessage('reload', _payload => {
+    const nonce = getNonce()
+    webviewView.webview.html = webviewView.webview.html.replace(
+      /(nonce="\w+?")|(nonce-\w+?)/g,
+      `nonce="${nonce}"`
+    )
+  })
+
+  parentPort.onMessage('search', async payload => {
+    const res = (await getPatternRes(payload.inputValue)) ?? []
+    parentPort.postMessage('search', { ...payload, searchResult: res })
+  })
+
+  parentPort.onMessage('openFile', async payload => openFile(payload))
+}
+
 class SearchSidebarProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'ast-grep.search.input'
 
@@ -64,59 +119,7 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
     }
 
     webviewView.webview.html = this.getHtmlForWebview(webviewView.webview)
-
-    const parentPort: ParentPort = new Unport()
-
-    parentPort.implementChannel({
-      async send(message) {
-        webviewView.webview.postMessage(message)
-      },
-      accept(pipe) {
-        webviewView.webview.onDidReceiveMessage((message: ChannelMessage) => {
-          pipe(message)
-        })
-      }
-    })
-    parentPort.onMessage('reload', _payload => {
-      const nonce = getNonce()
-      webviewView.webview.html = webviewView.webview.html.replace(
-        /(nonce="\w+?")|(nonce-\w+?)/g,
-        `nonce="${nonce}"`
-      )
-    })
-
-    parentPort.onMessage('search', async payload => {
-      const res = (await getPatternRes(payload.inputValue)) ?? []
-      parentPort.postMessage('search', { ...payload, searchResult: res })
-    })
-
-    parentPort.onMessage('openFile', async payload => this.openFile(payload))
-  }
-
-  private openFile = ({
-    filePath,
-    locationsToSelect
-  }: Definition['child2parent']['openFile']) => {
-    const uris = workspace.workspaceFolders
-    const { joinPath } = vscode.Uri
-
-    if (!uris?.length) {
-      return
-    }
-
-    const fileUri: vscode.Uri = joinPath(uris?.[0].uri, filePath)
-    let range: undefined | vscode.Range
-    if (locationsToSelect) {
-      const { start, end } = locationsToSelect
-      range = new vscode.Range(
-        new vscode.Position(start.line, start.column),
-        new vscode.Position(end.line, end.column)
-      )
-    }
-
-    vscode.commands.executeCommand('vscode.open', fileUri, {
-      selection: range
-    })
+    setupParentPort(webviewView)
   }
 
   private getHtmlForWebview(webview: vscode.Webview) {
