@@ -6,6 +6,7 @@ import { getDocUri } from './utils'
 suite('Should get code action', () => {
   const docUri = getDocUri('test.ts')
   test('Provide code action suggestions', async () => {
+    await new Promise(resolve => setTimeout(resolve, 2000))
     const range = new vscode.Range(
       new vscode.Position(0, 0),
       new vscode.Position(4, 1)
