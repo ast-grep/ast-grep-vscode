@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { useDebounce, useLocalStorage } from 'react-use'
 import { UseDarkContextProvider } from './hooks/useDark'
 import LoadingBar from '../LoadingBar'
+import Empty from './Empty'
 
 const useSearchResult = (inputValue: string) => {
   const [searchResult, setResult] = useState<SgSearch[]>([])
@@ -46,6 +47,7 @@ export const SearchSidebar = () => {
         refreshResult={refreshSearchResult}
         setInputValue={setInputValue}
       />
+      {searchResult.length === 0 ? <Empty /> : null}
       <SearchResultList matches={searchResult} />
     </UseDarkContextProvider>
   )
