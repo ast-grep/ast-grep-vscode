@@ -1,7 +1,6 @@
 import { Box } from '@chakra-ui/react'
 import type { SgSearch } from '../../../../types'
 import { openFile } from '../../postMessage'
-import { memo } from 'react'
 
 const style = {
   backgroundColor: 'var(--vscode-editor-findMatchHighlightBackground)',
@@ -53,7 +52,7 @@ function MultiLineIndicator({ lineSpan }: { lineSpan: number }) {
 interface CodeBlockProps {
   match: SgSearch
 }
-export const CodeBlock = memo(({ match }: CodeBlockProps) => {
+export const CodeBlock = ({ match }: CodeBlockProps) => {
   const { startIdx, endIdx, displayLine, lineSpan } =
     splitByHighLightToken(match)
 
@@ -77,4 +76,4 @@ export const CodeBlock = memo(({ match }: CodeBlockProps) => {
       {displayLine.slice(endIdx)}
     </Box>
   )
-})
+}

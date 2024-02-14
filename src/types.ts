@@ -25,13 +25,13 @@ export type Definition = {
   parent2child: {
     search: {
       searchResult: SgSearch[]
-      id: string
+      id: number
     }
   }
   child2parent: {
     search: {
       inputValue: string
-      id: string
+      id: number
     }
     reload: {}
     openFile: {
