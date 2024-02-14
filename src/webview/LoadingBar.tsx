@@ -20,7 +20,7 @@ export default function LoadingBar({ loading }: LoadingBarProps) {
       style={progressBarStyle}
       role="progressbar"
       aria-valuemin={0}
-      aria-hidden={loading}
+      aria-hidden={!loading}
     >
       <div className="progressBar" style={style} />
     </div>
