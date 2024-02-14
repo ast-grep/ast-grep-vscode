@@ -23,7 +23,7 @@ const useSearchResult = (inputValue: string) => {
 }
 
 export const SearchSidebar = () => {
-  const [inputValue = '', setInputValue] = useLocalStorage<string>(
+  const [inputValue = '', setInputValue] = useLocalStorage(
     'ast-grep-search-panel-input-value',
     ''
   )
@@ -36,7 +36,7 @@ export const SearchSidebar = () => {
         refreshResult={refreshSearchResult}
         setInputValue={setInputValue}
       />
-      <SearchResultList matches={searchResult} pattern={inputValue} />
+      <SearchResultList matches={searchResult} />
     </UseDarkContextProvider>
   )
 }

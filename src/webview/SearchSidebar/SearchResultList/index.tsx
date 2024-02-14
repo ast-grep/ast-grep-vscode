@@ -3,9 +3,8 @@ import { SgSearch } from '../../../types'
 import TreeItem from './comps/TreeItem'
 import { Box } from '@chakra-ui/react'
 
-type SearchResultListProps = {
+interface SearchResultListProps {
   matches: Array<SgSearch>
-  pattern: string
 }
 
 function groupBy(matches: SgSearch[]) {
