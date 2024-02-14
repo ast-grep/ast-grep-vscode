@@ -1,5 +1,4 @@
 import type { SgSearch, ChildPort, Definition } from '../../types'
-import { useCallback, useEffect, useRef } from 'react'
 import { Unport } from 'unport'
 
 // @ts-ignore
