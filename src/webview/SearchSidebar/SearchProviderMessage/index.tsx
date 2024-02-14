@@ -7,13 +7,45 @@ const style = {
   lineHeight: '1.4em'
 }
 
-const Empty = memo(() => {
+const ulStyle = {
+  listStyle: 'inside',
+  listStyleType: '"- "',
+  marginTop: '6px',
+  overflowWrap: 'break-word'
+} as const
+
+const Empty = memo(({ pattern }: { pattern: string }) => {
+  if (!pattern) {
+    return null
+  }
   return (
     <div style={style}>
-      No results found. Review your patterns and check your gitignore files. -{' '}
-      <VSCodeLink href="https://ast-grep.github.io/guide/pattern-syntax.html">
-        Pattern Syntax
-      </VSCodeLink>
+      No results found for <code>{pattern}</code>. If this is not expected, you
+      can try:
+      <ul style={ulStyle}>
+        <li>
+          Make sure your query follows the{' '}
+          <VSCodeLink href="https://ast-grep.github.io/guide/pattern-syntax.html">
+            Pattern Syntax
+          </VSCodeLink>
+          .
+        </li>
+        <li>
+          Check if the file type is one of the{' '}
+          <VSCodeLink href="https://ast-grep.github.io/reference/languages.html">
+            Supported Languages
+          </VSCodeLink>
+          .
+        </li>
+        {/*
+        <li>
+          Adjust your gitignore files. {' '}
+          <VSCodeLink href="https://ast-grep.github.io/guide/pattern-syntax.html">
+            Open Settings.
+          </VSCodeLink>
+        </li>
+        */}
+      </ul>
     </div>
   )
 })
@@ -21,16 +53,18 @@ const Empty = memo(() => {
 interface SearchProviderMessageProps {
   resultCount: number
   fileCount: number
+  pattern: string
 }
 
 const SearchProviderMessage = ({
+  pattern,
   resultCount,
   fileCount
 }: SearchProviderMessageProps) => {
   return (
     <>
       {resultCount === 0 ? (
-        <Empty />
+        <Empty pattern={pattern} />
       ) : (
         <div
           style={style}

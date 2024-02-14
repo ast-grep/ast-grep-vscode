@@ -12,6 +12,7 @@ export const SearchSidebar = () => {
     ''
   )
   const {
+    queryInFlight,
     searchResult,
     groupedByFileSearchResult,
     refreshSearchResult,
@@ -27,6 +28,7 @@ export const SearchSidebar = () => {
         setInputValue={setInputValue}
       />
       <SearchProviderMessage
+        pattern={queryInFlight}
         resultCount={searchResult.length}
         fileCount={groupedByFileSearchResult.length}
       />

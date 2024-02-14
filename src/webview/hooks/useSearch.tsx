@@ -45,19 +45,20 @@ function groupBy(matches: SgSearch[]) {
 export const useSearchResult = (inputValue: string) => {
   const [searchResult, setResult] = useState<SgSearch[]>([])
   const [searching, setSearching] = useState(false)
+  const [queryInFlight, setQuery] = useState(inputValue)
 
-  // TODO: setSearching has async racing condition here
   const refreshSearchResult = useCallback(() => {
     setSearching(true)
     postSearch(inputValue)
       .then(res => {
         setResult(res)
         setSearching(false)
+        setQuery(inputValue)
       })
       .catch(() => {
         // TODO: cancelled request, should send cancel to extension
       })
-  }, [postSearch, setResult, inputValue])
+  }, [inputValue])
 
   const groupedByFileSearchResult = useMemo(() => {
     return [...groupBy(searchResult).entries()]
@@ -66,6 +67,7 @@ export const useSearchResult = (inputValue: string) => {
   useDebounce(refreshSearchResult, 100, [inputValue])
 
   return {
+    queryInFlight,
     searching,
     searchResult,
     groupedByFileSearchResult,
