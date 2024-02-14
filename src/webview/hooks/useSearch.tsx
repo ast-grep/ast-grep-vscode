@@ -1,26 +1,5 @@
-import type { SgSearch, ChildPort, Definition } from '../../types'
-import { Unport } from 'unport'
-
-// @ts-ignore
-if (!window.vscode) {
-  // @ts-ignore
-  window.vscode = acquireVsCodeApi()
-}
-// @ts-ignore
-let vscode = window.vscode
-
-const childPort: ChildPort = new Unport()
-
-childPort.implementChannel({
-  send(message) {
-    vscode.postMessage(message)
-  },
-  accept(pipe) {
-    window.addEventListener('message', ev => {
-      pipe(ev.data)
-    })
-  }
-})
+import type { SgSearch } from '../postMessage'
+import { childPort } from '../postMessage'
 
 // id should not overflow, the MOD is large enough
 // for most cases (unless there is buggy search)
@@ -49,7 +28,3 @@ childPort.onMessage('search', event => {
   currentResolve = () => {}
   currentReject = () => {}
 })
-
-export const openFile = (data: Definition['child2parent']['openFile']) => {
-  childPort.postMessage('openFile', data)
-}

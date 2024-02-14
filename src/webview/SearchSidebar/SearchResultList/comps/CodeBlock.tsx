@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react'
 import type { SgSearch } from '../../../../types'
-import { openFile } from '../../postMessage'
+import { openFile } from '../../../postMessage'
 
 const style = {
   backgroundColor: 'var(--vscode-editor-findMatchHighlightBackground)',

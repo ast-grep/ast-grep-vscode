@@ -1,5 +1,5 @@
 import { Link, Text } from '@chakra-ui/react'
-import { openFile } from '../../postMessage'
+import { openFile } from '../../../postMessage'
 
 interface FileLinkProps {
   filePath: string
