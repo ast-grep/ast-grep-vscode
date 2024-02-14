@@ -35,9 +35,6 @@ devDependencies:
   cross-env:
     specifier: 7.0.3
     version: 7.0.3
-  execa:
-    specifier: 8.0.1
-    version: 8.0.1
   glob:
     specifier: 9.3.5
     version: 9.3.5

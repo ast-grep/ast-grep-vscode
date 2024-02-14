@@ -1,8 +1,8 @@
 import type { Definition, ParentPort, SgSearch } from './types'
-import { execa } from 'execa'
 import { Unport, ChannelMessage } from 'unport'
 import * as vscode from 'vscode'
 import { workspace } from 'vscode'
+import { spawn } from 'node:child_process'
 
 export function activate(context: vscode.ExtensionContext) {
   const provider = new SearchSidebarProvider(context.extensionUri)
@@ -25,13 +25,20 @@ async function getPatternRes(pattern: string) {
     .get('serverPath', 'ast-grep')
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
 
-  // TODO: use ast-grep lsp to optimize the performance
   // TODO: multi-workspaces support
-  const { stdout } = await execa(
+  // TODO: the code here is wrong, but we will change it
+  let stdout = ''
+  const child = spawn(
     command,
-    ['run', '--pattern', pattern, '--json'],
-    { cwd: uris[0] }
+    ['run', '--pattern', pattern, '--json=compact'],
+    {
+      cwd: uris[0]
+    }
   )
+  child.stdout.on('data', data => {
+    stdout += data
+  })
+  await new Promise(r => child.on('close', r))
 
   try {
     let res: SgSearch[] = JSON.parse(stdout)
