@@ -32,20 +32,18 @@ const Empty = memo(({ pattern }: { pattern: string }) => {
           .
         </li>
         <li>
-          Check if the file type is one of the{' '}
+          Check if the file types are{' '}
           <VSCodeLink href="https://ast-grep.github.io/reference/languages.html">
-            Supported Languages
+            Supported
           </VSCodeLink>
           .
         </li>
-        {/*
         <li>
-          Adjust your gitignore files. {' '}
-          <VSCodeLink href="https://ast-grep.github.io/guide/pattern-syntax.html">
-            Open Settings.
+          Adjust your gitignore files.{' '}
+          <VSCodeLink href="https://ast-grep.github.io/reference/cli/run.html#no-ignore-file-type">
+            See doc.
           </VSCodeLink>
         </li>
-        */}
       </ul>
     </div>
   )
