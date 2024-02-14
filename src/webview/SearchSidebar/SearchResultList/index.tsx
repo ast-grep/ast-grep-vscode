@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, memo } from 'react'
 import { SgSearch } from '../../../types'
 import TreeItem from './comps/TreeItem'
 import { Box } from '@chakra-ui/react'
@@ -32,4 +32,4 @@ const SearchResultList = ({ matches }: SearchResultListProps) => {
   )
 }
 
-export default SearchResultList
+export default memo(SearchResultList)

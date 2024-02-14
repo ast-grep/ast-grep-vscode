@@ -14,7 +14,7 @@ const useSearchResult = (inputValue: string) => {
     postSearch(inputValue).then(setResult)
   }, [postSearch, setResult, inputValue])
 
-  useDebounce(refreshSearchResult, 400, [inputValue])
+  useDebounce(refreshSearchResult, 100, [inputValue])
 
   return {
     searchResult,
