@@ -23,29 +23,21 @@ childPort.implementChannel({
   }
 })
 
-export const useSgSearch = () => {
-  const resolveMap = useRef(
-    new Map<string, (val: any | PromiseLike<any>) => void>()
-  )
+const resolveMap = new Map<string, (val: any | PromiseLike<any>) => void>()
 
-  const post = useCallback((inputValue: string) => {
-    let id = Math.random().toString() // TODO: nanoid
-    childPort.postMessage('search', { id, inputValue })
-    return new Promise<SgSearch[]>(resolve => {
-      resolveMap.current.set(id, resolve)
-    })
-  }, [])
-
-  useEffect(() => {
-    childPort.onMessage('search', event => {
-      const { id, searchResult } = event
-      resolveMap.current.get(id)?.(searchResult)
-      resolveMap.current.delete(id)
-    })
-  }, [])
-
-  return post
+export function postSearch(inputValue: string) {
+  let id = Math.random().toString() // TODO: nanoid
+  childPort.postMessage('search', { id, inputValue })
+  return new Promise<SgSearch[]>(resolve => {
+    resolveMap.set(id, resolve)
+  })
 }
+
+childPort.onMessage('search', event => {
+  const { id, searchResult } = event
+  resolveMap.get(id)?.(searchResult)
+  resolveMap.delete(id)
+})
 
 export const openFile = (data: Definition['child2parent']['openFile']) => {
   childPort.postMessage('openFile', data)
