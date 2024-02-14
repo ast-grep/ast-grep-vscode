@@ -1,6 +1,6 @@
 import type { SgSearch } from '../postMessage'
 import { childPort } from '../postMessage'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useDebounce } from 'react-use'
 
 // id should not overflow, the MOD is large enough
@@ -12,7 +12,7 @@ let id = 0
 let currentResolve: (r: SgSearch[]) => void
 let currentReject = () => {}
 
-export function postSearch(inputValue: string) {
+function postSearch(inputValue: string) {
   id = (id + 1) % MOD
   childPort.postMessage('search', { id, inputValue })
   currentReject()
@@ -37,7 +37,7 @@ function groupBy(matches: SgSearch[]) {
     if (!groups.has(match.file)) {
       groups.set(match.file, [])
     }
-    groups.get(match.file)?.push(match)
+    groups.get(match.file)!.push(match)
   }
   return groups
 }
@@ -49,10 +49,14 @@ export const useSearchResult = (inputValue: string) => {
   // TODO: setSearching has async racing condition here
   const refreshSearchResult = useCallback(() => {
     setSearching(true)
-    postSearch(inputValue).then(res => {
-      setResult(res)
-      setSearching(false)
-    })
+    postSearch(inputValue)
+      .then(res => {
+        setResult(res)
+        setSearching(false)
+      })
+      .catch(() => {
+        // TODO: cancelled request, should send cancel to extension
+      })
   }, [postSearch, setResult, inputValue])
 
   const groupedByFileSearchResult = useMemo(() => {
