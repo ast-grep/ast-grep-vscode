@@ -5,6 +5,35 @@ import type { SgSearch } from '../../../../types'
 import { CodeBlock } from './CodeBlock'
 import { FileLink } from './FileLink'
 import { VSCodeBadge } from '@vscode/webview-ui-toolkit/react'
+import { memo } from 'react'
+
+interface CodeBlockListProps {
+  matches: SgSearch[]
+}
+
+const CodeBlockList = memo(({ matches }: CodeBlockListProps) => {
+  return (
+    <>
+      {matches?.map(match => {
+        const { file, range } = match
+        const { byteOffset } = range
+        return (
+          <HStack
+            w="100%"
+            justifyContent="flex-start"
+            key={file + byteOffset.start + byteOffset.end}
+            _hover={{
+              background: 'var(--vscode-list-inactiveSelectionBackground)'
+            }}
+          >
+            <Box w="20px" />
+            <CodeBlock match={match} />
+          </HStack>
+        )
+      })}
+    </>
+  )
+})
 
 interface TreeItemProps {
   filePath: string
@@ -49,24 +78,13 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
         </HStack>
       </HStack>
 
-      <VStack w="100%" alignItems="flex-start" gap="0">
-        {isExpanded &&
-          matches?.map(match => {
-            const { file, range } = match
-            return (
-              <HStack
-                w="100%"
-                justifyContent="flex-start"
-                key={file + range.start.line + range.start.column}
-                _hover={{
-                  background: 'var(--vscode-list-inactiveSelectionBackground)'
-                }}
-              >
-                <Box w="20px" />
-                <CodeBlock match={match} />
-              </HStack>
-            )
-          })}
+      <VStack
+        w="100%"
+        alignItems="flex-start"
+        gap="0"
+        display={isExpanded ? 'flex' : 'none'}
+      >
+        <CodeBlockList matches={matches} />
       </VStack>
     </VStack>
   )
