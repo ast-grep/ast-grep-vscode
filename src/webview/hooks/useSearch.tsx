@@ -22,11 +22,19 @@ function postSearch(inputValue: string) {
   })
 }
 
-childPort.onMessage('search', event => {
+childPort.onMessage('searchResultStreaming', event => {
   if (event.id !== id) {
     return
   }
   currentResolve(event.searchResult)
+  currentResolve = () => {}
+  currentReject = () => {}
+})
+childPort.onMessage('searchEnd', event => {
+  if (event.id !== id) {
+    return
+  }
+  currentResolve([])
   currentResolve = () => {}
   currentReject = () => {}
 })

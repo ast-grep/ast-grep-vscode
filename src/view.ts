@@ -15,19 +15,20 @@ export function activate(context: vscode.ExtensionContext) {
     )
   )
 }
+type StreamingHandler = (r: SgSearch[]) => void
 
 let child: ChildProcessWithoutNullStreams | undefined
-
 function streamedPromise(
-  proc: ChildProcessWithoutNullStreams
-): Promise<SgSearch[]> {
-  // push all data into the result array
-  let result: SgSearch[] = []
+  proc: ChildProcessWithoutNullStreams,
+  handler: StreamingHandler
+): Promise<number> {
   // don't concatenate a single string/buffer
   // only maintain the last trailing line
   let trailingLine = ''
   // stream parsing JSON
   proc.stdout.on('data', (data: string) => {
+    // collect results in this batch
+    let result: SgSearch[] = []
     const lines = (trailingLine + data).split(/\r?\n/)
     trailingLine = ''
     for (let i = 0; i < lines.length; i++) {
@@ -40,13 +41,14 @@ function streamedPromise(
         }
       }
     }
+    handler(result)
   })
   return new Promise((resolve, reject) =>
     proc.on('exit', (code, signal) => {
       // exit without signal, search ends correctly
       // TODO: is it correct now?
       if (!signal && code === 0) {
-        resolve(result)
+        resolve(code)
       } else {
         reject([code, signal])
       }
@@ -55,8 +57,9 @@ function streamedPromise(
 }
 
 async function uniqueCommand(
-  proc: ChildProcessWithoutNullStreams
-): Promise<SgSearch[]> {
+  proc: ChildProcessWithoutNullStreams,
+  handler: StreamingHandler
+) {
   // kill previous search
   if (child) {
     child.kill('SIGTERM')
@@ -64,18 +67,16 @@ async function uniqueCommand(
   try {
     // set current proc to child
     child = proc
-    const ret = await streamedPromise(proc)
+    await streamedPromise(proc, handler)
     // unset child only when the promise succeed
     // interrupted proc will be replaced by latter proc
     child = undefined
-    return ret
   } catch (e) {
     console.error(e)
-    return []
   }
 }
 
-async function getPatternRes(pattern: string) {
+async function getPatternRes(pattern: string, handler: StreamingHandler) {
   if (!pattern) {
     return
   }
@@ -88,7 +89,7 @@ async function getPatternRes(pattern: string) {
   let proc = spawn(command, ['run', '--pattern', pattern, '--json=stream'], {
     cwd: uris[0]
   })
-  return uniqueCommand(proc)
+  return uniqueCommand(proc, handler)
 }
 
 function openFile({
@@ -139,8 +140,13 @@ function setupParentPort(webviewView: vscode.WebviewView) {
   })
 
   parentPort.onMessage('search', async payload => {
-    const res = (await getPatternRes(payload.inputValue)) ?? []
-    parentPort.postMessage('search', { ...payload, searchResult: res })
+    await getPatternRes(payload.inputValue, ret => {
+      parentPort.postMessage('searchResultStreaming', {
+        ...payload,
+        searchResult: ret
+      })
+    })
+    parentPort.postMessage('searchEnd', payload)
   })
 
   parentPort.onMessage('openFile', async payload => openFile(payload))
