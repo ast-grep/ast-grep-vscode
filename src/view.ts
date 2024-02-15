@@ -20,15 +20,31 @@ let child: ChildProcessWithoutNullStreams | undefined
 
 function streamedPromise(
   proc: ChildProcessWithoutNullStreams
-): Promise<string> {
-  let stdout = ''
+): Promise<SgSearch[]> {
+  // push all data into the result array
+  let result: SgSearch[] = []
+  // don't concatenate a single string/buffer
+  // only maintain the last trailing line
+  let trailingLine = ''
+  // kill previous search
   if (child) {
-    // kill previous search
     child.kill('SIGTERM')
   }
   child = proc
-  child.stdout.on('data', data => {
-    stdout += data
+  // stream parsing JSON
+  child.stdout.on('data', (data: string) => {
+    const lines = (trailingLine + data).split(/\r?\n/)
+    trailingLine = ''
+    for (let i = 0; i < lines.length; i++) {
+      try {
+        result.push(JSON.parse(lines[i]))
+      } catch (e) {
+        // only store the last non-json line
+        if (i === lines.length - 1) {
+          trailingLine = lines[i]
+        }
+      }
+    }
   })
   return new Promise((resolve, reject) =>
     child!.on('exit', (code, signal) => {
@@ -36,7 +52,7 @@ function streamedPromise(
       // TODO: is it correct now?
       if (!signal && code === 0) {
         child = undefined
-        resolve(stdout)
+        resolve(result)
       } else {
         reject([code, signal])
       }
@@ -54,14 +70,11 @@ async function getPatternRes(pattern: string) {
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
 
   // TODO: multi-workspaces support
-  // TODO: the code here is wrong, but we will change it
-  let proc = spawn(command, ['run', '--pattern', pattern, '--json=compact'], {
+  let proc = spawn(command, ['run', '--pattern', pattern, '--json=stream'], {
     cwd: uris[0]
   })
-  const stdout = await streamedPromise(proc)
   try {
-    let res: SgSearch[] = JSON.parse(stdout)
-    return res
+    return await streamedPromise(proc)
   } catch (e) {
     console.error(e)
     return []
