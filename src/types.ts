@@ -26,6 +26,7 @@ export type Definition = {
     searchResultStreaming: {
       searchResult: SgSearch[]
       id: number
+      inputValue: string
     }
     searchEnd: {
       id: number
