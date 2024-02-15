@@ -7,7 +7,8 @@
 
 body {
   /** Use important to override chakra styles */
-  color: var(--vscode-foreground) !important;
+  /*  pr #140: consistent with vscode builtin-search */
+  color: var(--vscode-sideBar-foreground, var(--vscode-foreground)) !important;
   font-size: var(--vscode-font-size) !important;
   font-weight: var(--vscode-font-weight) !important;
   font-family: var(--vscode-font-family) !important;
