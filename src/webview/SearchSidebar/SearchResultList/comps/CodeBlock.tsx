@@ -4,7 +4,7 @@ import { openFile } from '../../../postMessage'
 
 const style = {
   backgroundColor: 'var(--vscode-editor-findMatchHighlightBackground)',
-  border: '1px solid var(--vscode-editor-findMatchHighlightBackground)'
+  border: '1px solid var(--vscode-editor-findMatchHighlightBorder)'
 }
 
 const LEADING_SPACES_RE = /^\s*/
