@@ -23,8 +23,11 @@ export type SgSearch = {
 
 export type Definition = {
   parent2child: {
-    search: {
+    searchResultStreaming: {
       searchResult: SgSearch[]
+      id: number
+    }
+    searchEnd: {
       id: number
     }
   }
