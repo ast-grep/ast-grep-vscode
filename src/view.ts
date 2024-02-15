@@ -26,13 +26,8 @@ function streamedPromise(
   // don't concatenate a single string/buffer
   // only maintain the last trailing line
   let trailingLine = ''
-  // kill previous search
-  if (child) {
-    child.kill('SIGTERM')
-  }
-  child = proc
   // stream parsing JSON
-  child.stdout.on('data', (data: string) => {
+  proc.stdout.on('data', (data: string) => {
     const lines = (trailingLine + data).split(/\r?\n/)
     trailingLine = ''
     for (let i = 0; i < lines.length; i++) {
@@ -47,17 +42,37 @@ function streamedPromise(
     }
   })
   return new Promise((resolve, reject) =>
-    child!.on('exit', (code, signal) => {
+    proc.on('exit', (code, signal) => {
       // exit without signal, search ends correctly
       // TODO: is it correct now?
       if (!signal && code === 0) {
-        child = undefined
         resolve(result)
       } else {
         reject([code, signal])
       }
     })
   )
+}
+
+async function uniqueCommand(
+  proc: ChildProcessWithoutNullStreams
+): Promise<SgSearch[]> {
+  // kill previous search
+  if (child) {
+    child.kill('SIGTERM')
+  }
+  try {
+    // set current proc to child
+    child = proc
+    const ret = await streamedPromise(proc)
+    // unset child only when the promise succeed
+    // interrupted proc will be replaced by latter proc
+    child = undefined
+    return ret
+  } catch (e) {
+    console.error(e)
+    return []
+  }
 }
 
 async function getPatternRes(pattern: string) {
@@ -73,12 +88,7 @@ async function getPatternRes(pattern: string) {
   let proc = spawn(command, ['run', '--pattern', pattern, '--json=stream'], {
     cwd: uris[0]
   })
-  try {
-    return await streamedPromise(proc)
-  } catch (e) {
-    console.error(e)
-    return []
-  }
+  return uniqueCommand(proc)
 }
 
 function openFile({
