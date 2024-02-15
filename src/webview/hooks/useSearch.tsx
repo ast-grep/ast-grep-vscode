@@ -1,6 +1,11 @@
 import type { SgSearch } from '../postMessage'
 import { childPort } from '../postMessage'
-import { useCallback, useMemo, useSyncExternalStore } from 'react'
+import {
+  useCallback,
+  useDeferredValue,
+  useMemo,
+  useSyncExternalStore
+} from 'react'
 import { useDebounce } from 'react-use'
 
 // id should not overflow, the MOD is large enough
@@ -36,6 +41,7 @@ childPort.onMessage('searchEnd', event => {
     return
   }
   searching = false
+  queryInFlight = event.inputValue
   notify()
 })
 
@@ -75,9 +81,11 @@ export const useSearchResult = (inputValue: string) => {
     postSearch(inputValue)
   }, [inputValue])
 
-  const groupedByFileSearchResult = useMemo(() => {
+  const grouped = useMemo(() => {
     return [...groupBy(searchResult).entries()]
   }, [searchResult])
+  // rendering tree is too expensive, useDeferredValue
+  const groupedByFileSearchResult = useDeferredValue(grouped)
 
   useDebounce(refreshSearchResult, 100, [inputValue])
 

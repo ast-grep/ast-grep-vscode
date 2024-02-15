@@ -30,6 +30,7 @@ export type Definition = {
     }
     searchEnd: {
       id: number
+      inputValue: string
     }
   }
   child2parent: {
