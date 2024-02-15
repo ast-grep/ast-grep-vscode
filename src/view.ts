@@ -18,6 +18,32 @@ export function activate(context: vscode.ExtensionContext) {
 
 let child: ChildProcessWithoutNullStreams | undefined
 
+function streamedPromise(
+  proc: ChildProcessWithoutNullStreams
+): Promise<string> {
+  let stdout = ''
+  if (child) {
+    // kill previous search
+    child.kill('SIGTERM')
+  }
+  child = proc
+  child.stdout.on('data', data => {
+    stdout += data
+  })
+  return new Promise((resolve, reject) =>
+    child!.on('exit', (code, signal) => {
+      // exit without signal, search ends correctly
+      // TODO: is it correct now?
+      if (!signal && code === 0) {
+        child = undefined
+        resolve(stdout)
+      } else {
+        reject([code, signal])
+      }
+    })
+  )
+}
+
 async function getPatternRes(pattern: string) {
   if (!pattern) {
     return
@@ -29,30 +55,10 @@ async function getPatternRes(pattern: string) {
 
   // TODO: multi-workspaces support
   // TODO: the code here is wrong, but we will change it
-  let stdout = ''
-  if (child) {
-    // kill previous search
-    child.kill('SIGTERM')
-  }
-  child = spawn(command, ['run', '--pattern', pattern, '--json=compact'], {
+  let proc = spawn(command, ['run', '--pattern', pattern, '--json=compact'], {
     cwd: uris[0]
   })
-  child.stdout.on('data', data => {
-    stdout += data
-  })
-  await new Promise((resolve, reject) =>
-    child!.on('exit', (code, signal) => {
-      // exit without signal, search ends correctly
-      // TODO: is it correct now?
-      if (!signal && code === 0) {
-        resolve(code)
-      } else {
-        reject([code, signal])
-      }
-    })
-  )
-  child = undefined
-
+  const stdout = await streamedPromise(proc)
   try {
     let res: SgSearch[] = JSON.parse(stdout)
     return res
