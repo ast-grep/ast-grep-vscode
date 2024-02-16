@@ -13,7 +13,7 @@ export const SearchSidebar = () => {
   )
   const {
     queryInFlight,
-    searchResult,
+    searchCount,
     groupedByFileSearchResult,
     refreshSearchResult,
     searching
@@ -29,7 +29,7 @@ export const SearchSidebar = () => {
       />
       <SearchProviderMessage
         pattern={queryInFlight}
-        resultCount={searchResult.length}
+        resultCount={searchCount}
         fileCount={groupedByFileSearchResult.length}
       />
       <SearchResultList matches={groupedByFileSearchResult} />
