@@ -118,18 +118,20 @@ export function toRange(
  * @param docUri The URI of the document being tested
  */
 export function assertCodeActionArraysEqual(
-  actual: vscode.CodeAction[],
-  expected: vscode.CodeAction[],
+  actuals: vscode.CodeAction[],
+  expecteds: vscode.CodeAction[],
   docUri: vscode.Uri
 ): void {
-  assert.equal(actual.length, expected.length)
-  expected.forEach((expectedElement, i) => {
-    const actualElement = actual[i]
-    assert.equal(actualElement.title, expectedElement.title)
-    assert.equal(actualElement.isPreferred, expectedElement.isPreferred)
+  assert.equal(actuals.length, expecteds.length, 'Number of CodeActions differ')
+  expecteds.forEach((_, i) => {
+    const actual = actuals[i]
+    const expected = expecteds[i]
+    assert.equal(actual.title, expected.title, 'title')
+    assert.equal(actual.isPreferred, expected.isPreferred, 'isPreferred')
     assert.equal(
-      JSON.stringify(actualElement.edit?.get(docUri)),
-      JSON.stringify(expectedElement.edit?.get(docUri))
+      JSON.stringify(actual.edit?.get(docUri)),
+      JSON.stringify(expected.edit?.get(docUri)),
+      "CodeActions' edit texts differ"
     )
   })
 }
@@ -189,7 +191,7 @@ export function testAndRetry(
       }
     }
   }
-  let options = Object.assign({}, defaultRetryOptions, retryOptions)
+  const options = { ...defaultRetryOptions, ...retryOptions }
   return test(name, async () => {
     let p = retry.retry(wrapped, options)
     p.finally(() => {
