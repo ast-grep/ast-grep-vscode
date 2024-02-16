@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import * as assert from 'assert'
-import * as retry from 'ts-retry'
 
 export let doc: vscode.TextDocument
 export let editor: vscode.TextEditor
@@ -161,48 +160,36 @@ export async function getActualCodeActions(
 /**
  * Helper function to make our mocha tests retry on failure
  */
-const defaultRetryOptions: retry.RetryOptions = {
-  delay: 1000,
-  maxTry: 4
-  // onError: (e: Error) => console.log(`Test failed but retrying after 1s`)
-}
-export function testAndRetry(
-  name: string,
-  fn: () => Promise<void>,
-  retryOptions?: retry.RetryOptions
-) {
-  let startTime = Date.now()
-  let firstTry = true
-  let elapsedTime = 0
-  let errors: Error[] = []
-  let wrapped = async () => {
+export function testAndRetry(name: string, fn: () => Promise<void>) {
+  return test(name, async () => {
+    const errors: Array<any> = []
+    const startTime = Date.now()
+    /* perform initial test */
     try {
-      if (!firstTry) {
-        elapsedTime = Date.now() - startTime
-        console.log(`Retrying test at t=${elapsedTime}ms`)
-      } else {
-        firstTry = false
-      }
       await fn()
+      return
     } catch (e) {
-      if (e instanceof Error) {
+      errors.push(e)
+    }
+    /* perform retries */
+    let retries = 3
+    while (retries--) {
+      await sleep(1000)
+      try {
+        console.log(`Retrying test at t = ${Date.now() - startTime}ms`)
+        await fn()
+        break
+      } catch (e) {
         errors.push(e)
-        throw e
       }
     }
-  }
-  const options = { ...defaultRetryOptions, ...retryOptions }
-  return test(name, async () => {
-    let p = retry.retry(wrapped, options)
-    p.finally(() => {
-      errors.forEach((error, index) => {
-        console.error(`Error ${index + 1}: ${error.toString()}`)
-        // console.error(`Stack trace: ${error.stack}`)
-      })
-      if (errors.length > 0) {
-        throw errors[errors.length - 1]
-      }
+    /* Log every error that ocurred */
+    errors.forEach((error, index) => {
+      console.error(`Error ${index + 1}: ${error}`)
     })
-    await p
+    /* Throw the last error if all retries have been exhausted */
+    if (retries <= 0) {
+      throw errors[errors.length - 1]
+    }
   })
 }
