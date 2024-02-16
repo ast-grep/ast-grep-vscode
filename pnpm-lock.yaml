@@ -62,6 +62,9 @@ devDependencies:
   react-use:
     specifier: 17.5.0
     version: 17.5.0(react-dom@18.2.0)(react@18.2.0)
+  ts-retry:
+    specifier: ^4.2.5
+    version: 4.2.5
   tslib:
     specifier: 2.6.2
     version: 2.6.2
@@ -3743,6 +3746,10 @@ packages:
 
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
+    dev: true
+
+  /ts-retry@4.2.5:
+    resolution: {integrity: sha512-dFBa4pxMBkt/bjzdBio8EwYfbAdycEAwe0KZgzlUKKwU9Wr1WErK7Hg9QLqJuDDYJXTW4KYZyXAyqYKOdO/ehA==}
     dev: true
 
   /tslib@1.14.1:

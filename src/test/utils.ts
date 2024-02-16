@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import * as assert from 'assert'
+import * as retry from 'ts-retry'
 
 export let doc: vscode.TextDocument
 export let editor: vscode.TextEditor
@@ -108,4 +109,151 @@ export function toRange(
   const start = new vscode.Position(sLine, sChar)
   const end = new vscode.Position(eLine, eChar)
   return new vscode.Range(start, end)
+}
+
+// Add this function to normalize line endings
+function eolReplacer(key: string, value: any) {
+  if (typeof value === 'string') {
+    return value.replace(/\r\n/g, '\n')
+  }
+  return value
+}
+
+export function assertCodeActionArraysEqual(
+  codeActions1: vscode.CodeAction[],
+  codeActions2: vscode.CodeAction[],
+  docUri: vscode.Uri
+): void {
+  assert.equal(codeActions1.length, codeActions2.length)
+  codeActions1.forEach((codeAction1, i) => {
+    const codeAction2 = codeActions2[i]
+    assertCodeActionsEqual(codeAction1, codeAction2, docUri)
+  })
+}
+export function assertCodeActionsEqual(
+  codeAction1: vscode.CodeAction,
+  codeAction2: vscode.CodeAction,
+  docUri: vscode.Uri
+): void {
+  if (codeAction1.title !== codeAction2.title) {
+    throw new Error(
+      `Code Action Title: ${codeAction1.title} !== ${codeAction2.title}`
+    )
+  }
+
+  if (codeAction1.isPreferred !== codeAction2.isPreferred) {
+    throw new Error(
+      `Code Action isPreferred: ${codeAction1.isPreferred} !== ${codeAction2.isPreferred}`
+    )
+  }
+
+  if (codeAction1.edit === undefined && codeAction2.edit === undefined) {
+    return // both are undefined which counts as equal
+  }
+  if (codeAction1.edit === undefined) {
+    throw new Error(
+      `The First Code Action's edit is undefined, but the second is ${codeAction2.edit}`
+    )
+  }
+  if (codeAction2.edit === undefined) {
+    throw new Error(
+      `The First Code Action's edit is ${codeAction1.edit}, but the second is undefined`
+    )
+  }
+  // both exist
+  let edits1 = codeAction1.edit!.get(docUri)
+  let edits2 = codeAction2.edit!.get(docUri)
+  edits1.forEach((_, i) => {
+    let text1 = JSON.stringify(edits1[i], eolReplacer, 2)
+    let text2 = JSON.stringify(edits2[i], eolReplacer, 2)
+    if (text1 !== text2) {
+      throw new Error(
+        `Code Action Edit #${i} mismatch:\n${text1}\n!==\n${text2}`
+      )
+    }
+  })
+}
+
+export async function getActualCodeActions(
+  docUri: vscode.Uri,
+  range: vscode.Range
+): Promise<vscode.CodeAction[]> {
+  try {
+    let executedCommand = await vscode.commands.executeCommand(
+      'vscode.executeCodeActionProvider',
+      docUri,
+      range,
+      'quickfix'
+    )
+    return executedCommand as vscode.CodeAction[]
+  } catch (e) {
+    console.error('Failed to get code actions.')
+    throw e
+  }
+}
+export function getExpectedCodeActions(
+  docUri: vscode.Uri,
+  range: vscode.Range,
+  newText: string
+): vscode.CodeAction[] {
+  const edit = new vscode.WorkspaceEdit()
+  edit.replace(docUri, range, newText)
+  let exp = [
+    {
+      title: 'Test rule for vscode extension',
+      kind: vscode.CodeActionKind.QuickFix,
+      edit,
+      isPreferred: true
+    }
+  ] as vscode.CodeAction[]
+  return exp
+}
+
+/**
+ * Helper function to make our mocha tests retry on failure
+ */
+const defaultRetryOptions: retry.RetryOptions = {
+  delay: 1000,
+  maxTry: 4
+  // onError: (e: Error) => console.log(`Test failed but retrying after 1s`)
+}
+export function testAndRetry(
+  name: string,
+  fn: () => Promise<void>,
+  retryOptions?: retry.RetryOptions
+) {
+  let startTime = Date.now()
+  let firstTry = true
+  let elapsedTime = 0
+  let errors: Error[] = []
+  let wrapped = async () => {
+    try {
+      if (!firstTry) {
+        elapsedTime = Date.now() - startTime
+        console.log(`Retrying test at t=${elapsedTime}ms`)
+      } else {
+        firstTry = false
+      }
+      await fn()
+    } catch (e) {
+      if (e instanceof Error) {
+        errors.push(e)
+        throw e
+      }
+    }
+  }
+  let options = Object.assign({}, defaultRetryOptions, retryOptions)
+  return test(name, async () => {
+    let p = retry.retry(wrapped, options)
+    p.finally(() => {
+      errors.forEach((error, index) => {
+        console.error(`Error ${index + 1}: ${error.toString()}`)
+        // console.error(`Stack trace: ${error.stack}`)
+      })
+      if (errors.length > 0) {
+        throw errors[errors.length - 1]
+      }
+    })
+    await p
+  })
 }
