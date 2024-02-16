@@ -1,11 +1,6 @@
 import type { DisplayResult } from '../postMessage'
 import { childPort } from '../postMessage'
-import {
-  useCallback,
-  useDeferredValue,
-  useMemo,
-  useSyncExternalStore
-} from 'react'
+import { useCallback, useDeferredValue, useSyncExternalStore } from 'react'
 import { useDebounce } from 'react-use'
 
 // id should not overflow, the MOD is large enough
@@ -14,7 +9,7 @@ const MOD = 1e9 + 7
 
 // maintain the latest search task id and callback
 let id = 0
-let searchResult: DisplayResult[] = []
+let grouped = [] as [string, DisplayResult[]][]
 let queryInFlight = ''
 let searching = true
 let notify = () => {}
@@ -22,8 +17,8 @@ let notify = () => {}
 function postSearch(inputValue: string) {
   id = (id + 1) % MOD
   childPort.postMessage('search', { id, inputValue })
-  searchResult = []
   searching = true
+  grouped = []
   notify()
 }
 
@@ -32,7 +27,7 @@ childPort.onMessage('searchResultStreaming', event => {
     return
   }
   queryInFlight = event.inputValue
-  searchResult = searchResult.concat(event.searchResult)
+  grouped = merge(groupBy(event.searchResult))
   notify()
 })
 
@@ -54,6 +49,16 @@ function groupBy(matches: DisplayResult[]) {
     groups.get(match.file)!.push(match)
   }
   return groups
+}
+
+function merge(newEntries: Map<string, DisplayResult[]>) {
+  // first, clone the old map for react
+  let temp = new Map(grouped)
+  for (const [file, newList] of newEntries) {
+    const existing = temp.get(file) || []
+    temp.set(file, existing.concat(newList))
+  }
+  return [...temp.entries()]
 }
 
 // version is for react to update view
@@ -81,9 +86,6 @@ export const useSearchResult = (inputValue: string) => {
     postSearch(inputValue)
   }, [inputValue])
 
-  const grouped = useMemo(() => {
-    return [...groupBy(searchResult).entries()]
-  }, [searchResult])
   // rendering tree is too expensive, useDeferredValue
   const groupedByFileSearchResult = useDeferredValue(grouped)
 
@@ -92,8 +94,8 @@ export const useSearchResult = (inputValue: string) => {
   return {
     queryInFlight,
     searching,
-    searchResult,
     groupedByFileSearchResult,
+    searchCount: grouped.reduce((a, l) => a + l[1].length, 0),
     refreshSearchResult
   }
 }
