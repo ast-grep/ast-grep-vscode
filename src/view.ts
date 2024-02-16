@@ -1,4 +1,4 @@
-import type { Definition, ParentPort, SgSearch } from './types'
+import type { Definition, ParentPort, SgSearch, DisplayResult } from './types'
 import { Unport, ChannelMessage } from 'unport'
 import * as vscode from 'vscode'
 import { workspace } from 'vscode'
@@ -15,6 +15,36 @@ export function activate(context: vscode.ExtensionContext) {
     )
   )
 }
+
+const LEADING_SPACES_RE = /^\s*/
+
+function splitByHighLightToken(search: SgSearch): DisplayResult {
+  const { start, end } = search.range
+  let startIdx = start.column
+  let endIdx = end.column
+  let displayLine = search.lines
+  // multiline matches! only display the first line!
+  if (start.line < end.line) {
+    displayLine = search.lines.split(/\r?\n/, 1)[0]
+    endIdx = displayLine.length
+  }
+  // strip leading spaces
+  const leadingSpaces = displayLine.match(LEADING_SPACES_RE)?.[0].length
+  if (leadingSpaces) {
+    displayLine = displayLine.substring(leadingSpaces)
+    startIdx -= leadingSpaces
+    endIdx -= leadingSpaces
+  }
+  return {
+    startIdx,
+    endIdx,
+    displayLine,
+    lineSpan: end.line - start.line,
+    file: search.file,
+    range: search.range
+  }
+}
+
 type StreamingHandler = (r: SgSearch[]) => void
 
 let child: ChildProcessWithoutNullStreams | undefined
@@ -143,7 +173,7 @@ function setupParentPort(webviewView: vscode.WebviewView) {
     await getPatternRes(payload.inputValue, ret => {
       parentPort.postMessage('searchResultStreaming', {
         ...payload,
-        searchResult: ret
+        searchResult: ret.map(splitByHighLightToken)
       })
     })
     parentPort.postMessage('searchEnd', payload)

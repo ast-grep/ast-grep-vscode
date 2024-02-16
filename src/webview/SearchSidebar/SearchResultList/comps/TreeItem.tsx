@@ -1,14 +1,14 @@
 import { HStack, IconButton, VStack, Box } from '@chakra-ui/react'
 import { HiOutlineChevronDown, HiOutlineChevronRight } from 'react-icons/hi'
 import { useBoolean } from 'react-use'
-import type { SgSearch } from '../../../../types'
+import type { DisplayResult } from '../../../../types'
 import { CodeBlock } from './CodeBlock'
 import { FileLink } from './FileLink'
 import { VSCodeBadge } from '@vscode/webview-ui-toolkit/react'
 import { memo } from 'react'
 
 interface CodeBlockListProps {
-  matches: SgSearch[]
+  matches: DisplayResult[]
 }
 
 const CodeBlockList = memo(({ matches }: CodeBlockListProps) => {
@@ -37,7 +37,7 @@ const CodeBlockList = memo(({ matches }: CodeBlockListProps) => {
 
 interface TreeItemProps {
   filePath: string
-  matches: SgSearch[]
+  matches: DisplayResult[]
 }
 
 const TreeItem = ({ filePath, matches }: TreeItemProps) => {

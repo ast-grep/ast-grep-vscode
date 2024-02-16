@@ -1,6 +1,6 @@
 import type { ChildPort, Definition } from '../types'
 import { Unport } from 'unport'
-export type { SgSearch } from '../types'
+export type { DisplayResult } from '../types'
 
 // @ts-expect-error
 let vscode = acquireVsCodeApi()
