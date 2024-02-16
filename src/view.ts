@@ -102,11 +102,16 @@ async function uniqueCommand(
     // interrupted proc will be replaced by latter proc
     child = undefined
   } catch (e) {
-    console.error(e)
+    console.info(`search aborted: `, e)
   }
 }
 
-async function getPatternRes(pattern: string, handler: StreamingHandler) {
+interface Handlers {
+  onData: StreamingHandler
+  onError: (e: Error) => void
+}
+
+function getPatternRes(pattern: string, handlers: Handlers) {
   if (!pattern) {
     return
   }
@@ -119,7 +124,11 @@ async function getPatternRes(pattern: string, handler: StreamingHandler) {
   let proc = spawn(command, ['run', '--pattern', pattern, '--json=stream'], {
     cwd: uris[0]
   })
-  return uniqueCommand(proc, handler)
+  proc.on('error', error => {
+    console.debug('ast-grep CLI runs error')
+    handlers.onError(error)
+  })
+  return uniqueCommand(proc, handlers.onData)
 }
 
 function openFile({
@@ -170,11 +179,17 @@ function setupParentPort(webviewView: vscode.WebviewView) {
   })
 
   parentPort.onMessage('search', async payload => {
-    await getPatternRes(payload.inputValue, ret => {
+    const onData = (ret: SgSearch[]) => {
       parentPort.postMessage('searchResultStreaming', {
         ...payload,
         searchResult: ret.map(splitByHighLightToken)
       })
+    }
+    await getPatternRes(payload.inputValue, {
+      onData,
+      onError(e) {
+        parentPort.postMessage('error', e)
+      }
     })
     parentPort.postMessage('searchEnd', payload)
   })
