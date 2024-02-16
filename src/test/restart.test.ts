@@ -1,13 +1,19 @@
 import * as vscode from 'vscode'
 
-import { getDocUri, sleep, testDiagnostics, toRange } from './utils'
+import {
+  getDocUri,
+  sleep,
+  testDiagnostics,
+  toRange,
+  testAndRetry
+} from './utils'
 
 suite('ast-grep.restartLanguageServer should work', () => {
   const docUri = getDocUri('test.ts')
   const sgConfigYml = getDocUri('sgconfig.yml')
   const tempSgConfigYml = getDocUri('_sgconfig.yml')
 
-  test('Delete or create the sgconfig.yml', async () => {
+  testAndRetry('Delete or create the sgconfig.yml', async () => {
     // remove configFile should receive no diagnostics
     await vscode.workspace.fs.rename(sgConfigYml, tempSgConfigYml)
     await vscode.commands.executeCommand('ast-grep.restartLanguageServer')

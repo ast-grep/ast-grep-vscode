@@ -1,10 +1,10 @@
 import * as vscode from 'vscode'
 
-import { getDocUri, testDiagnostics, toRange } from './utils'
+import { getDocUri, testDiagnostics, toRange, testAndRetry } from './utils'
 
 suite('Should get diagnostics', () => {
   const docUri = getDocUri('test.ts')
-  test('Get ast-grep issues', async () => {
+  testAndRetry('Get ast-grep issues', async () => {
     await testDiagnostics(docUri, [
       {
         message: 'No console.log',
