@@ -36,26 +36,26 @@ export async function activate() {
 }
 
 /**
- * Compare expected and actual diagnostics reported by the language server
+ * Compare actual and expected diagnostics reported by the language server
  * sort them so that order doesn't matter
- * @param d1 The first array of vscode.Diagnostic objects
- * @param d2 The second array of vscode.Diagnostic objects
+ * @param actual The first array of vscode.Diagnostic objects
+ * @param expected The second array of vscode.Diagnostic objects
  */
 export const assertDiagnosticsEqual = (
-  d1: vscode.Diagnostic[],
-  d2: vscode.Diagnostic[]
+  actual: vscode.Diagnostic[],
+  expected: vscode.Diagnostic[]
 ) => {
-  assert.equal(d1.length, d2.length)
-  d1.sort((a, b) =>
+  assert.equal(actual.length, expected.length)
+  actual.sort((a, b) =>
     a.message === b.message ? 0 : a.message > b.message ? 1 : -1
   )
-  d2.sort((a, b) =>
+  expected.sort((a, b) =>
     a.message === b.message ? 0 : a.message > b.message ? 1 : -1
   )
-  d1.forEach((d, i) => {
-    assert.equal(d.message, d2[i].message)
-    assert.deepEqual(d.range, d2[i].range)
-    assert.equal(d.severity, d2[i].severity)
+  actual.forEach((actualElement, i) => {
+    assert.equal(actualElement.message, expected[i].message)
+    assert.deepEqual(actualElement.range, expected[i].range)
+    assert.equal(actualElement.severity, expected[i].severity)
   })
 }
 
@@ -111,69 +111,33 @@ export function toRange(
   return new vscode.Range(start, end)
 }
 
-// Add this function to normalize line endings
-function eolReplacer(key: string, value: any) {
-  if (typeof value === 'string') {
-    return value.replace(/\r\n/g, '\n')
-  }
-  return value
-}
-
+/**
+ * Compare actual and expected arrays of code actions reported by the language server
+ * @param actual The first array of vscode.CodeAction objects
+ * @param expected The second array of vscode.CodeAction objects
+ * @param docUri The URI of the document being tested
+ */
 export function assertCodeActionArraysEqual(
-  codeActions1: vscode.CodeAction[],
-  codeActions2: vscode.CodeAction[],
+  actual: vscode.CodeAction[],
+  expected: vscode.CodeAction[],
   docUri: vscode.Uri
 ): void {
-  assert.equal(codeActions1.length, codeActions2.length)
-  codeActions1.forEach((codeAction1, i) => {
-    const codeAction2 = codeActions2[i]
-    assertCodeActionsEqual(codeAction1, codeAction2, docUri)
-  })
-}
-export function assertCodeActionsEqual(
-  codeAction1: vscode.CodeAction,
-  codeAction2: vscode.CodeAction,
-  docUri: vscode.Uri
-): void {
-  if (codeAction1.title !== codeAction2.title) {
-    throw new Error(
-      `Code Action Title: ${codeAction1.title} !== ${codeAction2.title}`
+  assert.equal(actual.length, expected.length)
+  expected.forEach((expectedElement, i) => {
+    const actualElement = actual[i]
+    assert.equal(actualElement.title, expectedElement.title)
+    assert.equal(actualElement.isPreferred, expectedElement.isPreferred)
+    assert.equal(
+      JSON.stringify(actualElement.edit?.get(docUri)),
+      JSON.stringify(expectedElement.edit?.get(docUri))
     )
-  }
-
-  if (codeAction1.isPreferred !== codeAction2.isPreferred) {
-    throw new Error(
-      `Code Action isPreferred: ${codeAction1.isPreferred} !== ${codeAction2.isPreferred}`
-    )
-  }
-
-  if (codeAction1.edit === undefined && codeAction2.edit === undefined) {
-    return // both are undefined which counts as equal
-  }
-  if (codeAction1.edit === undefined) {
-    throw new Error(
-      `The First Code Action's edit is undefined, but the second is ${codeAction2.edit}`
-    )
-  }
-  if (codeAction2.edit === undefined) {
-    throw new Error(
-      `The First Code Action's edit is ${codeAction1.edit}, but the second is undefined`
-    )
-  }
-  // both exist
-  let edits1 = codeAction1.edit!.get(docUri)
-  let edits2 = codeAction2.edit!.get(docUri)
-  edits1.forEach((_, i) => {
-    let text1 = JSON.stringify(edits1[i], eolReplacer, 2)
-    let text2 = JSON.stringify(edits2[i], eolReplacer, 2)
-    if (text1 !== text2) {
-      throw new Error(
-        `Code Action Edit #${i} mismatch:\n${text1}\n!==\n${text2}`
-      )
-    }
   })
 }
 
+/**
+ * Get the actual code actions reported by the language server
+ * @throws Error if the call to vscode.commands.executeCommand fails
+ */
 export async function getActualCodeActions(
   docUri: vscode.Uri,
   range: vscode.Range
@@ -190,23 +154,6 @@ export async function getActualCodeActions(
     console.error('Failed to get code actions.')
     throw e
   }
-}
-export function getExpectedCodeActions(
-  docUri: vscode.Uri,
-  range: vscode.Range,
-  newText: string
-): vscode.CodeAction[] {
-  const edit = new vscode.WorkspaceEdit()
-  edit.replace(docUri, range, newText)
-  let exp = [
-    {
-      title: 'Test rule for vscode extension',
-      kind: vscode.CodeActionKind.QuickFix,
-      edit,
-      isPreferred: true
-    }
-  ] as vscode.CodeAction[]
-  return exp
 }
 
 /**
