@@ -5,6 +5,7 @@ import { UseDarkContextProvider } from '../hooks/useDark'
 import { useSearchResult } from '../hooks/useSearch'
 import LoadingBar from '../LoadingBar'
 import SearchProviderMessage from './SearchProviderMessage'
+import { useDeferredValue } from 'react'
 
 export const SearchSidebar = () => {
   const [inputValue = '', setInputValue] = useLocalStorage(
@@ -19,6 +20,11 @@ export const SearchSidebar = () => {
     searching
   } = useSearchResult(inputValue)
 
+  // rendering tree is too expensive, useDeferredValue
+  const groupedByFileSearchResultForRender = useDeferredValue(
+    groupedByFileSearchResult
+  )
+
   return (
     <UseDarkContextProvider>
       <LoadingBar loading={searching} />
@@ -32,7 +38,7 @@ export const SearchSidebar = () => {
         resultCount={searchCount}
         fileCount={groupedByFileSearchResult.length}
       />
-      <SearchResultList matches={groupedByFileSearchResult} />
+      <SearchResultList matches={groupedByFileSearchResultForRender} />
     </UseDarkContextProvider>
   )
 }
