@@ -13,18 +13,26 @@ let grouped = [] as [string, DisplayResult[]][]
 let queryInFlight = ''
 let searching = true
 let notify = () => {}
+// we will not immediately drop previous result
+// instead, use a stale flag and update it on streaming or end
+let hasStaleResult = false
 
 function postSearch(inputValue: string) {
   id = (id + 1) % MOD
   childPort.postMessage('search', { id, inputValue })
   searching = true
-  grouped = []
+  hasStaleResult = true
   notify()
 }
 
 childPort.onMessage('searchResultStreaming', event => {
   if (event.id !== id) {
     return
+  }
+  if (hasStaleResult) {
+    // empty previous result
+    hasStaleResult = false
+    grouped = []
   }
   queryInFlight = event.inputValue
   grouped = merge(groupBy(event.searchResult))
@@ -36,6 +44,10 @@ childPort.onMessage('searchEnd', event => {
     return
   }
   searching = false
+  if (hasStaleResult) {
+    grouped = []
+  }
+  hasStaleResult = false
   queryInFlight = event.inputValue
   notify()
 })
@@ -65,8 +77,9 @@ function merge(newEntries: Map<string, DisplayResult[]>) {
 let version = 114514
 function subscribe(onChange: () => void): () => void {
   notify = () => {
-    onChange()
+    // snapshot should precede onChange
     version = (version + 1) % MOD
+    onChange()
   }
   return () => {
     // TODO: cleanup is not correct
