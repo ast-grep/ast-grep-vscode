@@ -1,6 +1,6 @@
 import type { DisplayResult } from '../postMessage'
 import { childPort } from '../postMessage'
-import { useCallback, useDeferredValue, useSyncExternalStore } from 'react'
+import { useCallback, useSyncExternalStore } from 'react'
 import { useDebounce } from 'react-use'
 
 // id should not overflow, the MOD is large enough
@@ -99,15 +99,12 @@ export const useSearchResult = (inputValue: string) => {
     postSearch(inputValue)
   }, [inputValue])
 
-  // rendering tree is too expensive, useDeferredValue
-  const groupedByFileSearchResult = useDeferredValue(grouped)
-
   useDebounce(refreshSearchResult, 100, [inputValue])
 
   return {
     queryInFlight,
     searching,
-    groupedByFileSearchResult,
+    groupedByFileSearchResult: grouped,
     searchCount: grouped.reduce((a, l) => a + l[1].length, 0),
     refreshSearchResult
   }
