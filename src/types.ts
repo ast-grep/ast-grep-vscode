@@ -43,7 +43,10 @@ export type Definition = {
       id: number
       inputValue: string
     }
-    error: Error
+    error: {
+      id: number
+      error: Error
+    }
   }
   child2parent: {
     search: {

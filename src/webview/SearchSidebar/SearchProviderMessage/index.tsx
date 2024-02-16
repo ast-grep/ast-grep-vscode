@@ -53,13 +53,31 @@ interface SearchProviderMessageProps {
   resultCount: number
   fileCount: number
   pattern: string
+  error: Error | null
 }
 
 const SearchProviderMessage = ({
   pattern,
   resultCount,
-  fileCount
+  fileCount,
+  error
 }: SearchProviderMessageProps) => {
+  if (error) {
+    return (
+      <div style={style}>
+        Error occurs when running <code>ast-grep</code>.<br />
+        Make sure you{' '}
+        <VSCodeLink href="https://ast-grep.github.io/guide/quick-start.html#installation">
+          installed the binary
+        </VSCodeLink>{' '}
+        and the command <code>ast-grep</code> is accessible{' '}
+        <VSCodeLink href="https://github.com/ast-grep/ast-grep-vscode/issues/133#issuecomment-1943153446">
+          by your editor
+        </VSCodeLink>
+        .
+      </div>
+    )
+  }
   return (
     <>
       {resultCount === 0 ? (

@@ -187,8 +187,11 @@ function setupParentPort(webviewView: vscode.WebviewView) {
     }
     await getPatternRes(payload.inputValue, {
       onData,
-      onError(e) {
-        parentPort.postMessage('error', e)
+      onError(error) {
+        parentPort.postMessage('error', {
+          error,
+          ...payload
+        })
       }
     })
     parentPort.postMessage('searchEnd', payload)

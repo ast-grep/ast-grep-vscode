@@ -17,7 +17,8 @@ export const SearchSidebar = () => {
     searchCount,
     groupedByFileSearchResult,
     refreshSearchResult,
-    searching
+    searching,
+    searchError
   } = useSearchResult(inputValue)
 
   // rendering tree is too expensive, useDeferredValue
@@ -35,6 +36,7 @@ export const SearchSidebar = () => {
       />
       <SearchProviderMessage
         pattern={queryInFlight}
+        error={searchError}
         resultCount={searchCount}
         fileCount={groupedByFileSearchResult.length}
       />

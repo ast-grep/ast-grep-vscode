@@ -13,6 +13,7 @@ let grouped = [] as [string, DisplayResult[]][]
 let queryInFlight = ''
 let searching = true
 let notify = () => {}
+let searchError: Error | null = null
 // we will not immediately drop previous result
 // instead, use a stale flag and update it on streaming or end
 let hasStaleResult = false
@@ -22,6 +23,7 @@ function postSearch(inputValue: string) {
   childPort.postMessage('search', { id, inputValue })
   searching = true
   hasStaleResult = true
+  searchError = null
   notify()
 }
 
@@ -49,6 +51,16 @@ childPort.onMessage('searchEnd', event => {
   }
   hasStaleResult = false
   queryInFlight = event.inputValue
+  notify()
+})
+
+childPort.onMessage('error', event => {
+  if (event.id !== id) {
+    return
+  }
+  searchError = event.error
+  searching = false
+  grouped = []
   notify()
 })
 
@@ -104,6 +116,7 @@ export const useSearchResult = (inputValue: string) => {
   return {
     queryInFlight,
     searching,
+    searchError,
     groupedByFileSearchResult: grouped,
     searchCount: grouped.reduce((a, l) => a + l[1].length, 0),
     refreshSearchResult
