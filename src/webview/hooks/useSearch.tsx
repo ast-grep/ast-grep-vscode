@@ -1,4 +1,4 @@
-import type { SgSearch } from '../postMessage'
+import type { DisplayResult } from '../postMessage'
 import { childPort } from '../postMessage'
 import {
   useCallback,
@@ -14,7 +14,7 @@ const MOD = 1e9 + 7
 
 // maintain the latest search task id and callback
 let id = 0
-let searchResult: SgSearch[] = []
+let searchResult: DisplayResult[] = []
 let queryInFlight = ''
 let searching = true
 let notify = () => {}
@@ -45,8 +45,8 @@ childPort.onMessage('searchEnd', event => {
   notify()
 })
 
-function groupBy(matches: SgSearch[]) {
-  const groups = new Map<string, SgSearch[]>()
+function groupBy(matches: DisplayResult[]) {
+  const groups = new Map<string, DisplayResult[]>()
   for (const match of matches) {
     if (!groups.has(match.file)) {
       groups.set(match.file, [])

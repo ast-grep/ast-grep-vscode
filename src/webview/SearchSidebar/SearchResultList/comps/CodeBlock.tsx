@@ -1,37 +1,10 @@
 import { Box } from '@chakra-ui/react'
-import type { SgSearch } from '../../../../types'
+import type { DisplayResult } from '../../../../types'
 import { openFile } from '../../../postMessage'
 
 const style = {
   backgroundColor: 'var(--vscode-editor-findMatchHighlightBackground)',
   border: '1px solid var(--vscode-editor-findMatchHighlightBorder)'
-}
-
-const LEADING_SPACES_RE = /^\s*/
-
-function splitByHighLightToken(search: SgSearch) {
-  const { start, end } = search.range
-  let startIdx = start.column
-  let endIdx = end.column
-  let displayLine = search.lines
-  // multiline matches! only display the first line!
-  if (start.line < end.line) {
-    displayLine = search.lines.split(/\r?\n/, 1)[0]
-    endIdx = displayLine.length
-  }
-  // strip leading spaces
-  const leadingSpaces = displayLine.match(LEADING_SPACES_RE)?.[0].length
-  if (leadingSpaces) {
-    displayLine = displayLine.substring(leadingSpaces)
-    startIdx -= leadingSpaces
-    endIdx -= leadingSpaces
-  }
-  return {
-    startIdx,
-    endIdx,
-    displayLine,
-    lineSpan: end.line - start.line
-  }
 }
 
 // this is also hardcoded in vscode
@@ -50,11 +23,10 @@ function MultiLineIndicator({ lineSpan }: { lineSpan: number }) {
 }
 
 interface CodeBlockProps {
-  match: SgSearch
+  match: DisplayResult
 }
 export const CodeBlock = ({ match }: CodeBlockProps) => {
-  const { startIdx, endIdx, displayLine, lineSpan } =
-    splitByHighLightToken(match)
+  const { startIdx, endIdx, displayLine, lineSpan } = match
 
   return (
     <Box

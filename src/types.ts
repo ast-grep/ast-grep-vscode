@@ -6,16 +6,27 @@ export type Position = {
   index?: number
 }
 
+export interface RangeInfo {
+  byteOffset: {
+    start: number
+    end: number
+  }
+  start: Position
+  end: Position
+}
+
+export interface DisplayResult {
+  file: string
+  startIdx: number
+  endIdx: number
+  displayLine: string
+  lineSpan: number
+  range: RangeInfo
+}
+
 export type SgSearch = {
   text: string
-  range: {
-    byteOffset: {
-      start: number
-      end: number
-    }
-    start: Position
-    end: Position
-  }
+  range: RangeInfo
   file: string
   lines: string
   language: string
@@ -24,7 +35,7 @@ export type SgSearch = {
 export type Definition = {
   parent2child: {
     searchResultStreaming: {
-      searchResult: SgSearch[]
+      searchResult: DisplayResult[]
       id: number
       inputValue: string
     }
