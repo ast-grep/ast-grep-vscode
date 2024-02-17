@@ -99,8 +99,12 @@ export function assertCodeActionArraysEqual(
     assert.equal(actual.title, expected.title, 'title')
     assert.equal(actual.isPreferred, expected.isPreferred, 'isPreferred')
     assert.equal(
-      JSON.stringify(actual.edit?.get(docUri)),
-      JSON.stringify(expected.edit?.get(docUri)),
+      JSON.stringify(actual.edit?.get(docUri), str =>
+        str.replace(/\r\n/g, '\n')
+      ),
+      JSON.stringify(expected.edit?.get(docUri), str =>
+        str.replace(/\r\n/g, '\n')
+      ),
       "CodeActions' edit texts differ"
     )
   })
