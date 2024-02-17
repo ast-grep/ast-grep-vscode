@@ -8,8 +8,6 @@ export let editor: vscode.TextEditor
 /**
  * Compare actual and expected diagnostics reported by the language server
  * sort them so that order doesn't matter
- * @param actual The first array of vscode.Diagnostic objects
- * @param expected The second array of vscode.Diagnostic objects
  */
 export const assertDiagnosticsEqual = (
   actual: vscode.Diagnostic[],
@@ -83,8 +81,8 @@ export function toRange(
 
 /**
  * Compare actual and expected arrays of code actions reported by the language server
- * @param actual The first array of vscode.CodeAction objects
- * @param expected The second array of vscode.CodeAction objects
+ * @param actual array of vscode.CodeAction objects
+ * @param expected array of vscode.CodeAction objects
  * @param docUri The URI of the document being tested
  */
 export function assertCodeActionArraysEqual(
@@ -98,6 +96,7 @@ export function assertCodeActionArraysEqual(
     const expected = expecteds[i]
     assert.equal(actual.title, expected.title, 'title')
     assert.equal(actual.isPreferred, expected.isPreferred, 'isPreferred')
+    // needed for windows
     assert.equal(
       JSON.stringify(actual.edit?.get(docUri), str =>
         str.replace(/\r\n/g, '\n')
@@ -132,6 +131,7 @@ export async function getActualCodeActions(
   }
 }
 
+const MAX_RETRIES = 3
 /**
  * Helper function to make our mocha tests retry on failure
  */
@@ -139,23 +139,18 @@ export function testAndRetry(name: string, fn: () => Promise<void>) {
   return test(name, async () => {
     const errors: Array<any> = []
     const startTime = Date.now()
-    /* perform initial test */
-    try {
-      await fn()
-      return
-    } catch (e) {
-      errors.push(e)
-    }
     /* perform retries */
-    let retries = 3
-    while (retries--) {
-      await sleep(1000)
+    let retries = 0
+    while (true) {
       try {
-        console.log(`Retrying test at t = ${Date.now() - startTime}ms`)
         await fn()
         break
       } catch (e) {
         errors.push(e)
+        if (++retries < MAX_RETRIES) {
+          await sleep(1000)
+          console.log(`Retrying test at t = ${Date.now() - startTime}ms`)
+        }
       }
     }
     /* Log every error that ocurred */
@@ -163,7 +158,7 @@ export function testAndRetry(name: string, fn: () => Promise<void>) {
       console.error(`Error ${index + 1}: ${error}`)
     })
     /* Throw the last error if all retries have been exhausted */
-    if (retries <= 0) {
+    if (retries >= MAX_RETRIES) {
       throw errors[errors.length - 1]
     }
   })
