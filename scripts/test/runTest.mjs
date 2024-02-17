@@ -14,11 +14,18 @@ async function main() {
     // Passed to --extensionTestsPath
     const extensionTestsPath = path.resolve(__dirname, './integration-test.cjs')
 
+    const fixtureDirectoryPath = path.resolve(__dirname, '../../fixture')
+    const initialFilePath = path.resolve(fixtureDirectoryPath, 'test.ts')
+
     // Download VS Code, unzip it and run the integration test
     await runTests({
       extensionDevelopmentPath,
       extensionTestsPath,
-      launchArgs: ['--disable-extensions']
+      launchArgs: [
+        '--disable-extensions',
+        fixtureDirectoryPath,
+        initialFilePath
+      ]
     })
   } catch (err) {
     console.error('Failed to run tests', err)
