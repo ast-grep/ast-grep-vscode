@@ -6,35 +6,6 @@ export let doc: vscode.TextDocument
 export let editor: vscode.TextEditor
 
 /**
- * Prepare the vscode environment for testing by opening the fixture folder
- * and activating the extension.
- *
- * This function must be called before any tests are run.
- * And it should only be called once
- */
-export async function activate() {
-  // The extensionId is `publisher.name` from package.json
-  const ext = vscode.extensions.getExtension('ast-grep.ast-grep-vscode')!
-  const fixtureFolderUri = vscode.Uri.file(
-    path.resolve(__dirname, '../../fixture')
-  )
-  await ext.activate()
-  try {
-    // open ast-grep project to locate sgconfig.yml
-    await vscode.commands.executeCommand('vscode.openFolder', fixtureFolderUri)
-    doc = await vscode.workspace.openTextDocument(getDocUri('test.ts'))
-    editor = await vscode.window.showTextDocument(doc)
-    // enforce unix line endings, otherwise tests fail on windows
-    await editor.edit(builder => {
-      builder.setEndOfLine(vscode.EndOfLine.LF)
-    })
-    await sleep(1500) // Wait for server activation
-  } catch (e) {
-    console.error(e)
-  }
-}
-
-/**
  * Compare actual and expected diagnostics reported by the language server
  * sort them so that order doesn't matter
  * @param actual The first array of vscode.Diagnostic objects

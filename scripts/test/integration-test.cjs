@@ -13,12 +13,6 @@ async function run() {
   })
 
   /**
-    Before any other tests, run the testSetup.ts file
-    This will set up the test environment necessary for the other tests to run
-  */
-  mocha.addFile(path.join(__dirname, 'testSetup.ts'))
-
-  /**
    * Add each test file in src/test/**.test.ts to the test suite
    * Tests are run in series and should be designed to not have side effects
    * But side effects are possible and therefore test order could matter
