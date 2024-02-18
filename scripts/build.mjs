@@ -3,6 +3,8 @@ import { fileURLToPath } from 'url'
 import path from 'path'
 import stylexPlugin from '@stylexjs/esbuild-plugin'
 
+// ESM/CJS interop is a joke :)
+// https://github.com/facebook/stylex/blob/d7f23980c9667e55b5aad3a73b3d82294c53313a/apps/esbuild-example/scripts/build.mjs#L15
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
