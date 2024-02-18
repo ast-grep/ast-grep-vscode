@@ -12,7 +12,7 @@ export function useSearchQuery(startSearch: (query: SearchQuery) => void) {
     'ast-grep-search-panel-input-value',
     ''
   )
-  const [includeFile = '', setIncludeValue] = useLocalStorage(
+  const [includeFile = '', setIncludeFile] = useLocalStorage(
     'ast-grep-search-panel-include-value',
     ''
   )
@@ -24,13 +24,13 @@ export function useSearchQuery(startSearch: (query: SearchQuery) => void) {
   }, [inputValue, startSearch])
 
   // auto refresh result when input value changes
-  useDebounce(refreshResult, 100, [inputValue])
+  useDebounce(refreshResult, 100, [inputValue, includeFile])
 
   return {
     inputValue,
     setInputValue,
     includeFile,
-    setIncludeValue,
+    setIncludeFile,
     refreshResult
   }
 }

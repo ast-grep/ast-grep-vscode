@@ -1,4 +1,4 @@
-import { VSCodeTextField } from '@vscode/webview-ui-toolkit/react'
+import { SearchInput } from './SearchInput'
 const titleStyle = {
   textOverflow: 'ellipsis',
   overflow: 'hidden',
@@ -8,11 +8,27 @@ const titleStyle = {
   fontWeight: '400',
   lineHeight: '19px'
 }
-export default function IncludeFile() {
+
+interface IncludeFileProps {
+  includeFile: string
+  setIncludeFile: (value: string) => void
+  refreshResult: () => void
+}
+
+export default function IncludeFile({
+  includeFile,
+  setIncludeFile,
+  refreshResult
+}: IncludeFileProps) {
   return (
     <div>
       <h4 style={titleStyle}>files to include</h4>
-      <VSCodeTextField style={{ width: '100%' }} />
+      <SearchInput
+        placeholder="e.g. *.ts, src/**/include"
+        value={includeFile}
+        onChange={setIncludeFile}
+        onKeyEnterUp={refreshResult}
+      />
     </div>
   )
 }

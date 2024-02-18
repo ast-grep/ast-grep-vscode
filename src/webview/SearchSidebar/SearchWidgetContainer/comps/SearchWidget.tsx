@@ -33,12 +33,14 @@ const SearchWidgetContainer = ({
       </Center>
       <VStack gap={6} flex={1} ml="18px">
         <SearchInput
+          placeholder="Search"
           value={inputValue}
           onChange={setInputValue}
           onKeyEnterUp={refreshResult}
         />
         {isExpanded ? (
           <SearchInput
+            placeholder="Replace"
             value={inputValue}
             onChange={setInputValue}
             onKeyEnterUp={refreshResult}

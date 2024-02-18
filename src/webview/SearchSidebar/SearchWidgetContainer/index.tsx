@@ -7,8 +7,13 @@ interface Props {
 }
 
 const SearchWidgetContainer = ({ onQueryChange }: Props) => {
-  const { inputValue, setInputValue, refreshResult } =
-    useSearchQuery(onQueryChange)
+  const {
+    inputValue,
+    setInputValue,
+    includeFile,
+    setIncludeFile,
+    refreshResult
+  } = useSearchQuery(onQueryChange)
 
   return (
     <div>
@@ -17,7 +22,11 @@ const SearchWidgetContainer = ({ onQueryChange }: Props) => {
         setInputValue={setInputValue}
         refreshResult={refreshResult}
       />
-      <SearchOptions />
+      <SearchOptions
+        includeFile={includeFile}
+        setIncludeFile={setIncludeFile}
+        refreshResult={refreshResult}
+      />
     </div>
   )
 }
