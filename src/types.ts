@@ -51,6 +51,7 @@ export type Definition = {
   child2parent: {
     search: {
       inputValue: string
+      includeFile: string
       id: number
     }
     reload: {}

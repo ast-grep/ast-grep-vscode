@@ -1,6 +1,7 @@
 import type { DisplayResult } from '../postMessage'
 import { childPort } from '../postMessage'
 import { useSyncExternalStore } from 'react'
+import { SearchQuery } from './useQuery'
 
 // id should not overflow, the MOD is large enough
 // for most cases (unless there is buggy search)
@@ -17,9 +18,9 @@ let searchError: Error | null = null
 // instead, use a stale flag and update it on streaming or end
 let hasStaleResult = false
 
-function postSearch(inputValue: string) {
+function postSearch(searchQuery: SearchQuery) {
   id = (id + 1) % MOD
-  childPort.postMessage('search', { id, inputValue })
+  childPort.postMessage('search', { id, ...searchQuery })
   searching = true
   hasStaleResult = true
   searchError = null
