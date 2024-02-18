@@ -1,6 +1,12 @@
 import * as esbuild from 'esbuild'
-const isWatch = process.argv.includes('--watch')
+import { fileURLToPath } from 'url'
+import path from 'path'
 import stylexPlugin from '@stylexjs/esbuild-plugin'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+const isWatch = process.argv.includes('--watch')
 
 const extension = {
   entryPoints: ['src/extension.ts'],
@@ -21,11 +27,11 @@ const webview = {
     stylexPlugin({
       useCSSLayers: true,
       generatedCSSFileName: 'out/webview/index.css',
-      stylexImports: ['@stylexjs/stylex']
-      // unstable_moduleResolution: {
-      //   type: 'commonJS',
-      //   rootDir: path.resolve(__dirname, '..'),
-      // },
+      stylexImports: ['@stylexjs/stylex'],
+      unstable_moduleResolution: {
+        type: 'commonJS',
+        rootDir: path.resolve(__dirname, '..')
+      }
     })
   ],
   define: {
