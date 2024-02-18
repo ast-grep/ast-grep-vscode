@@ -22,6 +22,7 @@ const SearchInput = ({ value, onChange, onKeyEnterUp }: SearchInputProps) => {
       <VSCodeTextField
         style={{ flex: 1 }}
         value={value}
+        placeholder="Search"
         onInput={handleInput as any}
         onKeyUp={event => {
           if (event.key === 'Enter') {

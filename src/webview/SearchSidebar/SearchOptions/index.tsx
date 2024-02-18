@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import { VscEllipsis } from 'react-icons/vsc'
 import { useBoolean } from 'react-use'
+import IncludeFile from './IncludeFile'
 
 const buttonStyle: CSSProperties = {
   background: 'transparent',
@@ -13,13 +14,15 @@ const buttonStyle: CSSProperties = {
   textAlign: 'end',
   padding: '0 4px',
   height: '16px',
-  flex: '0 0 auto'
+  flex: '0 0 auto',
+  position: 'absolute',
+  top: '0',
+  right: '0'
 }
 const optionsStyle: CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  minHeight: '1em',
-  marginLeft: '18px'
+  minHeight: '16px',
+  marginLeft: '18px',
+  position: 'relative'
 }
 
 export default function SearchOptions() {
@@ -29,7 +32,12 @@ export default function SearchOptions() {
       <button style={buttonStyle} onClick={toggleOptions}>
         <VscEllipsis />
       </button>
-      {showOptions && <div>Options!</div>}
+      {showOptions && (
+        <div style={{ paddingBottom: '4px' }}>
+          <IncludeFile />
+          {/* TODO: add file include*/}
+        </div>
+      )}
     </div>
   )
 }
