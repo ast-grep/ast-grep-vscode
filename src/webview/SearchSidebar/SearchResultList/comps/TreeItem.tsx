@@ -9,12 +9,15 @@ import { memo } from 'react'
 import * as stylex from '@stylexjs/stylex'
 
 const styles = stylex.create({
-  oneItem: {
+  codeList: {
     width: '100%',
     paddingLeft: '20px',
     ':hover': {
       background: 'var(--vscode-list-inactiveSelectionBackground)'
     }
+  },
+  treeItem: {
+    padding: '2px 2px 2px 10px'
   }
 })
 
@@ -30,7 +33,7 @@ const CodeBlockList = memo(({ matches }: CodeBlockListProps) => {
         const { byteOffset } = range
         return (
           <div
-            {...stylex.props(styles.oneItem)}
+            {...stylex.props(styles.codeList)}
             key={file + byteOffset.start + byteOffset.end}
           >
             <CodeBlock match={match} />
@@ -50,21 +53,21 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
   const [isExpanded, toggleIsExpanded] = useBoolean(true)
 
   return (
-    <VStack w="100%" pl="10" p="2" gap="0">
+    <div {...stylex.props(styles.treeItem)}>
       <HStack
         w="100%"
-        onClick={toggleIsExpanded}
         cursor="pointer"
         _hover={{
           background: 'var(--vscode-list-inactiveSelectionBackground)'
         }}
+        onClick={toggleIsExpanded}
       >
         <IconButton
           flex={0}
           color="var(--vscode-foreground)"
           background="transparent"
-          aria-label="expand/collapse button"
           pointerEvents="none"
+          aria-label="expand/collapse button"
           icon={isExpanded ? <VscChevronDown /> : <VscChevronRight />}
           mr="2"
         />
@@ -81,7 +84,6 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
           <VSCodeBadge>{matches.length}</VSCodeBadge>
         </HStack>
       </HStack>
-
       <VStack
         w="100%"
         alignItems="flex-start"
@@ -90,7 +92,7 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
       >
         <CodeBlockList matches={matches} />
       </VStack>
-    </VStack>
+    </div>
   )
 }
 export default TreeItem
