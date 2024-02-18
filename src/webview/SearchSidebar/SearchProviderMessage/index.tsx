@@ -1,5 +1,6 @@
 import { memo } from 'react'
 import { VSCodeLink } from '@vscode/webview-ui-toolkit/react'
+import { DisplayResult } from '../../../types'
 
 const style = {
   color: 'var(--vscode-search-resultsInfoForeground)',
@@ -14,7 +15,7 @@ const ulStyle = {
   overflowWrap: 'break-word'
 } as const
 
-const Empty = memo(({ pattern }: { pattern: string }) => {
+function Empty({ pattern }: { pattern: string }) {
   if (!pattern) {
     return null
   }
@@ -47,48 +48,46 @@ const Empty = memo(({ pattern }: { pattern: string }) => {
       </ul>
     </div>
   )
-})
+}
 
 interface SearchProviderMessageProps {
-  resultCount: number
-  fileCount: number
   pattern: string
+  results: [string, DisplayResult[]][]
   error: Error | null
 }
 
-const SearchProviderMessage = ({
-  pattern,
-  resultCount,
-  fileCount,
-  error
-}: SearchProviderMessageProps) => {
-  if (error) {
+const SearchProviderMessage = memo(
+  ({ pattern, results, error }: SearchProviderMessageProps) => {
+    if (error) {
+      return (
+        <div style={style}>
+          Error occurs when running <code>ast-grep</code>.<br />
+          Make sure you{' '}
+          <VSCodeLink href="https://ast-grep.github.io/guide/quick-start.html#installation">
+            installed the binary
+          </VSCodeLink>{' '}
+          and the command <code>ast-grep</code> is accessible{' '}
+          <VSCodeLink href="https://github.com/ast-grep/ast-grep-vscode/issues/133#issuecomment-1943153446">
+            by your editor
+          </VSCodeLink>
+          .
+        </div>
+      )
+    }
+    const resultCount = results.reduce((a, l) => a + l[1].length, 0)
+    const fileCount = results.length
     return (
-      <div style={style}>
-        Error occurs when running <code>ast-grep</code>.<br />
-        Make sure you{' '}
-        <VSCodeLink href="https://ast-grep.github.io/guide/quick-start.html#installation">
-          installed the binary
-        </VSCodeLink>{' '}
-        and the command <code>ast-grep</code> is accessible{' '}
-        <VSCodeLink href="https://github.com/ast-grep/ast-grep-vscode/issues/133#issuecomment-1943153446">
-          by your editor
-        </VSCodeLink>
-        .
-      </div>
+      <>
+        {resultCount === 0 ? (
+          <Empty pattern={pattern} />
+        ) : (
+          <div
+            style={style}
+          >{`${resultCount} results in ${fileCount} files`}</div>
+        )}
+      </>
     )
   }
-  return (
-    <>
-      {resultCount === 0 ? (
-        <Empty pattern={pattern} />
-      ) : (
-        <div
-          style={style}
-        >{`${resultCount} results in ${fileCount} files`}</div>
-      )}
-    </>
-  )
-}
+)
 
 export default SearchProviderMessage
