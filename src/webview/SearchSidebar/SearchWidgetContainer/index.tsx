@@ -1,22 +1,27 @@
+import { useCallback } from 'react'
+import { useSearchQuery } from '../../hooks/useQuery'
 import SearchOptions from './comps/SearchOptions'
 import SearchWidget from './comps/SearchWidget'
 
 interface Props {
-  inputValue: string
-  setInputValue: (value: string) => void
   refreshResult: () => void
+  onQueryChange: (query: string) => void
 }
 
-const SearchWidgetContainer = ({
-  inputValue,
-  setInputValue,
-  refreshResult
-}: Props) => {
+const SearchWidgetContainer = ({ refreshResult, onQueryChange }: Props) => {
+  const { inputValue, setInputValue } = useSearchQuery()
+  const onChange = useCallback(
+    (val: string) => {
+      setInputValue(val)
+      onQueryChange(val)
+    },
+    [onQueryChange, setInputValue]
+  )
   return (
     <div>
       <SearchWidget
         inputValue={inputValue}
-        setInputValue={setInputValue}
+        setInputValue={onChange}
         refreshResult={refreshResult}
       />
       <SearchOptions />

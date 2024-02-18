@@ -1,17 +1,13 @@
 import SearchResultList from './SearchResultList'
 import SearchWidgetContainer from './SearchWidgetContainer'
-import { useLocalStorage } from 'react-use'
 import { UseDarkContextProvider } from '../hooks/useDark'
 import { useSearchResult } from '../hooks/useSearch'
 import LoadingBar from '../LoadingBar'
 import SearchProviderMessage from './SearchProviderMessage'
-import { useDeferredValue } from 'react'
+import { useCallback, useDeferredValue, useState } from 'react'
 
 export const SearchSidebar = () => {
-  const [inputValue = '', setInputValue] = useLocalStorage(
-    'ast-grep-search-panel-input-value',
-    ''
-  )
+  const [query, setQuery] = useState('')
   const {
     queryInFlight,
     searchCount,
@@ -19,7 +15,7 @@ export const SearchSidebar = () => {
     refreshSearchResult,
     searching,
     searchError
-  } = useSearchResult(inputValue)
+  } = useSearchResult(query)
 
   // rendering tree is too expensive, useDeferredValue
   const groupedByFileSearchResultForRender = useDeferredValue(
@@ -30,9 +26,8 @@ export const SearchSidebar = () => {
     <UseDarkContextProvider>
       <LoadingBar loading={searching} />
       <SearchWidgetContainer
-        inputValue={inputValue}
+        onQueryChange={setQuery}
         refreshResult={refreshSearchResult}
-        setInputValue={setInputValue}
       />
       <SearchProviderMessage
         pattern={queryInFlight}
