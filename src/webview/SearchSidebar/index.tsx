@@ -4,10 +4,9 @@ import { UseDarkContextProvider } from '../hooks/useDark'
 import { useSearchResult } from '../hooks/useSearch'
 import LoadingBar from '../LoadingBar'
 import SearchProviderMessage from './SearchProviderMessage'
-import { useCallback, useDeferredValue, useState } from 'react'
+import { useDeferredValue } from 'react'
 
 export const SearchSidebar = () => {
-  const [query, setQuery] = useState('')
   const {
     queryInFlight,
     searchCount,
@@ -15,7 +14,7 @@ export const SearchSidebar = () => {
     refreshSearchResult,
     searching,
     searchError
-  } = useSearchResult(query)
+  } = useSearchResult()
 
   // rendering tree is too expensive, useDeferredValue
   const groupedByFileSearchResultForRender = useDeferredValue(
@@ -25,10 +24,7 @@ export const SearchSidebar = () => {
   return (
     <UseDarkContextProvider>
       <LoadingBar loading={searching} />
-      <SearchWidgetContainer
-        onQueryChange={setQuery}
-        refreshResult={refreshSearchResult}
-      />
+      <SearchWidgetContainer onQueryChange={refreshSearchResult} />
       <SearchProviderMessage
         pattern={queryInFlight}
         error={searchError}

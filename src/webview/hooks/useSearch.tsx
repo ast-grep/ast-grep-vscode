@@ -1,7 +1,6 @@
 import type { DisplayResult } from '../postMessage'
 import { childPort } from '../postMessage'
-import { useCallback, useSyncExternalStore } from 'react'
-import { useDebounce } from 'react-use'
+import { useSyncExternalStore } from 'react'
 
 // id should not overflow, the MOD is large enough
 // for most cases (unless there is buggy search)
@@ -103,22 +102,14 @@ function getSnapshot() {
   return version // symbolic snapshot for react
 }
 
-export const useSearchResult = (inputValue: string) => {
+export const useSearchResult = () => {
   useSyncExternalStore(subscribe, getSnapshot)
-
-  const refreshSearchResult = useCallback(() => {
-    // TODO: cancelled request, should send cancel to extension
-    postSearch(inputValue)
-  }, [inputValue])
-
-  useDebounce(refreshSearchResult, 100, [inputValue])
-
   return {
     queryInFlight,
     searching,
     searchError,
     groupedByFileSearchResult: grouped,
     searchCount: grouped.reduce((a, l) => a + l[1].length, 0),
-    refreshSearchResult
+    refreshSearchResult: postSearch
   }
 }
