@@ -66,6 +66,10 @@ textarea::placeholder {
   color: var(--vscode-input-placeholderForeground);
 }
 
+svg {
+  font-size: 16px;
+}
+
 @keyframes progress {
   0% {
     transform: translateX(0) scaleX(1);

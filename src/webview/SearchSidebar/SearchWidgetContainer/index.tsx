@@ -1,7 +1,7 @@
 import { SearchInput } from './comps/SearchInput'
 import { Center, HStack, VStack } from '@chakra-ui/react'
 import { useBoolean } from 'react-use'
-import { HiOutlineChevronDown, HiOutlineChevronRight } from 'react-icons/hi'
+import { VscChevronRight, VscChevronDown } from 'react-icons/vsc'
 
 interface Props {
   inputValue: string
@@ -29,11 +29,7 @@ const SearchWidgetContainer = ({
           background: 'var(--vscode-list-inactiveSelectionBackground)'
         }}
       >
-        {isExpanded ? (
-          <HiOutlineChevronDown pointerEvents="none" />
-        ) : (
-          <HiOutlineChevronRight pointerEvents="none" />
-        )}
+        {isExpanded ? <VscChevronDown /> : <VscChevronRight />}
       </Center>
       <VStack gap={6} flex={1} ml="18px">
         <SearchInput

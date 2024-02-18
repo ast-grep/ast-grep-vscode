@@ -1,5 +1,5 @@
 import { HStack, IconButton, VStack, Box } from '@chakra-ui/react'
-import { HiOutlineChevronDown, HiOutlineChevronRight } from 'react-icons/hi'
+import { VscChevronDown, VscChevronRight } from 'react-icons/vsc'
 import { useBoolean } from 'react-use'
 import type { DisplayResult } from '../../../../types'
 import { CodeBlock } from './CodeBlock'
@@ -59,9 +59,7 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
           background="transparent"
           aria-label="expand/collapse button"
           pointerEvents="none"
-          icon={
-            isExpanded ? <HiOutlineChevronDown /> : <HiOutlineChevronRight />
-          }
+          icon={isExpanded ? <VscChevronDown /> : <VscChevronRight />}
           mr="2"
         />
         <HStack
