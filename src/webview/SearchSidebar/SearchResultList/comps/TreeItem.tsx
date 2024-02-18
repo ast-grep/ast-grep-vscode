@@ -35,6 +35,10 @@ const styles = stylex.create({
     alignItems: 'center',
     color: 'var(--vscode-foreground)',
     paddingRight: '4px'
+  },
+  badge: {
+    margin: '0 2px 0 auto',
+    flex: '0 0 auto'
   }
 })
 
@@ -80,7 +84,7 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
           {isExpanded ? <VscChevronDown /> : <VscChevronRight />}
         </div>
         <FileLink filePath={filePath} />
-        <VSCodeBadge style={{ margin: '0 2px 0 auto' }}>
+        <VSCodeBadge {...stylex.props(styles.badge)}>
           {matches.length}
         </VSCodeBadge>
       </div>
