@@ -25,8 +25,11 @@ form > * {
   margin-block-end: var(--input-margin-vertical);
 }
 /* do not apply margin to root*/
+html,
+body,
 #root {
   margin-block-start: 0;
+  height: 100%;
 }
 
 a {
