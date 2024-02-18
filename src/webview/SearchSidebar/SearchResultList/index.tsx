@@ -8,7 +8,7 @@ interface SearchResultListProps {
 
 const SearchResultList = ({ matches }: SearchResultListProps) => {
   return (
-    <div>
+    <div style={{ flexGrow: '1', overflowY: 'scroll' }}>
       {matches.map(([filePath, match]) => {
         return <TreeItem filePath={filePath} matches={match} key={filePath} />
       })}

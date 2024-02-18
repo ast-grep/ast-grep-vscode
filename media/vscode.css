@@ -31,6 +31,10 @@ body,
   margin-block-start: 0;
   height: 100%;
 }
+#root {
+  display: flex;
+  flex-direction: column;
+}
 
 a {
   color: var(--vscode-textLink-foreground);

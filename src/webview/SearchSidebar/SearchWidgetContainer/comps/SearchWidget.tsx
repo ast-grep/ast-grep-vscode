@@ -5,8 +5,7 @@ import * as stylex from '@stylexjs/stylex'
 
 const styles = stylex.create({
   container: {
-    position: 'relative',
-    margin: '0 12px 0 2px'
+    position: 'relative'
   },
   replaceToggle: {
     width: 16,

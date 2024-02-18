@@ -17,7 +17,7 @@ const buttonStyle: CSSProperties = {
   flex: '0 0 auto',
   position: 'absolute',
   top: '0',
-  right: '0'
+  right: '-2px'
 }
 const optionsStyle: CSSProperties = {
   minHeight: '16px',
@@ -43,7 +43,7 @@ export default function SearchOptions({
         <VscEllipsis />
       </button>
       {showOptions && (
-        <div style={{ paddingBottom: '4px' }}>
+        <div style={{ paddingBottom: '6px' }}>
           <IncludeFile
             includeFile={includeFile}
             setIncludeFile={setIncludeFile}

@@ -16,7 +16,7 @@ const SearchWidgetContainer = ({ onQueryChange }: Props) => {
   } = useSearchQuery(onQueryChange)
 
   return (
-    <div>
+    <div style={{ margin: '0 12px 0 2px' }}>
       <SearchWidget
         inputValue={inputValue}
         setInputValue={setInputValue}
