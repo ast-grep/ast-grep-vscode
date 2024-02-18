@@ -1,4 +1,4 @@
-import { IconButton, VStack } from '@chakra-ui/react'
+import { IconButton } from '@chakra-ui/react'
 import { VscChevronDown, VscChevronRight } from 'react-icons/vsc'
 import { useBoolean } from 'react-use'
 import type { DisplayResult } from '../../../../types'
@@ -10,14 +10,15 @@ import * as stylex from '@stylexjs/stylex'
 
 const styles = stylex.create({
   codeList: {
-    width: '100%',
+    flex: '1 0 100%',
     paddingLeft: '20px',
+    listStyle: 'none',
     ':hover': {
       background: 'var(--vscode-list-inactiveSelectionBackground)'
     }
   },
   treeItem: {
-    padding: '2px 2px 2px 10px'
+    padding: '0 2px 0 10px'
   },
   fileName: {
     cursor: 'pointer',
@@ -42,12 +43,12 @@ const CodeBlockList = memo(({ matches }: CodeBlockListProps) => {
         const { file, range } = match
         const { byteOffset } = range
         return (
-          <div
+          <li
             {...stylex.props(styles.codeList)}
             key={file + byteOffset.start + byteOffset.end}
           >
             <CodeBlock match={match} />
-          </div>
+          </li>
         )
       })}
     </>
@@ -79,14 +80,14 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
           {matches.length}
         </VSCodeBadge>
       </div>
-      <VStack
-        w="100%"
-        alignItems="flex-start"
-        gap="0"
-        display={isExpanded ? 'flex' : 'none'}
+      <ul
+        style={{
+          display: isExpanded ? 'flex' : 'none',
+          flexDirection: 'column'
+        }}
       >
         <CodeBlockList matches={matches} />
-      </VStack>
+      </ul>
     </div>
   )
 }
