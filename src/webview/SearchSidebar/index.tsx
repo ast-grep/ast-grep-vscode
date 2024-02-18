@@ -6,6 +6,7 @@ import { useSearchResult } from '../hooks/useSearch'
 import LoadingBar from '../LoadingBar'
 import SearchProviderMessage from './SearchProviderMessage'
 import { useDeferredValue } from 'react'
+import SearchOptions from './SearchOptions'
 
 export const SearchSidebar = () => {
   const [inputValue = '', setInputValue] = useLocalStorage(
@@ -34,6 +35,7 @@ export const SearchSidebar = () => {
         refreshResult={refreshSearchResult}
         setInputValue={setInputValue}
       />
+      <SearchOptions />
       <SearchProviderMessage
         pattern={queryInFlight}
         error={searchError}
