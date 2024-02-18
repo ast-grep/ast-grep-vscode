@@ -25,7 +25,17 @@ const optionsStyle: CSSProperties = {
   position: 'relative'
 }
 
-export default function SearchOptions() {
+interface SearchOptionsProps {
+  includeFile: string
+  setIncludeFile: (value: string) => void
+  refreshResult: () => void
+}
+
+export default function SearchOptions({
+  includeFile,
+  setIncludeFile,
+  refreshResult
+}: SearchOptionsProps) {
   const [showOptions, toggleOptions] = useBoolean(false)
   return (
     <div style={optionsStyle}>
@@ -34,7 +44,11 @@ export default function SearchOptions() {
       </button>
       {showOptions && (
         <div style={{ paddingBottom: '4px' }}>
-          <IncludeFile />
+          <IncludeFile
+            includeFile={includeFile}
+            setIncludeFile={setIncludeFile}
+            refreshResult={refreshResult}
+          />
           {/* TODO: add file include*/}
         </div>
       )}
