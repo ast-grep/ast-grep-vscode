@@ -1,4 +1,4 @@
-import { HStack, IconButton, VStack } from '@chakra-ui/react'
+import { IconButton, VStack } from '@chakra-ui/react'
 import { VscChevronDown, VscChevronRight } from 'react-icons/vsc'
 import { useBoolean } from 'react-use'
 import type { DisplayResult } from '../../../../types'
@@ -22,6 +22,9 @@ const styles = stylex.create({
   fileName: {
     cursor: 'pointer',
     display: 'flex',
+    lineHeight: '22px',
+    height: '22px',
+    alignItems: 'center',
     ':hover': {
       background: 'var(--vscode-list-inactiveSelectionBackground)'
     }
@@ -69,20 +72,12 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
           pointerEvents="none"
           aria-label="expand/collapse button"
           icon={isExpanded ? <VscChevronDown /> : <VscChevronRight />}
-          mr="2"
+          mr="4"
         />
-        <HStack
-          flex={1}
-          gap="4"
-          px="2"
-          alignItems="center"
-          justifyContent="space-between"
-          h="22px"
-          lineHeight="22px"
-        >
-          <FileLink filePath={filePath} />
-          <VSCodeBadge>{matches.length}</VSCodeBadge>
-        </HStack>
+        <FileLink filePath={filePath} />
+        <VSCodeBadge style={{ margin: '0 2px 0 auto' }}>
+          {matches.length}
+        </VSCodeBadge>
       </div>
       <VStack
         w="100%"
