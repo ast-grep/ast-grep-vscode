@@ -6,13 +6,19 @@ const extension = {
   bundle: true,
   external: ['vscode'],
   platform: 'node',
-  outfile: 'out/extension.js'
+  outfile: 'out/extension.js',
+  define: {
+    'process.env.NODE_ENV': '"production"'
+  }
 }
 
 const webview = {
   entryPoints: ['src/webview/index.tsx'],
   bundle: true,
-  outfile: 'out/webview/index.js'
+  outfile: 'out/webview/index.js',
+  define: {
+    'process.env.NODE_ENV': '"production"'
+  }
 }
 
 console.log('Build start')
