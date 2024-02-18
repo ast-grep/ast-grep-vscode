@@ -24,6 +24,11 @@ export interface DisplayResult {
   range: RangeInfo
 }
 
+export interface SearchQuery {
+  inputValue: string
+  includeFile: string
+}
+
 export type SgSearch = {
   text: string
   range: RangeInfo
@@ -49,9 +54,7 @@ export type Definition = {
     }
   }
   child2parent: {
-    search: {
-      inputValue: string
-      includeFile: string
+    search: SearchQuery & {
       id: number
     }
     reload: {}
