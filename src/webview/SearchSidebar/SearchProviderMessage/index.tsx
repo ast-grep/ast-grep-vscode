@@ -3,7 +3,7 @@ import { VSCodeLink } from '@vscode/webview-ui-toolkit/react'
 
 const style = {
   color: 'var(--vscode-search-resultsInfoForeground)',
-  padding: '6px 22px 8px',
+  padding: '0 22px 8px',
   lineHeight: '1.4em'
 }
 
