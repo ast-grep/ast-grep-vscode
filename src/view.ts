@@ -129,6 +129,7 @@ function buildCommand(query: SearchQuery) {
   // TODO: multi-workspaces support
   return spawn(command, args, {
     cwd: uris[0]
+    // shell: true, // it is safe because it is end user input
   })
 }
 

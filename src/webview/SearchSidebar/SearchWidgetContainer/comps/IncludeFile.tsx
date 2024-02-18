@@ -24,7 +24,7 @@ export default function IncludeFile({
     <div>
       <h4 style={titleStyle}>files to include</h4>
       <SearchInput
-        placeholder="e.g. *.ts, src/**/include"
+        placeholder="e.g. src, packages. Glob pattern is not supported"
         value={includeFile}
         onChange={setIncludeFile}
         onKeyEnterUp={refreshResult}
