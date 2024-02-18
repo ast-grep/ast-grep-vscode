@@ -1,5 +1,4 @@
 import { SearchInput } from './SearchInput'
-import { VStack } from '@chakra-ui/react'
 import { useBoolean } from 'react-use'
 import { VscChevronRight, VscChevronDown } from 'react-icons/vsc'
 import * as stylex from '@stylexjs/stylex'
@@ -21,6 +20,13 @@ const styles = stylex.create({
     ':hover': {
       background: 'var(--vscode-toolbar-hoverBackground)'
     }
+  },
+  inputs: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 6,
+    marginLeft: 18,
+    flex: 1
   }
 })
 
@@ -41,7 +47,7 @@ const SearchWidgetContainer = ({
       <div {...stylex.props(styles.replaceToggle)} onClick={toggleIsExpanded}>
         {isExpanded ? <VscChevronDown /> : <VscChevronRight />}
       </div>
-      <VStack gap={6} flex={1} ml="18px">
+      <div {...stylex.props(styles.inputs)}>
         <SearchInput
           placeholder="Search"
           value={inputValue}
@@ -56,7 +62,7 @@ const SearchWidgetContainer = ({
             onKeyEnterUp={() => {}}
           />
         ) : null}
-      </VStack>
+      </div>
     </div>
   )
 }
