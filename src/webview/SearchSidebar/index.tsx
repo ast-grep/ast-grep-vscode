@@ -9,7 +9,6 @@ import { useDeferredValue } from 'react'
 export const SearchSidebar = () => {
   const {
     queryInFlight,
-    searchCount,
     groupedByFileSearchResult,
     refreshSearchResult,
     searching,
@@ -28,8 +27,7 @@ export const SearchSidebar = () => {
       <SearchProviderMessage
         pattern={queryInFlight}
         error={searchError}
-        resultCount={searchCount}
-        fileCount={groupedByFileSearchResult.length}
+        results={groupedByFileSearchResult}
       />
       <SearchResultList matches={groupedByFileSearchResultForRender} />
     </UseDarkContextProvider>

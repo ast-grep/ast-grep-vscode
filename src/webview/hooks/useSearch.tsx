@@ -109,7 +109,6 @@ export const useSearchResult = () => {
     searching,
     searchError,
     groupedByFileSearchResult: grouped,
-    searchCount: grouped.reduce((a, l) => a + l[1].length, 0),
     refreshSearchResult: postSearch
   }
 }
