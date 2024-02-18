@@ -15,13 +15,13 @@ const webview = {
   outfile: 'out/webview/index.js'
 }
 
+console.log('Build start')
 if (isWatch) {
   await Promise.all([
     esbuild.context(extension).then(c => c.watch()),
     esbuild.context(webview).then(c => c.watch())
   ])
-  console.log('Start Watching')
 } else {
   await Promise.all([esbuild.build(extension), esbuild.build(webview)])
-  console.log('Build Success')
 }
+console.log('Build success')
