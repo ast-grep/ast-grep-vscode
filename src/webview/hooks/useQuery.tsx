@@ -1,11 +1,8 @@
 import { useCallback } from 'react'
 import { useLocalStorage } from 'react-use'
 import { useDebounce } from 'react-use'
-
-export interface SearchQuery {
-  inputValue: string
-  includeFile: string
-}
+import { SearchQuery } from '../../types'
+export { SearchQuery }
 
 export function useSearchQuery(startSearch: (query: SearchQuery) => void) {
   const [inputValue = '', setInputValue] = useLocalStorage(
@@ -21,7 +18,7 @@ export function useSearchQuery(startSearch: (query: SearchQuery) => void) {
       inputValue,
       includeFile
     })
-  }, [inputValue, startSearch])
+  }, [inputValue, includeFile, startSearch])
 
   // auto refresh result when input value changes
   useDebounce(refreshResult, 100, [inputValue, includeFile])

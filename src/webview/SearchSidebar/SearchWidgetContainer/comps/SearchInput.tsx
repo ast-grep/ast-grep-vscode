@@ -17,7 +17,7 @@ const SearchInput = ({
   const handleInput = useCallback(
     (e: { target: { value: string } }) => {
       const newValue = e.target.value
-      onChange?.(newValue)
+      onChange(newValue)
     },
     [onChange]
   )

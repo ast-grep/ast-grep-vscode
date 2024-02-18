@@ -1,4 +1,10 @@
-import type { Definition, ParentPort, SgSearch, DisplayResult } from './types'
+import type {
+  Definition,
+  ParentPort,
+  SgSearch,
+  DisplayResult,
+  SearchQuery
+} from './types'
 import { Unport, ChannelMessage } from 'unport'
 import * as vscode from 'vscode'
 import { workspace } from 'vscode'
@@ -106,12 +112,8 @@ async function uniqueCommand(
   }
 }
 
-interface Handlers {
-  onData: StreamingHandler
-  onError: (e: Error) => void
-}
-
-function getPatternRes(pattern: string, handlers: Handlers) {
+function buildCommand(query: SearchQuery) {
+  const { inputValue: pattern, includeFile = '' } = query
   if (!pattern) {
     return
   }
@@ -119,11 +121,27 @@ function getPatternRes(pattern: string, handlers: Handlers) {
     .getConfiguration('astGrep')
     .get('serverPath', 'ast-grep')
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
-
+  const args = ['run', '--pattern', pattern, '--json=stream']
+  if (includeFile) {
+    args.push(includeFile)
+  }
+  console.debug('running', query, command, args)
   // TODO: multi-workspaces support
-  let proc = spawn(command, ['run', '--pattern', pattern, '--json=stream'], {
+  return spawn(command, args, {
     cwd: uris[0]
   })
+}
+
+interface Handlers {
+  onData: StreamingHandler
+  onError: (e: Error) => void
+}
+
+function getPatternRes(query: SearchQuery, handlers: Handlers) {
+  const proc = buildCommand(query)
+  if (!proc) {
+    return Promise.resolve()
+  }
   proc.on('error', error => {
     console.debug('ast-grep CLI runs error')
     handlers.onError(error)
@@ -185,7 +203,7 @@ function setupParentPort(webviewView: vscode.WebviewView) {
         searchResult: ret.map(splitByHighLightToken)
       })
     }
-    await getPatternRes(payload.inputValue, {
+    await getPatternRes(payload, {
       onData,
       onError(error) {
         parentPort.postMessage('error', {
