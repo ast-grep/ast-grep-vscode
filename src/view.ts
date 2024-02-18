@@ -248,6 +248,9 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
     const scriptUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, 'out', 'webview', 'index.js')
     )
+    const stylexUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, 'out', 'webview', 'index.css')
+    )
 
     const stylesResetUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, 'media', 'reset.css')
@@ -266,6 +269,7 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="${stylesResetUri}" rel="stylesheet"">
         <link href="${stylesMainUri}" rel="stylesheet"">
+        <link href="${stylexUri}" rel="stylesheet"">
       </head>
       <body>
         <div id="root"></div>
