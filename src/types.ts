@@ -42,12 +42,10 @@ export type Definition = {
     searchResultStreaming: {
       searchResult: DisplayResult[]
       id: number
-      inputValue: string
-    }
+    } & SearchQuery
     searchEnd: {
       id: number
-      inputValue: string
-    }
+    } & SearchQuery
     error: {
       id: number
       error: Error

@@ -25,7 +25,7 @@ export const SearchSidebar = () => {
       <LoadingBar loading={searching} />
       <SearchWidgetContainer onQueryChange={refreshSearchResult} />
       <SearchProviderMessage
-        pattern={queryInFlight}
+        query={queryInFlight}
         error={searchError}
         results={groupedByFileSearchResult}
       />

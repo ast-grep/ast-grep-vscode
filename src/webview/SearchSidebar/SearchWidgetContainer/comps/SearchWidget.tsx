@@ -40,10 +40,10 @@ const SearchWidgetContainer = ({
         />
         {isExpanded ? (
           <SearchInput
-            placeholder="Replace"
-            value={inputValue}
-            onChange={setInputValue}
-            onKeyEnterUp={refreshResult}
+            placeholder="Replace not implemented yet"
+            value=""
+            onChange={() => {}}
+            onKeyEnterUp={() => {}}
           />
         ) : null}
       </VStack>

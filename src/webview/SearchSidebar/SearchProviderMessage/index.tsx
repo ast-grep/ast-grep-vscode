@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { VSCodeLink } from '@vscode/webview-ui-toolkit/react'
-import { DisplayResult } from '../../../types'
+import { DisplayResult, SearchQuery } from '../../../types'
 
 const style = {
   color: 'var(--vscode-search-resultsInfoForeground)',
@@ -15,13 +15,15 @@ const ulStyle = {
   overflowWrap: 'break-word'
 } as const
 
-function Empty({ pattern }: { pattern: string }) {
-  if (!pattern) {
+function Empty({ query }: { query: SearchQuery }) {
+  const { inputValue, includeFile } = query
+  if (!inputValue) {
     return null
   }
   return (
     <div style={style}>
-      No results found for <code>{pattern}</code>.
+      No results found for <code>{inputValue}</code>
+      {includeFile ? ` in '${includeFile}'` : null}.
       <br />
       If this is not expected, you can try:
       <ul style={ulStyle}>
@@ -30,19 +32,17 @@ function Empty({ pattern }: { pattern: string }) {
           <VSCodeLink href="https://ast-grep.github.io/guide/pattern-syntax.html">
             Pattern Syntax
           </VSCodeLink>
-          .
         </li>
         <li>
           Check if the file types are{' '}
           <VSCodeLink href="https://ast-grep.github.io/reference/languages.html">
             Supported
           </VSCodeLink>
-          .
         </li>
         <li>
           Adjust your gitignore files.{' '}
           <VSCodeLink href="https://ast-grep.github.io/reference/cli/run.html#no-ignore-file-type">
-            See doc.
+            See doc
           </VSCodeLink>
         </li>
       </ul>
@@ -51,13 +51,13 @@ function Empty({ pattern }: { pattern: string }) {
 }
 
 interface SearchProviderMessageProps {
-  pattern: string
+  query: SearchQuery
   results: [string, DisplayResult[]][]
   error: Error | null
 }
 
 const SearchProviderMessage = memo(
-  ({ pattern, results, error }: SearchProviderMessageProps) => {
+  ({ query, results, error }: SearchProviderMessageProps) => {
     if (error) {
       return (
         <div style={style}>
@@ -79,7 +79,7 @@ const SearchProviderMessage = memo(
     return (
       <>
         {resultCount === 0 ? (
-          <Empty pattern={pattern} />
+          <Empty query={query} />
         ) : (
           <div
             style={style}
