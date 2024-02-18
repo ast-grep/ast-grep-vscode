@@ -14,7 +14,6 @@ body {
   font-family: var(--vscode-font-family) !important;
   user-select: none;
 }
-
 ol,
 ul {
   padding-left: var(--container-paddding);
@@ -24,6 +23,10 @@ body > *,
 form > * {
   margin-block-start: var(--input-margin-vertical);
   margin-block-end: var(--input-margin-vertical);
+}
+/* do not apply margin to root*/
+#root {
+  margin-block-start: 0;
 }
 
 a {

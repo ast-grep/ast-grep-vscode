@@ -23,10 +23,10 @@ const SearchWidgetContainer = ({
         cursor="pointer"
         position="absolute"
         top="0"
-        left="0"
+        left="2px"
         onClick={toggleIsExpanded}
         _hover={{
-          background: 'var(--vscode-list-inactiveSelectionBackground)'
+          background: 'var(--vscode-toolbar-hoverBackground)'
         }}
       >
         {isExpanded ? <VscChevronDown /> : <VscChevronRight />}
