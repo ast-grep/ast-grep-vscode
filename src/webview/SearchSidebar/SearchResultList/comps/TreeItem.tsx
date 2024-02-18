@@ -18,6 +18,13 @@ const styles = stylex.create({
   },
   treeItem: {
     padding: '2px 2px 2px 10px'
+  },
+  fileName: {
+    cursor: 'pointer',
+    display: 'flex',
+    ':hover': {
+      background: 'var(--vscode-list-inactiveSelectionBackground)'
+    }
   }
 })
 
@@ -54,14 +61,7 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
 
   return (
     <div {...stylex.props(styles.treeItem)}>
-      <HStack
-        w="100%"
-        cursor="pointer"
-        _hover={{
-          background: 'var(--vscode-list-inactiveSelectionBackground)'
-        }}
-        onClick={toggleIsExpanded}
-      >
+      <div {...stylex.props(styles.fileName)} onClick={toggleIsExpanded}>
         <IconButton
           flex={0}
           color="var(--vscode-foreground)"
@@ -83,7 +83,7 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
           <FileLink filePath={filePath} />
           <VSCodeBadge>{matches.length}</VSCodeBadge>
         </HStack>
-      </HStack>
+      </div>
       <VStack
         w="100%"
         alignItems="flex-start"
