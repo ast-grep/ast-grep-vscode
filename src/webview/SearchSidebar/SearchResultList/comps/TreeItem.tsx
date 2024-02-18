@@ -1,4 +1,3 @@
-import { IconButton } from '@chakra-ui/react'
 import { VscChevronDown, VscChevronRight } from 'react-icons/vsc'
 import { useBoolean } from 'react-use'
 import type { DisplayResult } from '../../../../types'
@@ -29,6 +28,13 @@ const styles = stylex.create({
     ':hover': {
       background: 'var(--vscode-list-inactiveSelectionBackground)'
     }
+  },
+  toggleButton: {
+    flex: 0,
+    display: 'flex',
+    alignItems: 'center',
+    color: 'var(--vscode-foreground)',
+    paddingRight: '4px'
   }
 })
 
@@ -66,15 +72,13 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
   return (
     <div {...stylex.props(styles.treeItem)}>
       <div {...stylex.props(styles.fileName)} onClick={toggleIsExpanded}>
-        <IconButton
-          flex={0}
-          color="var(--vscode-foreground)"
-          background="transparent"
-          pointerEvents="none"
+        <div
+          {...stylex.props(styles.toggleButton)}
           aria-label="expand/collapse button"
-          icon={isExpanded ? <VscChevronDown /> : <VscChevronRight />}
-          mr="4"
-        />
+          role="button"
+        >
+          {isExpanded ? <VscChevronDown /> : <VscChevronRight />}
+        </div>
         <FileLink filePath={filePath} />
         <VSCodeBadge style={{ margin: '0 2px 0 auto' }}>
           {matches.length}
