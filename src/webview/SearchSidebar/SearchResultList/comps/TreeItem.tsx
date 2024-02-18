@@ -1,4 +1,4 @@
-import { HStack, IconButton, VStack, Box } from '@chakra-ui/react'
+import { HStack, IconButton, VStack } from '@chakra-ui/react'
 import { VscChevronDown, VscChevronRight } from 'react-icons/vsc'
 import { useBoolean } from 'react-use'
 import type { DisplayResult } from '../../../../types'
@@ -6,6 +6,17 @@ import { CodeBlock } from './CodeBlock'
 import { FileLink } from './FileLink'
 import { VSCodeBadge } from '@vscode/webview-ui-toolkit/react'
 import { memo } from 'react'
+import * as stylex from '@stylexjs/stylex'
+
+const styles = stylex.create({
+  oneItem: {
+    width: '100%',
+    paddingLeft: '20px',
+    ':hover': {
+      background: 'var(--vscode-list-inactiveSelectionBackground)'
+    }
+  }
+})
 
 interface CodeBlockListProps {
   matches: DisplayResult[]
@@ -18,17 +29,12 @@ const CodeBlockList = memo(({ matches }: CodeBlockListProps) => {
         const { file, range } = match
         const { byteOffset } = range
         return (
-          <HStack
-            w="100%"
-            justifyContent="flex-start"
+          <div
+            {...stylex.props(styles.oneItem)}
             key={file + byteOffset.start + byteOffset.end}
-            _hover={{
-              background: 'var(--vscode-list-inactiveSelectionBackground)'
-            }}
           >
-            <Box w="20px" />
             <CodeBlock match={match} />
-          </HStack>
+          </div>
         )
       })}
     </>
