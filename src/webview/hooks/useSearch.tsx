@@ -10,7 +10,7 @@ const MOD = 1e9 + 7
 // maintain the latest search task id and callback
 let id = 0
 let grouped = [] as [string, DisplayResult[]][]
-let queryInFlight = ''
+let queryInFlight = { inputValue: '', includeFile: '' }
 let searching = true
 let notify = () => {}
 let searchError: Error | null = null
@@ -28,7 +28,8 @@ function postSearch(searchQuery: SearchQuery) {
 }
 
 childPort.onMessage('searchResultStreaming', event => {
-  if (event.id !== id) {
+  const { id: eventId, ...query } = event
+  if (eventId !== id) {
     return
   }
   if (hasStaleResult) {
@@ -36,13 +37,14 @@ childPort.onMessage('searchResultStreaming', event => {
     hasStaleResult = false
     grouped = []
   }
-  queryInFlight = event.inputValue
+  queryInFlight = query
   grouped = merge(groupBy(event.searchResult))
   notify()
 })
 
 childPort.onMessage('searchEnd', event => {
-  if (event.id !== id) {
+  const { id: eventId, ...query } = event
+  if (eventId !== id) {
     return
   }
   searching = false
@@ -50,7 +52,7 @@ childPort.onMessage('searchEnd', event => {
     grouped = []
   }
   hasStaleResult = false
-  queryInFlight = event.inputValue
+  queryInFlight = query
   notify()
 })
 
