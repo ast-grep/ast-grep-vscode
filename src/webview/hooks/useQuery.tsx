@@ -2,7 +2,12 @@ import { useCallback } from 'react'
 import { useLocalStorage } from 'react-use'
 import { useDebounce } from 'react-use'
 
-export function useSearchQuery(onQueryChange: (query: string) => void) {
+export interface SearchQuery {
+  inputValue: string
+  includeFile: string
+}
+
+export function useSearchQuery(startSearch: (query: SearchQuery) => void) {
   const [inputValue = '', setInputValue] = useLocalStorage(
     'ast-grep-search-panel-input-value',
     ''
@@ -12,8 +17,11 @@ export function useSearchQuery(onQueryChange: (query: string) => void) {
     ''
   )
   const refreshResult = useCallback(() => {
-    onQueryChange(inputValue)
-  }, [inputValue, onQueryChange])
+    startSearch({
+      inputValue,
+      includeFile
+    })
+  }, [inputValue, startSearch])
 
   // auto refresh result when input value changes
   useDebounce(refreshResult, 100, [inputValue])

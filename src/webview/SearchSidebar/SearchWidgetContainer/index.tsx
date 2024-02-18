@@ -1,14 +1,15 @@
-import { useSearchQuery } from '../../hooks/useQuery'
+import { useSearchQuery, SearchQuery } from '../../hooks/useQuery'
 import SearchOptions from './comps/SearchOptions'
 import SearchWidget from './comps/SearchWidget'
 
 interface Props {
-  onQueryChange: (query: string) => void
+  onQueryChange: (query: SearchQuery) => void
 }
 
 const SearchWidgetContainer = ({ onQueryChange }: Props) => {
   const { inputValue, setInputValue, refreshResult } =
     useSearchQuery(onQueryChange)
+
   return (
     <div>
       <SearchWidget
