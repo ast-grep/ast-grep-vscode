@@ -1,9 +1,12 @@
-const progressBarStyle = {
-  width: '100%',
-  height: '6px',
-  overflow: 'hidden',
-  position: 'relative'
-} as const
+import * as stylex from '@stylexjs/stylex'
+const styles = stylex.create({
+  progressBar: {
+    width: '100%',
+    height: '6px',
+    overflow: 'hidden',
+    position: 'relative'
+  }
+})
 
 interface LoadingBarProps {
   loading: boolean
@@ -17,7 +20,7 @@ export default function LoadingBar({ loading }: LoadingBarProps) {
   } as const
   return (
     <div
-      style={progressBarStyle}
+      {...stylex.props(styles.progressBar)}
       role="progressbar"
       aria-valuemin={0}
       aria-hidden={!loading}
