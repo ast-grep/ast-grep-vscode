@@ -123,7 +123,7 @@
     "@types/vscode": "1.86.0",
     "@vscode/test-electron": "2.3.9",
     "@vscode/webview-ui-toolkit": "1.4.0",
-    "esbuild": "0.20.0",
+    "esbuild": "0.20.1",
     "glob": "9.3.5",
     "husky": "9.0.11",
     "lint-staged": "15.2.2",
