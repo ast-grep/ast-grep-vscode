@@ -1,6 +1,6 @@
 {
   "name": "ast-grep-vscode",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "VSCode extension for ast-grep language server",
   "keywords": [
     "ast-grep",
