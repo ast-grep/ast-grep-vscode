@@ -4,7 +4,7 @@ import type { DisplayResult } from '../../../../types'
 import { CodeBlock } from './CodeBlock'
 import { FileLink } from './FileLink'
 import { VSCodeBadge } from '@vscode/webview-ui-toolkit/react'
-import { memo } from 'react'
+import { memo, useEffect, useRef } from 'react'
 import * as stylex from '@stylexjs/stylex'
 
 const styles = stylex.create({
@@ -15,18 +15,7 @@ const styles = stylex.create({
     display: 'none'
   },
   codeList: {
-    flexDirection: 'column',
-    // this wil make the scroll drop shadow
-    ':before': {
-      content: '""',
-      position: 'sticky',
-      display: 'block',
-      height: 6,
-      top: 22,
-      left: 0,
-      right: 0,
-      boxShadow: 'var(--vscode-scrollbar-shadow) 0 6px 6px -6px inset'
-    }
+    flexDirection: 'column'
   },
   codeItem: {
     flex: '1 0 100%',
@@ -34,32 +23,11 @@ const styles = stylex.create({
     listStyle: 'none',
     ':hover': {
       background: 'var(--vscode-list-inactiveSelectionBackground)'
-    },
-    ':first-child': {
-      marginTop: -6
     }
   },
   treeItem: {
     position: 'relative',
-    background: 'var(--vscode-sideBar-background)',
-    // this will cover drop shadow if no scroll at all
-    ':before': {
-      content: '""',
-      // absolute makes it only cover when no scroll
-      // after scroll, cover will scroll up
-      position: 'absolute',
-      display: 'block',
-      height: 6,
-      top: 22,
-      left: 0,
-      right: 0,
-      zIndex: 1,
-      background: 'var(--vscode-sideBar-background)'
-    },
-    // tricky. compensate cover color for first item
-    ':has( ul>:first-child:hover):before': {
-      background: 'var(--vscode-list-inactiveSelectionBackground)'
-    }
+    background: 'var(--vscode-sideBar-background)'
   },
   fileName: {
     position: 'sticky',
@@ -76,6 +44,9 @@ const styles = stylex.create({
     ':hover': {
       background: 'var(--vscode-list-inactiveSelectionBackground)'
     }
+  },
+  scrolled: {
+    boxShadow: 'var(--vscode-scrollbar-shadow) 0 0 6px'
   },
   toggleButton: {
     flex: 0,
@@ -113,6 +84,29 @@ const CodeBlockList = memo(({ matches }: CodeBlockListProps) => {
   )
 })
 
+function useStickyShadow() {
+  const [isScrolled, setScrolled] = useBoolean(false)
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const observer = new IntersectionObserver(entries => {
+      const entry = entries[0]
+      if (entry.isIntersecting) {
+        setScrolled(false)
+      } else {
+        setScrolled(true)
+      }
+    })
+    observer.observe(ref.current!)
+    return () => {
+      observer.disconnect()
+    }
+  })
+  return {
+    isScrolled,
+    ref
+  }
+}
+
 interface TreeItemProps {
   filePath: string
   matches: DisplayResult[]
@@ -120,10 +114,15 @@ interface TreeItemProps {
 
 const TreeItem = ({ filePath, matches }: TreeItemProps) => {
   const [isExpanded, toggleIsExpanded] = useBoolean(true)
+  const { isScrolled, ref } = useStickyShadow()
 
   return (
     <div {...stylex.props(styles.treeItem)}>
-      <div {...stylex.props(styles.fileName)} onClick={toggleIsExpanded}>
+      <div className="scroll-observer" ref={ref} />
+      <div
+        {...stylex.props(styles.fileName, isScrolled && styles.scrolled)}
+        onClick={toggleIsExpanded}
+      >
         <div
           {...stylex.props(styles.toggleButton)}
           aria-label="expand/collapse button"
