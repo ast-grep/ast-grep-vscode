@@ -32,8 +32,21 @@
         "command": "ast-grep.restartLanguageServer",
         "title": "restart Language Server",
         "category": "ast-grep"
+      },
+      {
+        "command": "ast-grep.searchInFolder",
+        "title": "Find ast-grep Pattern in Folder"
       }
     ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "ast-grep.searchInFolder",
+          "group": "4_search",
+          "when": "explorerResourceIsFolder"
+        }
+      ]
+    },
     "configuration": {
       "type": "object",
       "title": "ast-grep",

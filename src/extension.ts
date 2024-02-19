@@ -7,7 +7,7 @@ import {
   Executable
 } from 'vscode-languageclient/node'
 
-import { activate as activateWebview } from './view'
+import { activate as activateWebview, findInFolder } from './view'
 
 let client: LanguageClient
 const diagnosticCollectionName = 'ast-grep-diagnostics'
@@ -35,6 +35,7 @@ function getExecutable(isDebug: boolean): Executable {
 
 function activateLsp(context: ExtensionContext) {
   context.subscriptions.push(
+    commands.registerCommand('ast-grep.searchInFolder', findInFolder),
     commands.registerCommand('ast-grep.restartLanguageServer', async () => {
       console.log(
         'Restart the ast-grep language server by ast-grep.restart command'
