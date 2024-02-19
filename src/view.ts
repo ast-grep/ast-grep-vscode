@@ -177,9 +177,9 @@ function openFile({
   })
 }
 
-function setupParentPort(webviewView: vscode.WebviewView) {
-  const parentPort: ParentPort = new Unport()
+const parentPort: ParentPort = new Unport()
 
+function setupParentPort(webviewView: vscode.WebviewView) {
   parentPort.implementChannel({
     async send(message) {
       webviewView.webview.postMessage(message)
@@ -298,5 +298,8 @@ export function findInFolder(data: any) {
     window.showErrorMessage('ast-grep Error: folder is not in the workspace')
     return
   }
-  window.showInformationMessage('ast-grep: searching in ' + relative)
+  vscode.commands.executeCommand('ast-grep.search.input.focus')
+  parentPort.postMessage('setIncludeFile', {
+    includeFile: relative
+  })
 }

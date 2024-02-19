@@ -12,6 +12,8 @@ const SearchWidgetContainer = ({ onQueryChange }: Props) => {
     setInputValue,
     includeFile,
     setIncludeFile,
+    showOptions,
+    toggleOptions,
     refreshResult
   } = useSearchQuery(onQueryChange)
 
@@ -26,6 +28,8 @@ const SearchWidgetContainer = ({ onQueryChange }: Props) => {
         includeFile={includeFile}
         setIncludeFile={setIncludeFile}
         refreshResult={refreshResult}
+        showOptions={showOptions}
+        toggleOptions={toggleOptions}
       />
     </div>
   )

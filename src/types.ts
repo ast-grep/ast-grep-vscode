@@ -50,6 +50,9 @@ export type Definition = {
       id: number
       error: Error
     }
+    setIncludeFile: {
+      includeFile: string
+    }
   }
   child2parent: {
     search: SearchQuery & {

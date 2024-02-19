@@ -1,7 +1,7 @@
-import { useCallback } from 'react'
-import { useLocalStorage } from 'react-use'
-import { useDebounce } from 'react-use'
+import { useCallback, useEffect } from 'react'
+import { useLocalStorage, useDebounce, useBoolean } from 'react-use'
 import { SearchQuery } from '../../types'
+import { childPort } from '../postMessage'
 export { SearchQuery }
 
 export function useSearchQuery(startSearch: (query: SearchQuery) => void) {
@@ -13,12 +13,20 @@ export function useSearchQuery(startSearch: (query: SearchQuery) => void) {
     'ast-grep-search-panel-include-value',
     ''
   )
+  const [showOptions, toggleOptions] = useBoolean(Boolean(includeFile))
   const refreshResult = useCallback(() => {
     startSearch({
       inputValue,
       includeFile
     })
   }, [inputValue, includeFile, startSearch])
+
+  useEffect(() => {
+    childPort.onMessage('setIncludeFile', val => {
+      setIncludeFile(val.includeFile)
+      toggleOptions(true)
+    })
+  }, [])
 
   // auto refresh result when input value changes
   useDebounce(refreshResult, 100, [inputValue, includeFile])
@@ -28,6 +36,8 @@ export function useSearchQuery(startSearch: (query: SearchQuery) => void) {
     setInputValue,
     includeFile,
     setIncludeFile,
-    refreshResult
+    refreshResult,
+    showOptions,
+    toggleOptions
   }
 }
