@@ -30,7 +30,7 @@ const styles = stylex.create({
   },
   codeItem: {
     flex: '1 0 100%',
-    paddingLeft: '20px',
+    paddingLeft: '38px',
     listStyle: 'none',
     ':hover': {
       background: 'var(--vscode-list-inactiveSelectionBackground)'
@@ -40,7 +40,6 @@ const styles = stylex.create({
     }
   },
   treeItem: {
-    padding: '0 2px 0 10px',
     position: 'relative',
     background: 'var(--vscode-sideBar-background)',
     // this will cover drop shadow if no scroll at all
@@ -53,13 +52,12 @@ const styles = stylex.create({
       height: 6,
       top: 22,
       left: 0,
-      right: 2,
+      right: 0,
       zIndex: 1,
       background: 'var(--vscode-sideBar-background)'
     },
     // tricky. compensate cover color for first item
     ':has( ul>:first-child:hover):before': {
-      left: 18,
       background: 'var(--vscode-list-inactiveSelectionBackground)'
     }
   },
@@ -69,6 +67,8 @@ const styles = stylex.create({
     top: 0,
     cursor: 'pointer',
     display: 'flex',
+    paddingLeft: 8,
+    paddingRight: 2,
     lineHeight: '22px',
     height: '22px',
     alignItems: 'center',
@@ -85,7 +85,7 @@ const styles = stylex.create({
     paddingRight: '4px'
   },
   badge: {
-    margin: '0 2px 0 auto',
+    marginLeft: 'auto',
     flex: '0 0 auto'
   }
 })
