@@ -2,6 +2,7 @@ import * as stylex from '@stylexjs/stylex'
 const styles = stylex.create({
   progressBar: {
     width: '100%',
+    flex: '0 0 auto',
     height: '6px',
     overflow: 'hidden',
     position: 'relative'
