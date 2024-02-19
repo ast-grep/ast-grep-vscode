@@ -8,23 +8,71 @@ import { memo } from 'react'
 import * as stylex from '@stylexjs/stylex'
 
 const styles = stylex.create({
+  show: {
+    display: 'flex'
+  },
+  hide: {
+    display: 'none'
+  },
   codeList: {
+    flexDirection: 'column',
+    // this wil make the scroll drop shadow
+    ':before': {
+      content: '""',
+      position: 'sticky',
+      display: 'block',
+      height: 6,
+      top: 22,
+      left: 0,
+      right: 0,
+      boxShadow: 'var(--vscode-scrollbar-shadow) 0 6px 6px -6px inset'
+    }
+  },
+  codeItem: {
     flex: '1 0 100%',
     paddingLeft: '20px',
     listStyle: 'none',
     ':hover': {
       background: 'var(--vscode-list-inactiveSelectionBackground)'
+    },
+    ':first-child': {
+      marginTop: -6
     }
   },
   treeItem: {
-    padding: '0 2px 0 10px'
+    padding: '0 2px 0 10px',
+    position: 'relative',
+    background: 'var(--vscode-sideBar-background)',
+    // this will cover drop shadow if no scroll at all
+    ':before': {
+      content: '""',
+      // absolute makes it only cover when no scroll
+      // after scroll, cover will scroll up
+      position: 'absolute',
+      display: 'block',
+      height: 6,
+      top: 22,
+      left: 0,
+      right: 2,
+      zIndex: 1,
+      background: 'var(--vscode-sideBar-background)'
+    },
+    // tricky. compensate cover color for first item
+    ':has( ul>:first-child:hover):before': {
+      left: 18,
+      background: 'var(--vscode-list-inactiveSelectionBackground)'
+    }
   },
   fileName: {
+    position: 'sticky',
+    zIndex: 1, // not occluded by cover
+    top: 0,
     cursor: 'pointer',
     display: 'flex',
     lineHeight: '22px',
     height: '22px',
     alignItems: 'center',
+    background: 'var(--vscode-sideBar-background)',
     ':hover': {
       background: 'var(--vscode-list-inactiveSelectionBackground)'
     }
@@ -54,7 +102,7 @@ const CodeBlockList = memo(({ matches }: CodeBlockListProps) => {
         const { byteOffset } = range
         return (
           <li
-            {...stylex.props(styles.codeList)}
+            {...stylex.props(styles.codeItem)}
             key={file + byteOffset.start + byteOffset.end}
           >
             <CodeBlock match={match} />
@@ -89,10 +137,10 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
         </VSCodeBadge>
       </div>
       <ul
-        style={{
-          display: isExpanded ? 'flex' : 'none',
-          flexDirection: 'column'
-        }}
+        {...stylex.props(
+          styles.codeList,
+          isExpanded ? styles.show : styles.hide
+        )}
       >
         <CodeBlockList matches={matches} />
       </ul>
