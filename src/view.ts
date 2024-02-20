@@ -24,6 +24,8 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 const LEADING_SPACES_RE = /^\s*/
+const PRE_CTX = 30
+const POST_CTX = 100
 
 function splitByHighLightToken(search: SgSearch): DisplayResult {
   const { start, end } = search.range
@@ -41,6 +43,17 @@ function splitByHighLightToken(search: SgSearch): DisplayResult {
     displayLine = displayLine.substring(leadingSpaces)
     startIdx -= leadingSpaces
     endIdx -= leadingSpaces
+  }
+  // TODO: improve this rendering logic
+  // truncate long lines
+  if (startIdx > PRE_CTX + 3) {
+    displayLine = '...' + displayLine.substring(startIdx - PRE_CTX)
+    let length = endIdx - startIdx
+    startIdx = PRE_CTX + 3
+    endIdx = startIdx + length
+  }
+  if (endIdx + POST_CTX + 3 < displayLine.length) {
+    displayLine = displayLine.substring(0, endIdx + POST_CTX) + '...'
   }
   return {
     startIdx,

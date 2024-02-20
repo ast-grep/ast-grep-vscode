@@ -38,6 +38,7 @@ export type SgSearch = {
   file: string
   lines: string
   language: string
+  replacement: string
 }
 
 export type Definition = {
