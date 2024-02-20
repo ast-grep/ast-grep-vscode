@@ -1,5 +1,7 @@
 import { Unport } from 'unport'
 
+type WithId<T> = T & { id: number }
+
 export type Position = {
   line: number
   column: number
@@ -44,9 +46,7 @@ export type Definition = {
       searchResult: DisplayResult[]
       id: number
     } & SearchQuery
-    searchEnd: {
-      id: number
-    } & SearchQuery
+    searchEnd: WithId<SearchQuery>
     error: {
       id: number
       error: Error
@@ -56,9 +56,7 @@ export type Definition = {
     }
   }
   child2parent: {
-    search: SearchQuery & {
-      id: number
-    }
+    search: WithId<SearchQuery>
     reload: {}
     openFile: {
       filePath: string
