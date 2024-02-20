@@ -32,7 +32,8 @@ const styles = stylex.create({
 
 function SearchWidgetContainer() {
   const [inputValue, setInputValue] = useSearchField('inputValue')
-  const [isExpanded, toggleIsExpanded] = useBoolean(false)
+  const [rewrite, setRewrite] = useSearchField('rewrite')
+  const [isExpanded, toggleIsExpanded] = useBoolean(Boolean(rewrite))
   return (
     <div {...stylex.props(styles.container)}>
       <div {...stylex.props(styles.replaceToggle)} onClick={toggleIsExpanded}>
@@ -47,10 +48,10 @@ function SearchWidgetContainer() {
         />
         {isExpanded ? (
           <SearchInput
-            placeholder="Replace not implemented yet"
-            value=""
-            onChange={() => {}}
-            onKeyEnterUp={() => {}}
+            placeholder="Replace"
+            value={rewrite}
+            onChange={setRewrite}
+            onKeyEnterUp={refreshResult}
           />
         ) : null}
       </div>

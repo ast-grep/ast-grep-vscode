@@ -27,6 +27,7 @@ export interface DisplayResult {
 export interface SearchQuery {
   inputValue: string
   includeFile: string
+  rewrite: string
 }
 
 export type SgSearch = {

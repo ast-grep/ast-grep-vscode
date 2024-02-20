@@ -9,8 +9,12 @@ const MOD = 1e9 + 7
 
 // maintain the latest search task id and callback
 let id = 0
-let grouped = [] as [string, DisplayResult[]][]
-let queryInFlight = { inputValue: '', includeFile: '' }
+let grouped: [string, DisplayResult[]][] = []
+let queryInFlight: SearchQuery = {
+  inputValue: '',
+  includeFile: '',
+  rewrite: ''
+}
 let searching = true
 let notify = () => {}
 let searchError: Error | null = null
