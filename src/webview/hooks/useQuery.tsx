@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useLocalStorage, useDebounce, useBoolean } from 'react-use'
 import { SearchQuery } from '../../types'
 import { childPort } from '../postMessage'
@@ -7,22 +7,42 @@ export { SearchQuery }
 // between search query and search result
 import { postSearch } from './useSearch'
 
-export function useSearchQuery() {
+const searchQuery = {
+  inputValue: '',
+  includeFile: ''
+}
+
+export function refreshResult() {
+  postSearch(searchQuery)
+}
+
+export function useInputValue() {
   const [inputValue = '', setInputValue] = useLocalStorage(
     'ast-grep-search-panel-input-value',
     ''
   )
+  useEffect(() => {
+    searchQuery.inputValue = inputValue
+  }, [inputValue])
+  useDebounce(refreshResult, 150, [inputValue])
+  return [inputValue, setInputValue] as const
+}
+
+function useIncludeFile() {
   const [includeFile = '', setIncludeFile] = useLocalStorage(
     'ast-grep-search-panel-include-value',
     ''
   )
+  useEffect(() => {
+    searchQuery.includeFile = includeFile
+  }, [includeFile])
+  useDebounce(refreshResult, 150, [includeFile])
+  return [includeFile, setIncludeFile] as const
+}
+
+export function useSearchOption() {
+  const [includeFile = '', setIncludeFile] = useIncludeFile()
   const [showOptions, toggleOptions] = useBoolean(Boolean(includeFile))
-  const refreshResult = useCallback(() => {
-    postSearch({
-      inputValue,
-      includeFile
-    })
-  }, [inputValue, includeFile])
 
   useEffect(() => {
     childPort.onMessage('setIncludeFile', val => {
@@ -30,16 +50,9 @@ export function useSearchQuery() {
       toggleOptions(true)
     })
   }, [])
-
-  // auto refresh result when input value changes
-  useDebounce(refreshResult, 100, [inputValue, includeFile])
-
   return {
-    inputValue,
-    setInputValue,
     includeFile,
     setIncludeFile,
-    refreshResult,
     showOptions,
     toggleOptions
   }

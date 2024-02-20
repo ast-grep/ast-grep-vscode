@@ -1,3 +1,4 @@
+import { useInputValue, refreshResult } from '../../../hooks/useQuery'
 import { SearchInput } from './SearchInput'
 import { useBoolean } from 'react-use'
 import { VscChevronRight, VscChevronDown } from 'react-icons/vsc'
@@ -29,17 +30,8 @@ const styles = stylex.create({
   }
 })
 
-interface Props {
-  inputValue: string
-  setInputValue: (value: string) => void
-  refreshResult: () => void
-}
-
-const SearchWidgetContainer = ({
-  inputValue,
-  setInputValue,
-  refreshResult
-}: Props) => {
+function SearchWidgetContainer() {
+  const [inputValue, setInputValue] = useInputValue()
   const [isExpanded, toggleIsExpanded] = useBoolean(false)
   return (
     <div {...stylex.props(styles.container)}>

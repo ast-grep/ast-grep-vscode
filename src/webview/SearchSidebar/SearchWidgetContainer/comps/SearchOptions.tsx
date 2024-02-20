@@ -1,6 +1,7 @@
 import { VscEllipsis } from 'react-icons/vsc'
 import IncludeFile from './IncludeFile'
 import * as stylex from '@stylexjs/stylex'
+import { useSearchOption, refreshResult } from '../../../hooks/useQuery'
 
 const styles = stylex.create({
   button: {
@@ -24,21 +25,9 @@ const styles = stylex.create({
   }
 })
 
-interface SearchOptionsProps {
-  includeFile: string
-  setIncludeFile: (value: string) => void
-  refreshResult: () => void
-  showOptions: boolean
-  toggleOptions: () => void
-}
-
-export default function SearchOptions({
-  includeFile,
-  setIncludeFile,
-  refreshResult,
-  showOptions,
-  toggleOptions
-}: SearchOptionsProps) {
+export default function SearchOptions() {
+  const { showOptions, toggleOptions, includeFile, setIncludeFile } =
+    useSearchOption()
   return (
     <div {...stylex.props(styles.options)}>
       <button {...stylex.props(styles.button)} onClick={toggleOptions}>

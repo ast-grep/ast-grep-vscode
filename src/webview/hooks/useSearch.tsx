@@ -18,6 +18,7 @@ let searchError: Error | null = null
 // instead, use a stale flag and update it on streaming or end
 let hasStaleResult = false
 
+// this function is also called in useQuery
 function postSearch(searchQuery: SearchQuery) {
   id = (id + 1) % MOD
   childPort.postMessage('search', { id, ...searchQuery })
