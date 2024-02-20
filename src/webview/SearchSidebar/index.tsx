@@ -7,13 +7,8 @@ import SearchProviderMessage from './SearchProviderMessage'
 import { useDeferredValue } from 'react'
 
 export const SearchSidebar = () => {
-  const {
-    queryInFlight,
-    groupedByFileSearchResult,
-    refreshSearchResult,
-    searching,
-    searchError
-  } = useSearchResult()
+  const { queryInFlight, groupedByFileSearchResult, searching, searchError } =
+    useSearchResult()
 
   // rendering tree is too expensive, useDeferredValue
   const groupedByFileSearchResultForRender = useDeferredValue(
@@ -23,7 +18,7 @@ export const SearchSidebar = () => {
   return (
     <UseDarkContextProvider>
       <LoadingBar loading={searching} />
-      <SearchWidgetContainer onQueryChange={refreshSearchResult} />
+      <SearchWidgetContainer />
       <SearchProviderMessage
         query={queryInFlight}
         error={searchError}

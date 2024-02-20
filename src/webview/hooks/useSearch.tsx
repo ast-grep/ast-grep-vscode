@@ -111,7 +111,7 @@ export const useSearchResult = () => {
     queryInFlight,
     searching,
     searchError,
-    groupedByFileSearchResult: grouped,
-    refreshSearchResult: postSearch
+    groupedByFileSearchResult: grouped
   }
 }
+export { postSearch }

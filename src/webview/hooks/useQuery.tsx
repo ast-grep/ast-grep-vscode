@@ -3,8 +3,11 @@ import { useLocalStorage, useDebounce, useBoolean } from 'react-use'
 import { SearchQuery } from '../../types'
 import { childPort } from '../postMessage'
 export { SearchQuery }
+// this is the single sole point of communication
+// between search query and search result
+import { postSearch } from './useSearch'
 
-export function useSearchQuery(startSearch: (query: SearchQuery) => void) {
+export function useSearchQuery() {
   const [inputValue = '', setInputValue] = useLocalStorage(
     'ast-grep-search-panel-input-value',
     ''
@@ -15,11 +18,11 @@ export function useSearchQuery(startSearch: (query: SearchQuery) => void) {
   )
   const [showOptions, toggleOptions] = useBoolean(Boolean(includeFile))
   const refreshResult = useCallback(() => {
-    startSearch({
+    postSearch({
       inputValue,
       includeFile
     })
-  }, [inputValue, includeFile, startSearch])
+  }, [inputValue, includeFile])
 
   useEffect(() => {
     childPort.onMessage('setIncludeFile', val => {
