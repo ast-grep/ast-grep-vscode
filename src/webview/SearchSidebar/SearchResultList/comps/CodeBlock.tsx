@@ -35,6 +35,24 @@ function MultiLineIndicator({ lineSpan }: { lineSpan: number }) {
   return <span style={lineIndicatorStyle}>+{lineSpan}</span>
 }
 
+function Highlight({
+  displayLine,
+  startIdx,
+  endIdx,
+  replacement
+}: DisplayResult) {
+  const matched = displayLine.slice(startIdx, endIdx)
+  if (replacement) {
+    return (
+      <>
+        <span style={{ background: 'red' }}>{matched}</span>
+        <span style={{ background: 'green' }}>{replacement}</span>
+      </>
+    )
+  }
+  return <span style={style}>{matched}</span>
+}
+
 interface CodeBlockProps {
   match: DisplayResult
 }
@@ -50,7 +68,7 @@ export const CodeBlock = ({ match }: CodeBlockProps) => {
     >
       <MultiLineIndicator lineSpan={lineSpan} />
       {displayLine.slice(0, startIdx)}
-      <span style={style}>{displayLine.slice(startIdx, endIdx)}</span>
+      <Highlight {...match} />
       {displayLine.slice(endIdx)}
     </div>
   )

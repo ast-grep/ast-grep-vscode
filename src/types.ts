@@ -24,6 +24,7 @@ export interface DisplayResult {
   displayLine: string
   lineSpan: number
   range: RangeInfo
+  replacement?: string
 }
 
 export interface SearchQuery {
@@ -38,7 +39,7 @@ export type SgSearch = {
   file: string
   lines: string
   language: string
-  replacement: string
+  replacement?: string
 }
 
 export type Definition = {

@@ -23,6 +23,13 @@ export function activate(context: vscode.ExtensionContext) {
   )
 }
 
+function handleReplacement(replacement?: string) {
+  if (replacement) {
+    return { replacement: replacement.split(/\r?\n/, 1)[0] }
+  }
+  return {}
+}
+
 const LEADING_SPACES_RE = /^\s*/
 const PRE_CTX = 30
 const POST_CTX = 100
@@ -61,7 +68,8 @@ function splitByHighLightToken(search: SgSearch): DisplayResult {
     displayLine,
     lineSpan: end.line - start.line,
     file: search.file,
-    range: search.range
+    range: search.range,
+    ...handleReplacement(search.replacement)
   }
 }
 
