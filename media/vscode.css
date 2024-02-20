@@ -52,11 +52,11 @@ code {
 
 button {
   border: none;
-  padding: var(--input-padding-vertical) var(--input-padding-horizontal);
-  width: 100%;
   text-align: center;
-  color: var(--vscode-button-foreground);
-  background: var(--vscode-button-background);
+  /* padding: var(--input-padding-vertical) var(--input-padding-horizontal); */
+  /* width: 100%; */
+  /* color: var(--vscode-button-foreground); */
+  /* background: var(--vscode-button-background); */
 }
 
 input:not([type='checkbox']),
