@@ -7,41 +7,32 @@ export { SearchQuery }
 // between search query and search result
 import { postSearch } from './useSearch'
 
-const searchQuery = {
+const searchQuery: Record<keyof SearchQuery, string> = {
   inputValue: '',
   includeFile: ''
+}
+
+const LS_KEYS: Record<keyof SearchQuery, string> = {
+  inputValue: 'ast-grep-search-panel-input-value',
+  includeFile: 'ast-grep-search-panel-include-value'
 }
 
 export function refreshResult() {
   postSearch(searchQuery)
 }
 
-export function useInputValue() {
-  const [inputValue = '', setInputValue] = useLocalStorage(
-    'ast-grep-search-panel-input-value',
-    ''
-  )
+export function useSearchField(key: keyof SearchQuery) {
+  const [field = '', setField] = useLocalStorage(LS_KEYS[key], '')
+  // this useEffect and useDebounce is silly
   useEffect(() => {
-    searchQuery.inputValue = inputValue
-  }, [inputValue])
-  useDebounce(refreshResult, 150, [inputValue])
-  return [inputValue, setInputValue] as const
-}
-
-function useIncludeFile() {
-  const [includeFile = '', setIncludeFile] = useLocalStorage(
-    'ast-grep-search-panel-include-value',
-    ''
-  )
-  useEffect(() => {
-    searchQuery.includeFile = includeFile
-  }, [includeFile])
-  useDebounce(refreshResult, 150, [includeFile])
-  return [includeFile, setIncludeFile] as const
+    searchQuery[key] = field
+  }, [field])
+  useDebounce(refreshResult, 150, [field])
+  return [field, setField] as const
 }
 
 export function useSearchOption() {
-  const [includeFile = '', setIncludeFile] = useIncludeFile()
+  const [includeFile = '', setIncludeFile] = useSearchField('includeFile')
   const [showOptions, toggleOptions] = useBoolean(Boolean(includeFile))
 
   useEffect(() => {
