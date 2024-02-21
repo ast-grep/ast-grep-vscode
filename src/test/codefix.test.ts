@@ -3,7 +3,7 @@ import {
   assertCodeActionArraysEqual,
   getActualCodeActions,
   getDocUri,
-  testAndRetry
+  testAndRetry,
 } from './utils'
 
 /** Actual tests */
@@ -12,7 +12,7 @@ suite('Should get code action', () => {
     const docUri = getDocUri('test.ts')
     const range = new vscode.Range(
       new vscode.Position(0, 0),
-      new vscode.Position(4, 1)
+      new vscode.Position(4, 1),
     )
     /* Generate expected code actions */
     const expectedTitle = 'Test rule for vscode extension'
@@ -31,8 +31,8 @@ suite('Should get code action', () => {
         title: expectedTitle,
         kind: expectedKind,
         edit: edit,
-        isPreferred: expectedIsPreferred
-      } as vscode.CodeAction
+        isPreferred: expectedIsPreferred,
+      } as vscode.CodeAction,
     ]
 
     /* Measure actual code actions */

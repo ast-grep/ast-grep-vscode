@@ -16,13 +16,13 @@ const styles = stylex.create({
     flex: '0 0 auto',
     position: 'absolute',
     top: '0',
-    right: '-2px'
+    right: '-2px',
   },
   options: {
     minHeight: '16px',
     marginLeft: '18px',
-    position: 'relative'
-  }
+    position: 'relative',
+  },
 })
 
 export default function SearchOptions() {

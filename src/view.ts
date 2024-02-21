@@ -4,7 +4,7 @@ import type {
   ParentPort,
   SgSearch,
   DisplayResult,
-  SearchQuery
+  SearchQuery,
 } from './types'
 import { Unport, ChannelMessage } from 'unport'
 import * as vscode from 'vscode'
@@ -18,8 +18,8 @@ export function activate(context: vscode.ExtensionContext) {
     window.registerWebviewViewProvider(
       SearchSidebarProvider.viewType,
       provider,
-      { webviewOptions: { retainContextWhenHidden: true } }
-    )
+      { webviewOptions: { retainContextWhenHidden: true } },
+    ),
   )
 }
 
@@ -69,7 +69,7 @@ function splitByHighLightToken(search: SgSearch): DisplayResult {
     lineSpan: end.line - start.line,
     file: search.file,
     range: search.range,
-    ...handleReplacement(search.replacement)
+    ...handleReplacement(search.replacement),
   }
 }
 
@@ -78,7 +78,7 @@ type StreamingHandler = (r: SgSearch[]) => void
 let child: ChildProcessWithoutNullStreams | undefined
 function streamedPromise(
   proc: ChildProcessWithoutNullStreams,
-  handler: StreamingHandler
+  handler: StreamingHandler,
 ): Promise<number> {
   // don't concatenate a single string/buffer
   // only maintain the last trailing line
@@ -110,13 +110,13 @@ function streamedPromise(
       } else {
         reject([code, signal])
       }
-    })
+    }),
   )
 }
 
 async function uniqueCommand(
   proc: ChildProcessWithoutNullStreams,
-  handler: StreamingHandler
+  handler: StreamingHandler,
 ) {
   // kill previous search
   if (child) {
@@ -154,7 +154,7 @@ function buildCommand(query: SearchQuery) {
   console.debug('running', query, command, args)
   // TODO: multi-workspaces support
   return spawn(command, args, {
-    cwd: uris[0]
+    cwd: uris[0],
     // shell: true, // it is safe because it is end user input
   })
 }
@@ -178,7 +178,7 @@ function getPatternRes(query: SearchQuery, handlers: Handlers) {
 
 function openFile({
   filePath,
-  locationsToSelect
+  locationsToSelect,
 }: Definition['child2parent']['openFile']) {
   const uris = workspace.workspaceFolders
   const { joinPath } = vscode.Uri
@@ -193,12 +193,12 @@ function openFile({
     const { start, end } = locationsToSelect
     range = new vscode.Range(
       new vscode.Position(start.line, start.column),
-      new vscode.Position(end.line, end.column)
+      new vscode.Position(end.line, end.column),
     )
   }
 
   vscode.commands.executeCommand('vscode.open', fileUri, {
-    selection: range
+    selection: range,
   })
 }
 
@@ -213,13 +213,13 @@ function setupParentPort(webviewView: vscode.WebviewView) {
       webviewView.webview.onDidReceiveMessage((message: ChannelMessage) => {
         pipe(message)
       })
-    }
+    },
   })
   parentPort.onMessage('reload', _payload => {
     const nonce = getNonce()
     webviewView.webview.html = webviewView.webview.html.replace(
       /(nonce="\w+?")|(nonce-\w+?)/g,
-      `nonce="${nonce}"`
+      `nonce="${nonce}"`,
     )
   })
 
@@ -227,7 +227,7 @@ function setupParentPort(webviewView: vscode.WebviewView) {
     const onData = (ret: SgSearch[]) => {
       parentPort.postMessage('searchResultStreaming', {
         ...payload,
-        searchResult: ret.map(splitByHighLightToken)
+        searchResult: ret.map(splitByHighLightToken),
       })
     }
     await getPatternRes(payload, {
@@ -235,9 +235,9 @@ function setupParentPort(webviewView: vscode.WebviewView) {
       onError(error) {
         parentPort.postMessage('error', {
           error,
-          ...payload
+          ...payload,
         })
-      }
+      },
     })
     parentPort.postMessage('searchEnd', payload)
   })
@@ -256,14 +256,14 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
   public resolveWebviewView(
     webviewView: vscode.WebviewView,
     _context: vscode.WebviewViewResolveContext,
-    _token: vscode.CancellationToken
+    _token: vscode.CancellationToken,
   ) {
     this._view = webviewView
 
     webviewView.webview.options = {
       // Allow scripts in the webview
       enableScripts: true,
-      localResourceRoots: [this._extensionUri]
+      localResourceRoots: [this._extensionUri],
     }
 
     webviewView.webview.html = this.getHtmlForWebview(webviewView.webview)
@@ -272,17 +272,17 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
 
   private getHtmlForWebview(webview: vscode.Webview) {
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'out', 'webview', 'index.js')
+      vscode.Uri.joinPath(this._extensionUri, 'out', 'webview', 'index.js'),
     )
     const stylexUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'out', 'webview', 'index.css')
+      vscode.Uri.joinPath(this._extensionUri, 'out', 'webview', 'index.css'),
     )
 
     const stylesResetUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'media', 'reset.css')
+      vscode.Uri.joinPath(this._extensionUri, 'media', 'reset.css'),
     )
     const stylesMainUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'media', 'vscode.css')
+      vscode.Uri.joinPath(this._extensionUri, 'media', 'vscode.css'),
     )
 
     // Use a nonce to only allow a specific script to be run.
@@ -325,6 +325,6 @@ export function findInFolder(data: any) {
   }
   vscode.commands.executeCommand('ast-grep.search.input.focus')
   parentPort.postMessage('setIncludeFile', {
-    includeFile: relative
+    includeFile: relative,
   })
 }

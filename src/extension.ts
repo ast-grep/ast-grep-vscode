@@ -4,7 +4,7 @@ import {
   LanguageClient,
   LanguageClientOptions,
   ServerOptions,
-  Executable
+  Executable,
 } from 'vscode-languageclient/node'
 
 import { activate as activateWebview, findInFolder } from './view'
@@ -25,11 +25,11 @@ function getExecutable(isDebug: boolean): Executable {
     options: {
       env: {
         ...process.env,
-        ...(isDebug ? { RUST_LOG: 'debug' } : {})
+        ...(isDebug ? { RUST_LOG: 'debug' } : {}),
       },
       // shell is required for Windows cmd to pick up global npm binary
-      shell: true
-    }
+      shell: true,
+    },
   }
 }
 
@@ -38,18 +38,18 @@ function activateLsp(context: ExtensionContext) {
     commands.registerCommand('ast-grep.searchInFolder', findInFolder),
     commands.registerCommand('ast-grep.restartLanguageServer', async () => {
       console.log(
-        'Restart the ast-grep language server by ast-grep.restart command'
+        'Restart the ast-grep language server by ast-grep.restart command',
       )
       await restart()
     }),
     workspace.onDidChangeConfiguration(async changeEvent => {
       if (changeEvent.affectsConfiguration('astGrep')) {
         console.log(
-          'Restart the ast-grep language server due to modification of vscode settings'
+          'Restart the ast-grep language server due to modification of vscode settings',
         )
         await restart()
       }
-    })
+    }),
   )
 
   // instantiate and set input which updates the view
@@ -57,7 +57,7 @@ function activateLsp(context: ExtensionContext) {
   // Otherwise the run options are used
   let serverOptions: ServerOptions = {
     run: getExecutable(false),
-    debug: getExecutable(true)
+    debug: getExecutable(true),
   }
 
   // Options to control the language client
@@ -65,7 +65,7 @@ function activateLsp(context: ExtensionContext) {
     diagnosticCollectionName,
     // Register the server for plain text documents
     documentSelector: [{ scheme: 'file', language: '*' }],
-    outputChannel: window.createOutputChannel(outputChannelName)
+    outputChannel: window.createOutputChannel(outputChannelName),
   }
 
   // Create the language client and start the client.
@@ -73,7 +73,7 @@ function activateLsp(context: ExtensionContext) {
     languageClientId,
     languageClientName,
     serverOptions,
-    clientOptions
+    clientOptions,
   )
 
   // Start the client. This will also launch the server

@@ -9,7 +9,7 @@ async function run() {
     ui: 'tdd',
     color: true,
     timeout: 100000,
-    slow: 1000
+    slow: 1000,
   })
 
   /**

@@ -11,24 +11,24 @@ const styles = stylex.create({
     fontSize: '13px',
     lineHeight: '22px',
     height: '22px',
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
   deleted: {
     textDecoration: 'line-through',
     backgroundColor: 'var(--vscode-diffEditor-removedTextBackground)',
-    border: '1px solid var(--vscode-diffEditor-removedTextBackground)'
+    border: '1px solid var(--vscode-diffEditor-removedTextBackground)',
   },
   inserted: {
     backgroundColor: 'var(--vscode-diffEditor-insertedTextBackground)',
     ':not(:empty)': {
-      border: '1px solid var(--vscode-diffEditor-insertedLineBackground)'
-    }
-  }
+      border: '1px solid var(--vscode-diffEditor-insertedLineBackground)',
+    },
+  },
 })
 
 const style = {
   backgroundColor: 'var(--vscode-editor-findMatchHighlightBackground)',
-  border: '1px solid var(--vscode-editor-findMatchHighlightBorder)'
+  border: '1px solid var(--vscode-editor-findMatchHighlightBorder)',
 }
 
 // this is also hardcoded in vscode
@@ -36,7 +36,7 @@ const lineIndicatorStyle = {
   margin: '0 7px 4px',
   opacity: '0.7',
   fontSize: '0.9em',
-  verticalAlign: 'bottom'
+  verticalAlign: 'bottom',
 }
 
 function MultiLineIndicator({ lineSpan }: { lineSpan: number }) {
@@ -50,7 +50,7 @@ function Highlight({
   displayLine,
   startIdx,
   endIdx,
-  replacement
+  replacement,
 }: DisplayResult) {
   const matched = displayLine.slice(startIdx, endIdx)
   if (replacement) {

@@ -6,7 +6,7 @@ import * as stylex from '@stylexjs/stylex'
 
 const styles = stylex.create({
   container: {
-    position: 'relative'
+    position: 'relative',
   },
   replaceToggle: {
     width: 16,
@@ -18,16 +18,16 @@ const styles = stylex.create({
     display: 'flex',
     alignItems: 'center',
     ':hover': {
-      background: 'var(--vscode-toolbar-hoverBackground)'
-    }
+      background: 'var(--vscode-toolbar-hoverBackground)',
+    },
   },
   inputs: {
     display: 'flex',
     flexDirection: 'column',
     gap: 6,
     marginLeft: 18,
-    flex: 1
-  }
+    flex: 1,
+  },
 })
 
 function SearchWidgetContainer() {

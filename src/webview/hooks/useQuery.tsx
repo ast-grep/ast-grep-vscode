@@ -10,13 +10,13 @@ import { postSearch } from './useSearch'
 const searchQuery: Record<keyof SearchQuery, string> = {
   inputValue: '',
   includeFile: '',
-  rewrite: ''
+  rewrite: '',
 }
 
 const LS_KEYS: Record<keyof SearchQuery, string> = {
   inputValue: 'ast-grep-search-panel-input-value',
   includeFile: 'ast-grep-search-panel-include-value',
-  rewrite: 'ast-grep-search-panel-rewrite-value'
+  rewrite: 'ast-grep-search-panel-rewrite-value',
 }
 
 export function refreshResult() {
@@ -47,6 +47,6 @@ export function useSearchOption() {
     includeFile,
     setIncludeFile,
     showOptions,
-    toggleOptions
+    toggleOptions,
   }
 }

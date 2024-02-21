@@ -3,7 +3,7 @@ import {
   createContext,
   useContext,
   useEffect,
-  useState
+  useState,
 } from 'react'
 
 const BODY_DARK_ATTRIBUTE = 'data-vscode-theme-kind'

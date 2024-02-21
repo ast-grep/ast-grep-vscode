@@ -15,7 +15,7 @@ childPort.implementChannel({
     window.addEventListener('message', ev => {
       pipe(ev.data)
     })
-  }
+  },
 })
 
 export const openFile = (data: Definition['child2parent']['openFile']) => {

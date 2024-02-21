@@ -10,8 +10,8 @@ const extension = {
   platform: 'node',
   outfile: 'out/extension.js',
   define: {
-    'process.env.NODE_ENV': '"production"'
-  }
+    'process.env.NODE_ENV': '"production"',
+  },
 }
 
 const webview = {
@@ -22,19 +22,19 @@ const webview = {
     stylexPlugin({
       useCSSLayers: true,
       generatedCSSFileName: 'out/webview/index.css',
-      stylexImports: ['@stylexjs/stylex']
-    })
+      stylexImports: ['@stylexjs/stylex'],
+    }),
   ],
   define: {
-    'process.env.NODE_ENV': '"production"'
-  }
+    'process.env.NODE_ENV': '"production"',
+  },
 }
 
 console.log('Build start')
 if (isWatch) {
   await Promise.all([
     esbuild.context(extension).then(c => c.watch()),
-    esbuild.context(webview).then(c => c.watch())
+    esbuild.context(webview).then(c => c.watch()),
   ])
 } else {
   await Promise.all([esbuild.build(extension), esbuild.build(webview)])

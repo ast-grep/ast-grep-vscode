@@ -13,7 +13,7 @@ let grouped: [string, DisplayResult[]][] = []
 let queryInFlight: SearchQuery = {
   inputValue: '',
   includeFile: '',
-  rewrite: ''
+  rewrite: '',
 }
 let searching = true
 let notify = () => {}
@@ -116,7 +116,7 @@ export const useSearchResult = () => {
     queryInFlight,
     searching,
     searchError,
-    groupedByFileSearchResult: grouped
+    groupedByFileSearchResult: grouped,
   }
 }
 export { postSearch }

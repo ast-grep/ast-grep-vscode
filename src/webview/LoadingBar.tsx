@@ -5,8 +5,8 @@ const styles = stylex.create({
     flex: '0 0 auto',
     height: '6px',
     overflow: 'hidden',
-    position: 'relative'
-  }
+    position: 'relative',
+  },
 })
 
 interface LoadingBarProps {
@@ -17,7 +17,7 @@ export default function LoadingBar({ loading }: LoadingBarProps) {
   const style = {
     display: loading ? '' : 'none',
     position: 'absolute',
-    top: '0'
+    top: '0',
   } as const
   return (
     <div

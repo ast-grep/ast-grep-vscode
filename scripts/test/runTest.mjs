@@ -24,8 +24,8 @@ async function main() {
       launchArgs: [
         '--disable-extensions',
         fixtureDirectoryPath,
-        initialFilePath
-      ]
+        initialFilePath,
+      ],
     })
   } catch (err) {
     console.error('Failed to run tests', err)

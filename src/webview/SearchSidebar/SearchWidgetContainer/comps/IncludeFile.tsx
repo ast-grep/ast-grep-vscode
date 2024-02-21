@@ -6,7 +6,7 @@ const titleStyle = {
   padding: '4px 0 0',
   fontSize: '11px',
   fontWeight: '400',
-  lineHeight: '19px'
+  lineHeight: '19px',
 }
 
 interface IncludeFileProps {
@@ -18,7 +18,7 @@ interface IncludeFileProps {
 export default function IncludeFile({
   includeFile,
   setIncludeFile,
-  refreshResult
+  refreshResult,
 }: IncludeFileProps) {
   return (
     <div>

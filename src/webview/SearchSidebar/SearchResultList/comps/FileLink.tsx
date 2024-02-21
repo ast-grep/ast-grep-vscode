@@ -7,12 +7,12 @@ const styles = stylex.create({
   fileLink: {
     display: 'flex',
     flex: '1 1 auto',
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   fileName: {
     flex: '0 0 auto',
     whiteSpace: 'pre',
-    color: 'inherit'
+    color: 'inherit',
   },
   basePath: {
     flex: '1 1 auto',
@@ -21,8 +21,8 @@ const styles = stylex.create({
     fontSize: '0.9em',
     whiteSpace: 'pre',
     overflow: 'hidden',
-    textOverflow: 'ellipsis'
-  }
+    textOverflow: 'ellipsis',
+  },
 })
 
 function splitPath(path: string) {
@@ -33,12 +33,12 @@ function splitPath(path: string) {
   if (lastSlash === -1) {
     return {
       fileName: path,
-      basePath: ''
+      basePath: '',
     }
   } else {
     return {
       fileName: path.slice(lastSlash + 1),
-      basePath: path.slice(0, lastSlash)
+      basePath: path.slice(0, lastSlash),
     }
   }
 }

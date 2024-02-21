@@ -12,14 +12,14 @@ const SearchInput = ({
   value,
   onChange,
   onKeyEnterUp,
-  placeholder
+  placeholder,
 }: SearchInputProps) => {
   const handleInput = useCallback(
     (e: { target: { value: string } }) => {
       const newValue = e.target.value
       onChange(newValue)
     },
-    [onChange]
+    [onChange],
   )
 
   return (

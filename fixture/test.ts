@@ -15,5 +15,5 @@ const NoProblemHere = {
     if (Math.random() > 3) {
       throw new Error('This is not an error')
     }
-  }
+  },
 }

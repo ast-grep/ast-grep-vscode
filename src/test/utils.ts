@@ -11,14 +11,14 @@ export let editor: vscode.TextEditor
  */
 export const assertDiagnosticsEqual = (
   actual: vscode.Diagnostic[],
-  expected: vscode.Diagnostic[]
+  expected: vscode.Diagnostic[],
 ) => {
   assert.equal(actual.length, expected.length)
   actual.sort((a, b) =>
-    a.message === b.message ? 0 : a.message > b.message ? 1 : -1
+    a.message === b.message ? 0 : a.message > b.message ? 1 : -1,
   )
   expected.sort((a, b) =>
-    a.message === b.message ? 0 : a.message > b.message ? 1 : -1
+    a.message === b.message ? 0 : a.message > b.message ? 1 : -1,
   )
   actual.forEach((actualElement, i) => {
     assert.equal(actualElement.message, expected[i].message)
@@ -44,18 +44,18 @@ export const getDocUri = (p: string) => {
 export async function setTestContent(content: string): Promise<boolean> {
   const all = new vscode.Range(
     doc.positionAt(0),
-    doc.positionAt(doc.getText().length)
+    doc.positionAt(doc.getText().length),
   )
   return editor.edit(eb => eb.replace(all, content))
 }
 
 export async function testDiagnostics(
   docUri: vscode.Uri,
-  expectedDiagnostics: vscode.Diagnostic[]
+  expectedDiagnostics: vscode.Diagnostic[],
 ) {
   const actualDiagnostics = vscode.languages.getDiagnostics(docUri)
   actualDiagnostics.sort((a, b) =>
-    a.message === b.message ? 0 : a.message > b.message ? 1 : -1
+    a.message === b.message ? 0 : a.message > b.message ? 1 : -1,
   )
 
   assert.equal(actualDiagnostics.length, expectedDiagnostics.length)
@@ -72,7 +72,7 @@ export function toRange(
   sLine: number,
   sChar: number,
   eLine: number,
-  eChar: number
+  eChar: number,
 ) {
   const start = new vscode.Position(sLine, sChar)
   const end = new vscode.Position(eLine, eChar)
@@ -88,7 +88,7 @@ export function toRange(
 export function assertCodeActionArraysEqual(
   actuals: vscode.CodeAction[],
   expecteds: vscode.CodeAction[],
-  docUri: vscode.Uri
+  docUri: vscode.Uri,
 ): void {
   assert.equal(actuals.length, expecteds.length, 'Number of CodeActions differ')
   expecteds.forEach((_, i) => {
@@ -99,12 +99,12 @@ export function assertCodeActionArraysEqual(
     // needed for windows
     assert.equal(
       JSON.stringify(actual.edit?.get(docUri), str =>
-        str.replace(/\r\n/g, '\n')
+        str.replace(/\r\n/g, '\n'),
       ),
       JSON.stringify(expected.edit?.get(docUri), str =>
-        str.replace(/\r\n/g, '\n')
+        str.replace(/\r\n/g, '\n'),
       ),
-      "CodeActions' edit texts differ"
+      "CodeActions' edit texts differ",
     )
   })
 }
@@ -115,14 +115,14 @@ export function assertCodeActionArraysEqual(
  */
 export async function getActualCodeActions(
   docUri: vscode.Uri,
-  range: vscode.Range
+  range: vscode.Range,
 ): Promise<vscode.CodeAction[]> {
   try {
     let executedCommand = await vscode.commands.executeCommand(
       'vscode.executeCodeActionProvider',
       docUri,
       range,
-      'quickfix'
+      'quickfix',
     )
     return executedCommand as vscode.CodeAction[]
   } catch (e) {

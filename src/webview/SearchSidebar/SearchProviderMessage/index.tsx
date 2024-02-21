@@ -5,14 +5,14 @@ import { DisplayResult, SearchQuery } from '../../../types'
 const style = {
   color: 'var(--vscode-search-resultsInfoForeground)',
   padding: '0 22px 8px',
-  lineHeight: '1.4em'
+  lineHeight: '1.4em',
 }
 
 const ulStyle = {
   listStyle: 'inside',
   listStyleType: '"- "',
   marginTop: '6px',
-  overflowWrap: 'break-word'
+  overflowWrap: 'break-word',
 } as const
 
 function Empty({ query }: { query: SearchQuery }) {
@@ -87,7 +87,7 @@ const SearchProviderMessage = memo(
         )}
       </>
     )
-  }
+  },
 )
 
 export default SearchProviderMessage

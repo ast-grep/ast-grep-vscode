@@ -12,7 +12,7 @@ export const SearchSidebar = () => {
 
   // rendering tree is too expensive, useDeferredValue
   const groupedByFileSearchResultForRender = useDeferredValue(
-    groupedByFileSearchResult
+    groupedByFileSearchResult,
   )
 
   return (

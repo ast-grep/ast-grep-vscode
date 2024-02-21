@@ -9,25 +9,25 @@ import * as stylex from '@stylexjs/stylex'
 
 const styles = stylex.create({
   show: {
-    display: 'flex'
+    display: 'flex',
   },
   hide: {
-    display: 'none'
+    display: 'none',
   },
   codeList: {
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   codeItem: {
     flex: '1 0 100%',
     paddingLeft: '38px',
     listStyle: 'none',
     ':hover': {
-      background: 'var(--vscode-list-inactiveSelectionBackground)'
-    }
+      background: 'var(--vscode-list-inactiveSelectionBackground)',
+    },
   },
   treeItem: {
     position: 'relative',
-    background: 'var(--vscode-sideBar-background)'
+    background: 'var(--vscode-sideBar-background)',
   },
   fileName: {
     position: 'sticky',
@@ -42,23 +42,23 @@ const styles = stylex.create({
     alignItems: 'center',
     background: 'var(--vscode-sideBar-background)',
     ':hover': {
-      background: 'var(--vscode-list-inactiveSelectionBackground)'
-    }
+      background: 'var(--vscode-list-inactiveSelectionBackground)',
+    },
   },
   scrolled: {
-    boxShadow: 'var(--vscode-scrollbar-shadow) 0 0 6px'
+    boxShadow: 'var(--vscode-scrollbar-shadow) 0 0 6px',
   },
   toggleButton: {
     flex: 0,
     display: 'flex',
     alignItems: 'center',
     color: 'var(--vscode-foreground)',
-    paddingRight: '4px'
+    paddingRight: '4px',
   },
   badge: {
     marginLeft: 'auto',
-    flex: '0 0 auto'
-  }
+    flex: '0 0 auto',
+  },
 })
 
 interface CodeBlockListProps {
@@ -103,7 +103,7 @@ function useStickyShadow() {
   })
   return {
     isScrolled,
-    ref
+    ref,
   }
 }
 
@@ -138,7 +138,7 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
       <ul
         {...stylex.props(
           styles.codeList,
-          isExpanded ? styles.show : styles.hide
+          isExpanded ? styles.show : styles.hide,
         )}
       >
         <CodeBlockList matches={matches} />
