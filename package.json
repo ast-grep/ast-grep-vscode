@@ -3,9 +3,20 @@
   "version": "0.0.7",
   "description": "VSCode extension for ast-grep language server",
   "keywords": [
+    "ast",
     "ast-grep",
-    "vscode",
+    "code search",
     "language-server",
+    "lint",
+    "multiline search",
+    "refactor",
+    "rewrite",
+    "search and replace",
+    "structural replace",
+    "structural search",
+    "structural",
+    "syntax",
+    "vscode",
     "extension"
   ],
   "publisher": "ast-grep",
@@ -35,7 +46,7 @@
       },
       {
         "command": "ast-grep.searchInFolder",
-        "title": "Find ast-grep Pattern in Folder"
+        "title": "SG: Find ast-grep Pattern in Folder"
       }
     ],
     "menus": {
