@@ -12,6 +12,17 @@ const styles = stylex.create({
     lineHeight: '22px',
     height: '22px',
     cursor: 'pointer'
+  },
+  deleted: {
+    textDecoration: 'line-through',
+    backgroundColor: 'var(--vscode-diffEditor-removedTextBackground)',
+    border: '1px solid var(--vscode-diffEditor-removedTextBackground)'
+  },
+  inserted: {
+    backgroundColor: 'var(--vscode-diffEditor-insertedTextBackground)',
+    ':not(:empty)': {
+      border: '1px solid var(--vscode-diffEditor-insertedLineBackground)'
+    }
   }
 })
 
@@ -45,8 +56,8 @@ function Highlight({
   if (replacement) {
     return (
       <>
-        <span style={{ background: 'red' }}>{matched}</span>
-        <span style={{ background: 'green' }}>{replacement}</span>
+        <span {...stylex.props(styles.deleted)}>{matched}</span>
+        <span {...stylex.props(styles.inserted)}>{replacement}</span>
       </>
     )
   }
