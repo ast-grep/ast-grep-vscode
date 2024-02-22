@@ -17,24 +17,32 @@ const SCHEME = 'sgpreview'
 
 /**
  * NB A file will only have one preview at a time
+ * last rewrite will replace older rewrites
+ * key: path, value: string content
  **/
-const _documents: Map<string, string> = new Map()
+const previewContents: Map<string, string> = new Map()
 
 class AstGrepPreviewProvider implements TextDocumentContentProvider {
-  // TODO: add cancellation and onClose cleanup
+  // TODO: add cancellation
   provideTextDocumentContent(uri: Uri, _token: CancellationToken): string {
-    return _documents.get(uri.path) || ''
+    return previewContents.get(uri.path) || ''
   }
 }
 
-function cleanupDocument(_doc: TextDocument) {
-  // TODO
+function isSgPreviewUri(uri: Uri) {
+  return uri.scheme === SCHEME
+}
+
+function cleanupDocument(doc: TextDocument) {
+  const uri = doc.uri
+  if (!isSgPreviewUri(uri)) {
+    return
+  }
+  previewContents.delete(uri.path)
 }
 
 /**
- *  Registration function for preview files.
- *  You need to call this once, if you want to make use of
- *  `MemoryFile`s.
+ *  Registration function for preview file provider
  **/
 export function registerPreviewProvider({ subscriptions }: ExtensionContext) {
   const previewProvider = new AstGrepPreviewProvider()
