@@ -52,12 +52,12 @@ export function registerPreviewProvider({ subscriptions }: ExtensionContext) {
   )
 }
 
-export function generatePreview(
-  _file: string,
-  _pattern: string,
-  _rewrite: string,
-) {
+export async function generatePreview(uri: Uri) {
   // TODO, maybe we also need a rewrite change event?
   // TODO, implement close preview on new search at first
-  // TODO
+  const buffer = await workspace.fs.readFile(uri)
+  const content = new TextDecoder('utf-8').decode(buffer)
+  // TODO: implement real logic here
+  const replaced = content.replace(/test/g, 'wwww')
+  previewContents.set(uri.path, replaced)
 }

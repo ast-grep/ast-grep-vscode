@@ -10,6 +10,7 @@ import { Unport, ChannelMessage } from 'unport'
 import * as vscode from 'vscode'
 import { workspace, window, commands } from 'vscode'
 import { type ChildProcessWithoutNullStreams, spawn } from 'node:child_process'
+import { generatePreview } from './replacePreview'
 
 export function activateWebview(context: vscode.ExtensionContext) {
   const provider = new SearchSidebarProvider(context.extensionUri)
@@ -197,12 +198,33 @@ function openFile({
       new vscode.Position(end.line, end.column),
     )
   }
-  // const previewUri = vscode.Uri.parse('inmemoryfile://ast-grep/preview')
-  // vscode.commands.executeCommand('vscode.diff', fileUri, previewUri)
-
   vscode.commands.executeCommand('vscode.open', fileUri, {
     selection: range,
   })
+}
+
+export async function previewReplace({
+  filePath,
+  locationsToSelect,
+}: Definition['child2parent']['openFile']) {
+  const uris = workspace.workspaceFolders
+  const { joinPath } = vscode.Uri
+  if (!uris?.length) {
+    return
+  }
+  const fileUri: vscode.Uri = joinPath(uris?.[0].uri, filePath)
+  await generatePreview(fileUri)
+  const previewUri = fileUri.with({ scheme: 'sgpreview' })
+  // const previewUri = vscode.Uri.parse('inmemoryfile://ast-grep/preview')
+  await vscode.commands.executeCommand('vscode.diff', fileUri, previewUri)
+  if (locationsToSelect) {
+    const { start, end } = locationsToSelect
+    const range = new vscode.Range(
+      new vscode.Position(start.line, start.column),
+      new vscode.Position(end.line, end.column),
+    )
+    window.activeTextEditor?.revealRange(range)
+  }
 }
 
 const parentPort: ParentPort = new Unport()
