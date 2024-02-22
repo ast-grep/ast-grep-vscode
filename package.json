@@ -22,6 +22,7 @@
   "publisher": "ast-grep",
   "preview": true,
   "displayName": "ast-grep VSCode",
+  "homepage": "https://ast-grep.github.io",
   "repository": "https://github.com/ast-grep/ast-grep-vscode",
   "author": "Herrington Darkholme",
   "license": "MIT",
