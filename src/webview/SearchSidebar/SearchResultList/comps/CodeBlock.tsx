@@ -1,5 +1,6 @@
-import type { DisplayResult } from '../../../../types'
-import { openFile } from '../../../postMessage'
+import { useCallback } from 'react'
+import type { DisplayResult, SearchQuery } from '../../../../types'
+import { openFile, previewDiff } from '../../../postMessage'
 import * as stylex from '@stylexjs/stylex'
 
 const styles = stylex.create({
@@ -66,17 +67,20 @@ function Highlight({
 
 interface CodeBlockProps {
   match: DisplayResult
+  query: SearchQuery
 }
-export const CodeBlock = ({ match }: CodeBlockProps) => {
-  const { startIdx, endIdx, displayLine, lineSpan } = match
+export const CodeBlock = ({ query, match }: CodeBlockProps) => {
+  const { startIdx, endIdx, displayLine, lineSpan, file, range } = match
+  const onClick = useCallback(() => {
+    if (query.rewrite) {
+      previewDiff({ filePath: file, locationsToSelect: range })
+    } else {
+      openFile({ filePath: file, locationsToSelect: range })
+    }
+  }, [query.rewrite, file, range])
 
   return (
-    <div
-      {...stylex.props(styles.box)}
-      onClick={() => {
-        openFile({ filePath: match.file, locationsToSelect: match.range })
-      }}
-    >
+    <div {...stylex.props(styles.box)} onClick={onClick}>
       <MultiLineIndicator lineSpan={lineSpan} />
       {displayLine.slice(0, startIdx)}
       <Highlight {...match} />

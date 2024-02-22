@@ -21,3 +21,7 @@ childPort.implementChannel({
 export const openFile = (data: Definition['child2parent']['openFile']) => {
   childPort.postMessage('openFile', data)
 }
+
+export function previewDiff(data: Definition['child2parent']['previewDiff']) {
+  childPort.postMessage('previewDiff', data)
+}

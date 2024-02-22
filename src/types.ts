@@ -73,6 +73,19 @@ export type Definition = {
         }
       }
     }
+    previewDiff: {
+      filePath: string
+      locationsToSelect?: {
+        start: {
+          column: number
+          line: number
+        }
+        end: {
+          column: number
+          line: number
+        }
+      }
+    }
   }
 }
 

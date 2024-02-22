@@ -72,7 +72,7 @@ function openFile({
   })
 }
 
-export async function previewReplace({
+async function previewDiff({
   filePath,
   locationsToSelect,
 }: Definition['child2parent']['openFile']) {
@@ -94,7 +94,8 @@ export async function previewReplace({
     window.activeTextEditor?.revealRange(range)
   }
 }
-parentPort.onMessage('openFile', async payload => openFile(payload))
+parentPort.onMessage('openFile', openFile)
+parentPort.onMessage('previewDiff', previewDiff)
 
 /**
  *  set up replace preview and open file
@@ -108,7 +109,7 @@ export function activatePreview({ subscriptions }: ExtensionContext) {
   )
 }
 
-export async function generatePreview(uri: Uri) {
+async function generatePreview(uri: Uri) {
   // TODO, maybe we also need a rewrite change event?
   // TODO, implement close preview on new search at first
   const buffer = await workspace.fs.readFile(uri)

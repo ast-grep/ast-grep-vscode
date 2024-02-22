@@ -24,7 +24,10 @@ export const SearchSidebar = () => {
         error={searchError}
         results={groupedByFileSearchResult}
       />
-      <SearchResultList matches={groupedByFileSearchResultForRender} />
+      <SearchResultList
+        query={queryInFlight}
+        matches={groupedByFileSearchResultForRender}
+      />
     </UseDarkContextProvider>
   )
 }
