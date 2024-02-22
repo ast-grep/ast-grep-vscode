@@ -30,6 +30,9 @@ function getExecutable(isDebug: boolean): Executable {
   }
 }
 
+/**
+ * Set up language server/client
+ */
 export function activateLsp(context: ExtensionContext) {
   context.subscriptions.push(
     commands.registerCommand('ast-grep.restartLanguageServer', async () => {
