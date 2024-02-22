@@ -1,4 +1,5 @@
 import { workspace, ExtensionContext, window, commands } from 'vscode'
+import { register_memoryFileProvider } from './file'
 
 import {
   LanguageClient,
@@ -34,6 +35,7 @@ function getExecutable(isDebug: boolean): Executable {
 }
 
 function activateLsp(context: ExtensionContext) {
+  register_memoryFileProvider(context)
   context.subscriptions.push(
     commands.registerCommand('ast-grep.searchInFolder', findInFolder),
     commands.registerCommand('ast-grep.restartLanguageServer', async () => {

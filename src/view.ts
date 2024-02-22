@@ -196,6 +196,8 @@ function openFile({
       new vscode.Position(end.line, end.column),
     )
   }
+  // const previewUri = vscode.Uri.parse('inmemoryfile://ast-grep/preview')
+  // vscode.commands.executeCommand('vscode.diff', fileUri, previewUri)
 
   vscode.commands.executeCommand('vscode.open', fileUri, {
     selection: range,
