@@ -2,7 +2,7 @@ import path from 'path'
 import { ExtensionContext, commands, workspace, window } from 'vscode'
 import { type ChildProcessWithoutNullStreams, spawn } from 'node:child_process'
 
-import { parentPort, resolveBinary } from './common'
+import { parentPort, resolveBinary, streamedPromise } from './common'
 import type { SgSearch, DisplayResult, SearchQuery } from '../types'
 
 /**
@@ -79,45 +79,7 @@ function handleReplacement(replacement?: string) {
 }
 
 type StreamingHandler = (r: SgSearch[]) => void
-
 let child: ChildProcessWithoutNullStreams | undefined
-function streamedPromise(
-  proc: ChildProcessWithoutNullStreams,
-  handler: StreamingHandler,
-): Promise<number> {
-  // don't concatenate a single string/buffer
-  // only maintain the last trailing line
-  let trailingLine = ''
-  // stream parsing JSON
-  proc.stdout.on('data', (data: string) => {
-    // collect results in this batch
-    let result: SgSearch[] = []
-    const lines = (trailingLine + data).split(/\r?\n/)
-    trailingLine = ''
-    for (let i = 0; i < lines.length; i++) {
-      try {
-        result.push(JSON.parse(lines[i]))
-      } catch (e) {
-        // only store the last non-json line
-        if (i === lines.length - 1) {
-          trailingLine = lines[i]
-        }
-      }
-    }
-    handler(result)
-  })
-  return new Promise((resolve, reject) =>
-    proc.on('exit', (code, signal) => {
-      // exit without signal, search ends correctly
-      // TODO: is it correct now?
-      if (!signal && code === 0) {
-        resolve(code)
-      } else {
-        reject([code, signal])
-      }
-    }),
-  )
-}
 
 async function uniqueCommand(
   proc: ChildProcessWithoutNullStreams,
@@ -140,7 +102,7 @@ async function uniqueCommand(
 }
 
 // TODO: add unit test for commandBuilder
-function buildCommand(query: SearchQuery) {
+export function buildCommand(query: SearchQuery) {
   const { inputValue: pattern, includeFile, rewrite } = query
   if (!pattern) {
     return
