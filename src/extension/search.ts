@@ -2,7 +2,7 @@ import path from 'path'
 import { ExtensionContext, commands, workspace, window } from 'vscode'
 import { type ChildProcessWithoutNullStreams, spawn } from 'node:child_process'
 
-import { parentPort } from './view'
+import { parentPort } from './webview'
 import type { SgSearch, DisplayResult, SearchQuery } from '../types'
 
 /**

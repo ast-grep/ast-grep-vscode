@@ -1,6 +1,6 @@
 import { ExtensionContext } from 'vscode'
 import { activatePreview } from './preview'
-import { activateWebview } from './view'
+import { activateWebview } from './webview'
 import { activateLsp } from './lsp'
 import { activateSearch } from './search'
 
