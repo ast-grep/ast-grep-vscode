@@ -2,7 +2,7 @@ import type { Definition, ParentPort } from '../types'
 import { Unport, ChannelMessage } from 'unport'
 import * as vscode from 'vscode'
 import { workspace, window } from 'vscode'
-import { generatePreview } from './replacePreview'
+import { generatePreview } from './preview'
 
 /**
  * Set up webviews for UI display, e.g. sidebar.

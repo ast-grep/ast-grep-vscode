@@ -42,9 +42,9 @@ function cleanupDocument(doc: TextDocument) {
 }
 
 /**
- *  Registration function for preview file provider
+ *  set up replace preview and open file
  **/
-export function registerPreviewProvider({ subscriptions }: ExtensionContext) {
+export function activatePreview({ subscriptions }: ExtensionContext) {
   const previewProvider = new AstGrepPreviewProvider()
   subscriptions.push(
     workspace.registerTextDocumentContentProvider(SCHEME, previewProvider),
