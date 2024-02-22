@@ -2,7 +2,7 @@ import path from 'path'
 import { ExtensionContext, commands, workspace, window } from 'vscode'
 import { type ChildProcessWithoutNullStreams, spawn } from 'node:child_process'
 
-import { parentPort } from './webview'
+import { parentPort, resolveBinary } from './common'
 import type { SgSearch, DisplayResult, SearchQuery } from '../types'
 
 /**
@@ -145,9 +145,7 @@ function buildCommand(query: SearchQuery) {
   if (!pattern) {
     return
   }
-  let command = workspace
-    .getConfiguration('astGrep')
-    .get('serverPath', 'ast-grep')
+  const command = resolveBinary()
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
   const args = ['run', '--pattern', pattern, '--json=stream']
   if (rewrite) {

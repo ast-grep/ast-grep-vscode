@@ -17,7 +17,7 @@ import {
   workspace,
 } from 'vscode'
 import type { Definition } from '../types'
-import { parentPort } from './webview'
+import { parentPort } from './common'
 
 const SCHEME = 'sgpreview'
 
@@ -110,6 +110,9 @@ export function activatePreview({ subscriptions }: ExtensionContext) {
 }
 
 async function generatePreview(uri: Uri) {
+  if (previewContents.has(uri.path)) {
+    return
+  }
   // TODO, maybe we also need a rewrite change event?
   // TODO, implement close preview on new search at first
   const buffer = await workspace.fs.readFile(uri)

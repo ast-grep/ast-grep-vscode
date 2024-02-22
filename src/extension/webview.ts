@@ -1,5 +1,5 @@
-import type { ParentPort } from '../types'
-import { Unport, ChannelMessage } from 'unport'
+import type { ChannelMessage } from 'unport'
+import { parentPort } from './common'
 import * as vscode from 'vscode'
 import { window } from 'vscode'
 
@@ -17,8 +17,6 @@ export function activateWebview(context: vscode.ExtensionContext) {
     ),
   )
 }
-
-export const parentPort: ParentPort = new Unport()
 
 function setupParentPort(webviewView: vscode.WebviewView) {
   parentPort.implementChannel({
