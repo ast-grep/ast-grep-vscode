@@ -15,67 +15,15 @@ import {
 
 const SCHEME = 'sgpreview'
 
-const _documents: { [key: string]: MemoryFile } = {}
-let _lastDocId: number = 0
-
-function getDocument(uri: Uri): MemoryFile | null {
-  return _documents[uri.path]
-}
-
-function _getNextDocId(): string {
-  _lastDocId++
-  return '_' + _lastDocId + '_'
-}
-
-function createDocument(extension = '') {
-  let path = _getNextDocId()
-
-  if (extension != '') path += '.' + extension
-
-  let self = new MemoryFile(path)
-
-  _documents[path] = self
-
-  return self
-}
-
 /**
  * NB A file will only have one preview at a time
  **/
-export class MemoryFile {
-  public static getDocument(uri: Uri): MemoryFile | null {
-    return getDocument(uri)
-  }
-
-  public static createDocument(extension = '') {
-    return createDocument(extension)
-  }
-
-  public content: string = ''
-  public uri: Uri
-
-  constructor(path: string) {
-    this.uri = Uri.from({ scheme: SCHEME, path: path })
-  }
-
-  public write(strContent: string) {
-    this.content += strContent
-  }
-
-  public read(): string {
-    return this.content
-  }
-
-  public getUri(): Uri {
-    return this.uri
-  }
-}
+const _documents: Map<string, string> = new Map()
 
 class AstGrepPreviewProvider implements TextDocumentContentProvider {
   // TODO: add cancellation and onClose cleanup
   provideTextDocumentContent(uri: Uri, _token: CancellationToken): string {
-    let memDoc = MemoryFile.getDocument(uri)
-    return memDoc?.read() || ''
+    return _documents.get(uri.path) || ''
   }
 }
 
