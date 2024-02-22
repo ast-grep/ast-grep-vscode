@@ -4,7 +4,7 @@ import stylexPlugin from '@stylexjs/esbuild-plugin'
 const isWatch = process.argv.includes('--watch')
 
 const extension = {
-  entryPoints: ['src/extension.ts'],
+  entryPoints: ['src/extension/index.ts'],
   bundle: true,
   external: ['vscode'],
   platform: 'node',

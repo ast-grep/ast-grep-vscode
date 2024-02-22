@@ -5,7 +5,7 @@ import type {
   SgSearch,
   DisplayResult,
   SearchQuery,
-} from './types'
+} from '../types'
 import { Unport, ChannelMessage } from 'unport'
 import * as vscode from 'vscode'
 import { workspace, window } from 'vscode'
