@@ -1,8 +1,7 @@
-import type { Definition, ParentPort } from '../types'
+import type { ParentPort } from '../types'
 import { Unport, ChannelMessage } from 'unport'
 import * as vscode from 'vscode'
-import { workspace, window } from 'vscode'
-import { generatePreview } from './preview'
+import { window } from 'vscode'
 
 /**
  * Set up webviews for UI display, e.g. sidebar.
@@ -17,55 +16,6 @@ export function activateWebview(context: vscode.ExtensionContext) {
       { webviewOptions: { retainContextWhenHidden: true } },
     ),
   )
-}
-
-function openFile({
-  filePath,
-  locationsToSelect,
-}: Definition['child2parent']['openFile']) {
-  const uris = workspace.workspaceFolders
-  const { joinPath } = vscode.Uri
-
-  if (!uris?.length) {
-    return
-  }
-
-  const fileUri: vscode.Uri = joinPath(uris?.[0].uri, filePath)
-  let range: undefined | vscode.Range
-  if (locationsToSelect) {
-    const { start, end } = locationsToSelect
-    range = new vscode.Range(
-      new vscode.Position(start.line, start.column),
-      new vscode.Position(end.line, end.column),
-    )
-  }
-  vscode.commands.executeCommand('vscode.open', fileUri, {
-    selection: range,
-  })
-}
-
-export async function previewReplace({
-  filePath,
-  locationsToSelect,
-}: Definition['child2parent']['openFile']) {
-  const uris = workspace.workspaceFolders
-  const { joinPath } = vscode.Uri
-  if (!uris?.length) {
-    return
-  }
-  const fileUri: vscode.Uri = joinPath(uris?.[0].uri, filePath)
-  await generatePreview(fileUri)
-  const previewUri = fileUri.with({ scheme: 'sgpreview' })
-  // const previewUri = vscode.Uri.parse('inmemoryfile://ast-grep/preview')
-  await vscode.commands.executeCommand('vscode.diff', fileUri, previewUri)
-  if (locationsToSelect) {
-    const { start, end } = locationsToSelect
-    const range = new vscode.Range(
-      new vscode.Position(start.line, start.column),
-      new vscode.Position(end.line, end.column),
-    )
-    window.activeTextEditor?.revealRange(range)
-  }
 }
 
 export const parentPort: ParentPort = new Unport()
@@ -89,8 +39,6 @@ function setupParentPort(webviewView: vscode.WebviewView) {
     )
   })
 }
-
-parentPort.onMessage('openFile', async payload => openFile(payload))
 
 class SearchSidebarProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'ast-grep.search.input'

@@ -7,11 +7,17 @@
 import {
   CancellationToken,
   ExtensionContext,
+  Position,
+  Range,
   TextDocument,
   TextDocumentContentProvider,
   Uri,
+  commands,
+  window,
   workspace,
 } from 'vscode'
+import type { Definition } from '../types'
+import { parentPort } from './webview'
 
 const SCHEME = 'sgpreview'
 
@@ -41,11 +47,61 @@ function cleanupDocument(doc: TextDocument) {
   previewContents.delete(uri.path)
 }
 
+function openFile({
+  filePath,
+  locationsToSelect,
+}: Definition['child2parent']['openFile']) {
+  const uris = workspace.workspaceFolders
+  const { joinPath } = Uri
+
+  if (!uris?.length) {
+    return
+  }
+
+  const fileUri: Uri = joinPath(uris?.[0].uri, filePath)
+  let range: undefined | Range
+  if (locationsToSelect) {
+    const { start, end } = locationsToSelect
+    range = new Range(
+      new Position(start.line, start.column),
+      new Position(end.line, end.column),
+    )
+  }
+  commands.executeCommand('vscode.open', fileUri, {
+    selection: range,
+  })
+}
+
+export async function previewReplace({
+  filePath,
+  locationsToSelect,
+}: Definition['child2parent']['openFile']) {
+  const uris = workspace.workspaceFolders
+  const { joinPath } = Uri
+  if (!uris?.length) {
+    return
+  }
+  const fileUri = joinPath(uris?.[0].uri, filePath)
+  await generatePreview(fileUri)
+  const previewUri = fileUri.with({ scheme: SCHEME })
+  await commands.executeCommand('vscode.diff', fileUri, previewUri)
+  if (locationsToSelect) {
+    const { start, end } = locationsToSelect
+    const range = new Range(
+      new Position(start.line, start.column),
+      new Position(end.line, end.column),
+    )
+    window.activeTextEditor?.revealRange(range)
+  }
+}
+parentPort.onMessage('openFile', async payload => openFile(payload))
+
 /**
  *  set up replace preview and open file
  **/
 export function activatePreview({ subscriptions }: ExtensionContext) {
   const previewProvider = new AstGrepPreviewProvider()
+
   subscriptions.push(
     workspace.registerTextDocumentContentProvider(SCHEME, previewProvider),
     workspace.onDidCloseTextDocument(cleanupDocument),
