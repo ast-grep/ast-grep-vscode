@@ -8,13 +8,14 @@ import type {
 } from '../types'
 import { Unport, ChannelMessage } from 'unport'
 import * as vscode from 'vscode'
-import { workspace, window } from 'vscode'
+import { workspace, window, commands } from 'vscode'
 import { type ChildProcessWithoutNullStreams, spawn } from 'node:child_process'
 
-export function activate(context: vscode.ExtensionContext) {
+export function activateWebview(context: vscode.ExtensionContext) {
   const provider = new SearchSidebarProvider(context.extensionUri)
 
   context.subscriptions.push(
+    commands.registerCommand('ast-grep.searchInFolder', findInFolder),
     window.registerWebviewViewProvider(
       SearchSidebarProvider.viewType,
       provider,
@@ -317,7 +318,7 @@ function getNonce() {
   return text
 }
 
-export function findInFolder(data: any) {
+function findInFolder(data: any) {
   const workspacePath = workspace.workspaceFolders?.[0].uri.fsPath
   // compute relative path to the workspace folder
   const relative = workspacePath && path.relative(workspacePath, data.fsPath)
