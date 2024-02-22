@@ -1,4 +1,9 @@
-import type { DisplayResult } from '../postMessage'
+import {
+  DisplayResult,
+  OpenPayload,
+  openFile,
+  previewDiff,
+} from '../postMessage'
 import { childPort } from '../postMessage'
 import { useSyncExternalStore } from 'react'
 import { SearchQuery } from './useQuery'
@@ -108,6 +113,17 @@ function subscribe(onChange: () => void): () => void {
 
 function getSnapshot() {
   return version // symbolic snapshot for react
+}
+
+/**
+ * Either open a file or preview the diff
+ */
+export function openAction(payload: OpenPayload) {
+  if (queryInFlight.rewrite) {
+    previewDiff(payload)
+  } else {
+    openFile(payload)
+  }
 }
 
 export const useSearchResult = () => {

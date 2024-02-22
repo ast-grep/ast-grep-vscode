@@ -1,6 +1,7 @@
 import type { ChildPort, Definition } from '../types'
 import { Unport } from 'unport'
 export type { DisplayResult } from '../types'
+export type OpenPayload = Definition['child2parent']['openFile']
 
 // @ts-expect-error
 let vscode = acquireVsCodeApi()
@@ -18,7 +19,7 @@ childPort.implementChannel({
   },
 })
 
-export const openFile = (data: Definition['child2parent']['openFile']) => {
+export const openFile = (data: OpenPayload) => {
   childPort.postMessage('openFile', data)
 }
 

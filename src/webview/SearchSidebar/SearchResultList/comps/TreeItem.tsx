@@ -1,6 +1,6 @@
 import { VscChevronDown, VscChevronRight } from 'react-icons/vsc'
 import { useBoolean } from 'react-use'
-import type { DisplayResult, SearchQuery } from '../../../../types'
+import type { DisplayResult } from '../../../../types'
 import { CodeBlock } from './CodeBlock'
 import { FileLink } from './FileLink'
 import { VSCodeBadge } from '@vscode/webview-ui-toolkit/react'
@@ -63,10 +63,9 @@ const styles = stylex.create({
 
 interface CodeBlockListProps {
   matches: DisplayResult[]
-  query: SearchQuery
 }
 
-const CodeBlockList = memo(({ matches, query }: CodeBlockListProps) => {
+const CodeBlockList = memo(({ matches }: CodeBlockListProps) => {
   return (
     <>
       {matches?.map(match => {
@@ -77,7 +76,7 @@ const CodeBlockList = memo(({ matches, query }: CodeBlockListProps) => {
             {...stylex.props(styles.codeItem)}
             key={file + byteOffset.start + byteOffset.end}
           >
-            <CodeBlock match={match} query={query} />
+            <CodeBlock match={match} />
           </li>
         )
       })}
@@ -111,10 +110,9 @@ function useStickyShadow() {
 interface TreeItemProps {
   filePath: string
   matches: DisplayResult[]
-  query: SearchQuery
 }
 
-const TreeItem = ({ filePath, matches, query }: TreeItemProps) => {
+const TreeItem = ({ filePath, matches }: TreeItemProps) => {
   const [isExpanded, toggleIsExpanded] = useBoolean(true)
   const { isScrolled, ref } = useStickyShadow()
 
@@ -143,7 +141,7 @@ const TreeItem = ({ filePath, matches, query }: TreeItemProps) => {
           isExpanded ? styles.show : styles.hide,
         )}
       >
-        <CodeBlockList matches={matches} query={query} />
+        <CodeBlockList matches={matches} />
       </ul>
     </div>
   )
