@@ -14,12 +14,22 @@ const SearchInput = ({
   onKeyEnterUp,
   placeholder,
 }: SearchInputProps) => {
+  // onInput event has wrong type signature.
+  // I know any better
   const handleInput = useCallback(
-    (e: { target: { value: string } }) => {
-      const newValue = e.target.value
+    (e: any) => {
+      const newValue = e.target.value || ''
       onChange(newValue)
     },
     [onChange],
+  )
+  const onKeyUp = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        onKeyEnterUp()
+      }
+    },
+    [onKeyEnterUp],
   )
   const rows = value.split(/\r?\n/).length
 
@@ -29,12 +39,8 @@ const SearchInput = ({
       rows={rows}
       value={value}
       placeholder={placeholder}
-      onInput={handleInput as any}
-      onKeyUp={event => {
-        if (event.key === 'Enter') {
-          onKeyEnterUp()
-        }
-      }}
+      onInput={handleInput}
+      onKeyUp={onKeyUp}
     ></VSCodeTextArea>
   )
 }
