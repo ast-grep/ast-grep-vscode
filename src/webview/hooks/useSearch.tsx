@@ -120,7 +120,11 @@ function getSnapshot() {
  */
 export function openAction(payload: OpenPayload) {
   if (queryInFlight.rewrite) {
-    previewDiff(payload)
+    previewDiff({
+      ...payload,
+      rewrite: queryInFlight.rewrite,
+      inputValue: queryInFlight.inputValue,
+    })
   } else {
     openFile(payload)
   }

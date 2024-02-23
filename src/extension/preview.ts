@@ -76,14 +76,16 @@ function openFile({
 async function previewDiff({
   filePath,
   locationsToSelect,
-}: Definition['child2parent']['openFile']) {
+  inputValue,
+  rewrite,
+}: Definition['child2parent']['previewDiff']) {
   const uris = workspace.workspaceFolders
   const { joinPath } = Uri
   if (!uris?.length) {
     return
   }
   const fileUri = joinPath(uris?.[0].uri, filePath)
-  await generatePreview(fileUri)
+  await generatePreview(fileUri, inputValue, rewrite)
   const previewUri = fileUri.with({ scheme: SCHEME })
   await commands.executeCommand('vscode.diff', fileUri, previewUri)
   if (locationsToSelect) {
@@ -110,10 +112,17 @@ export function activatePreview({ subscriptions }: ExtensionContext) {
   )
 }
 
-async function haveReplace(bytes: Uint8Array, uri: Uri) {
+interface ReplaceArg {
+  bytes: Uint8Array
+  uri: Uri
+  inputValue: string
+  rewrite: string
+}
+
+async function haveReplace({ bytes, uri, inputValue, rewrite }: ReplaceArg) {
   const command = buildCommand({
-    inputValue: 'Some($A)',
-    rewrite: 'Ok($A)',
+    inputValue: inputValue,
+    rewrite: rewrite,
     includeFile: uri.fsPath,
   })
   // TODO: resize buffer
@@ -142,13 +151,18 @@ async function haveReplace(bytes: Uint8Array, uri: Uri) {
   return new TextDecoder('utf-8').decode(final)
 }
 
-async function generatePreview(uri: Uri) {
+async function generatePreview(uri: Uri, inputValue: string, rewrite: string) {
   if (previewContents.has(uri.path)) {
     return
   }
   // TODO, maybe we also need a rewrite change event?
   // TODO, implement close preview on new search at first
   const bytes = await workspace.fs.readFile(uri)
-  const replaced = await haveReplace(bytes, uri)
+  const replaced = await haveReplace({
+    bytes,
+    uri,
+    inputValue,
+    rewrite,
+  })
   previewContents.set(uri.path, replaced)
 }

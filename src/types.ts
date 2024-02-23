@@ -62,28 +62,18 @@ export type Definition = {
     openFile: {
       filePath: string
       locationsToSelect?: {
-        start: {
-          column: number
-          line: number
-        }
-        end: {
-          column: number
-          line: number
-        }
+        start: Position
+        end: Position
       }
     }
     previewDiff: {
       filePath: string
       locationsToSelect?: {
-        start: {
-          column: number
-          line: number
-        }
-        end: {
-          column: number
-          line: number
-        }
+        start: Position
+        end: Position
       }
+      inputValue: string
+      rewrite: string
     }
   }
 }
