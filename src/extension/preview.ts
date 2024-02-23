@@ -16,8 +16,9 @@ import {
   window,
   workspace,
 } from 'vscode'
-import type { Definition } from '../types'
-import { parentPort } from './common'
+import type { Definition, SgSearch } from '../types'
+import { parentPort, streamedPromise } from './common'
+import { buildCommand } from './search'
 
 const SCHEME = 'sgpreview'
 
@@ -109,15 +110,45 @@ export function activatePreview({ subscriptions }: ExtensionContext) {
   )
 }
 
+async function haveReplace(bytes: Uint8Array, uri: Uri) {
+  const command = buildCommand({
+    inputValue: 'Some($A)',
+    rewrite: 'Ok($A)',
+    includeFile: uri.fsPath,
+  })
+  // TODO: resize buffer
+  const underlying = new ArrayBuffer(100000)
+  const newBuffer = new Uint8Array(underlying)
+  let srcOffset = 0
+  let destOffset = 0
+  const encoder = new TextEncoder()
+  await streamedPromise(command!, (results: SgSearch[]) => {
+    for (const r of results) {
+      if (r.range.byteOffset.start < srcOffset) {
+        continue
+      }
+      const slice = bytes.slice(srcOffset, r.range.byteOffset.start)
+      newBuffer.set(slice, destOffset)
+      destOffset += slice.byteLength
+      const replacement = encoder.encode(r.replacement!)
+      newBuffer.set(replacement, destOffset)
+      destOffset += replacement.byteLength
+      srcOffset = r.range.byteOffset.end
+    }
+  })
+  const slice = bytes.slice(srcOffset, bytes.byteLength)
+  newBuffer.set(slice, destOffset)
+  const final = newBuffer.slice(0, destOffset + slice.byteLength)
+  return new TextDecoder('utf-8').decode(final)
+}
+
 async function generatePreview(uri: Uri) {
   if (previewContents.has(uri.path)) {
     return
   }
   // TODO, maybe we also need a rewrite change event?
   // TODO, implement close preview on new search at first
-  const buffer = await workspace.fs.readFile(uri)
-  const content = new TextDecoder('utf-8').decode(buffer)
-  // TODO: implement real logic here
-  const replaced = content.replace(/test/g, 'wwww')
+  const bytes = await workspace.fs.readFile(uri)
+  const replaced = await haveReplace(bytes, uri)
   previewContents.set(uri.path, replaced)
 }

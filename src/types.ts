@@ -5,7 +5,6 @@ type WithId<T> = T & { id: number }
 export type Position = {
   line: number
   column: number
-  index?: number
 }
 
 export interface RangeInfo {
