@@ -41,41 +41,45 @@ export type SgSearch = {
   replacement?: string
 }
 
+export interface ParentToChild {
+  searchResultStreaming: {
+    searchResult: DisplayResult[]
+    id: number
+  } & SearchQuery
+  searchEnd: WithId<SearchQuery>
+  error: {
+    id: number
+    error: Error
+  }
+  setIncludeFile: {
+    includeFile: string
+  }
+}
+
+export interface ChildToParent {
+  search: WithId<SearchQuery>
+  reload: {}
+  openFile: {
+    filePath: string
+    locationsToSelect?: {
+      start: Position
+      end: Position
+    }
+  }
+  previewDiff: {
+    filePath: string
+    locationsToSelect?: {
+      start: Position
+      end: Position
+    }
+    inputValue: string
+    rewrite: string
+  }
+}
+
 export type Definition = {
-  parent2child: {
-    searchResultStreaming: {
-      searchResult: DisplayResult[]
-      id: number
-    } & SearchQuery
-    searchEnd: WithId<SearchQuery>
-    error: {
-      id: number
-      error: Error
-    }
-    setIncludeFile: {
-      includeFile: string
-    }
-  }
-  child2parent: {
-    search: WithId<SearchQuery>
-    reload: {}
-    openFile: {
-      filePath: string
-      locationsToSelect?: {
-        start: Position
-        end: Position
-      }
-    }
-    previewDiff: {
-      filePath: string
-      locationsToSelect?: {
-        start: Position
-        end: Position
-      }
-      inputValue: string
-      rewrite: string
-    }
-  }
+  parent2child: ParentToChild
+  child2parent: ChildToParent
 }
 
 export type ChildPort = Unport<Definition, 'child'>

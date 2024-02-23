@@ -16,7 +16,7 @@ import {
   window,
   workspace,
 } from 'vscode'
-import type { Definition, SgSearch } from '../types'
+import type { ChildToParent, SgSearch } from '../types'
 import { parentPort, streamedPromise } from './common'
 import { buildCommand } from './search'
 
@@ -48,10 +48,7 @@ function cleanupDocument(doc: TextDocument) {
   previewContents.delete(uri.path)
 }
 
-function openFile({
-  filePath,
-  locationsToSelect,
-}: Definition['child2parent']['openFile']) {
+function openFile({ filePath, locationsToSelect }: ChildToParent['openFile']) {
   const uris = workspace.workspaceFolders
   const { joinPath } = Uri
 
@@ -78,7 +75,7 @@ async function previewDiff({
   locationsToSelect,
   inputValue,
   rewrite,
-}: Definition['child2parent']['previewDiff']) {
+}: ChildToParent['previewDiff']) {
   const uris = workspace.workspaceFolders
   const { joinPath } = Uri
   if (!uris?.length) {
