@@ -1,4 +1,4 @@
-import { VSCodeTextField } from '@vscode/webview-ui-toolkit/react'
+import { VSCodeTextArea } from '@vscode/webview-ui-toolkit/react'
 import { useCallback } from 'react'
 
 interface SearchInputProps {
@@ -21,10 +21,12 @@ const SearchInput = ({
     },
     [onChange],
   )
+  const rows = value.split(/\r?\n/).length
 
   return (
-    <VSCodeTextField
+    <VSCodeTextArea
       style={{ width: '100%' }}
+      rows={rows}
       value={value}
       placeholder={placeholder}
       onInput={handleInput as any}
@@ -33,7 +35,7 @@ const SearchInput = ({
           onKeyEnterUp()
         }
       }}
-    ></VSCodeTextField>
+    ></VSCodeTextArea>
   )
 }
 
