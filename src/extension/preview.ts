@@ -122,27 +122,39 @@ async function haveReplace({ bytes, uri, inputValue, rewrite }: ReplaceArg) {
     rewrite: rewrite,
     includeFile: uri.fsPath,
   })
-  // TODO: resize buffer
-  const underlying = new ArrayBuffer(100000)
-  const newBuffer = new Uint8Array(underlying)
+  let newBuffer = new Uint8Array(bytes.byteLength)
   let srcOffset = 0
   let destOffset = 0
+  function resizeBuffer() {
+    let newNewBuffer = new Uint8Array(newBuffer.byteLength * 2)
+    newNewBuffer.set(newBuffer)
+    newBuffer = newNewBuffer
+  }
   const encoder = new TextEncoder()
   await streamedPromise(command!, (results: SgSearch[]) => {
     for (const r of results) {
+      // skip overlapping replacement
       if (r.range.byteOffset.start < srcOffset) {
         continue
       }
       const slice = bytes.slice(srcOffset, r.range.byteOffset.start)
+      const replacement = encoder.encode(r.replacement!)
+      const expectedLength =
+        destOffset + slice.byteLength + replacement.byteLength
+      while (expectedLength > newBuffer.byteLength) {
+        resizeBuffer()
+      }
       newBuffer.set(slice, destOffset)
       destOffset += slice.byteLength
-      const replacement = encoder.encode(r.replacement!)
       newBuffer.set(replacement, destOffset)
       destOffset += replacement.byteLength
       srcOffset = r.range.byteOffset.end
     }
   })
   const slice = bytes.slice(srcOffset, bytes.byteLength)
+  while (destOffset + slice.byteLength > newBuffer.byteLength) {
+    resizeBuffer()
+  }
   newBuffer.set(slice, destOffset)
   const final = newBuffer.slice(0, destOffset + slice.byteLength)
   return new TextDecoder('utf-8').decode(final)
