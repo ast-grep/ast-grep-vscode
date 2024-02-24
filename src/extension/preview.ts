@@ -15,10 +15,12 @@ import {
   commands,
   window,
   workspace,
+  TextEditorRevealType,
 } from 'vscode'
 import type { ChildToParent, SgSearch } from '../types'
 import { parentPort, streamedPromise } from './common'
 import { buildCommand } from './search'
+import path from 'path'
 
 const SCHEME = 'sgpreview'
 
@@ -67,6 +69,7 @@ function openFile({ filePath, locationsToSelect }: ChildToParent['openFile']) {
   }
   commands.executeCommand('vscode.open', fileUri, {
     selection: range,
+    preserveFocus: true,
   })
 }
 
@@ -84,14 +87,24 @@ async function previewDiff({
   const fileUri = joinPath(uris?.[0].uri, filePath)
   await generatePreview(fileUri, inputValue, rewrite)
   const previewUri = fileUri.with({ scheme: SCHEME })
-  await commands.executeCommand('vscode.diff', fileUri, previewUri)
+  const filename = path.basename(filePath)
+  // https://github.com/microsoft/vscode/blob/d63202a5382aa104f5515ea09053a2a21a2587c6/src/vs/workbench/api/common/extHostApiCommands.ts#L422
+  await commands.executeCommand(
+    'vscode.diff',
+    fileUri,
+    previewUri,
+    `${filename} ↔ ${filename} (Replace Preview)`,
+    {
+      preserveFocus: true,
+    },
+  )
   if (locationsToSelect) {
     const { start, end } = locationsToSelect
     const range = new Range(
       new Position(start.line, start.column),
       new Position(end.line, end.column),
     )
-    window.activeTextEditor?.revealRange(range)
+    window.activeTextEditor?.revealRange(range, TextEditorRevealType.InCenter)
   }
 }
 parentPort.onMessage('openFile', openFile)
