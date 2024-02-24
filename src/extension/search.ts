@@ -101,9 +101,15 @@ async function uniqueCommand(
   }
 }
 
+interface CommandArgs {
+  pattern: string
+  rewrite?: string
+  includeFiles: string[]
+}
+
 // TODO: add unit test for commandBuilder
-export function buildCommand(query: SearchQuery) {
-  const { inputValue: pattern, includeFile, rewrite } = query
+export function buildCommand(query: CommandArgs) {
+  const { pattern, includeFiles, rewrite } = query
   if (!pattern) {
     return
   }
@@ -113,9 +119,7 @@ export function buildCommand(query: SearchQuery) {
   if (rewrite) {
     args.push('--rewrite', rewrite)
   }
-  if (includeFile) {
-    args.push(includeFile)
-  }
+  args.push(...includeFiles.filter(Boolean))
   console.debug('running', query, command, args)
   // TODO: multi-workspaces support
   return spawn(command, args, {
@@ -130,7 +134,11 @@ interface Handlers {
 }
 
 function getPatternRes(query: SearchQuery, handlers: Handlers) {
-  const proc = buildCommand(query)
+  const proc = buildCommand({
+    pattern: query.inputValue,
+    includeFiles: [query.includeFile],
+    rewrite: query.rewrite,
+  })
   if (!proc) {
     return Promise.resolve()
   }

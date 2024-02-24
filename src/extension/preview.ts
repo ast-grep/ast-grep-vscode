@@ -131,9 +131,9 @@ interface ReplaceArg {
 
 async function haveReplace({ bytes, uri, inputValue, rewrite }: ReplaceArg) {
   const command = buildCommand({
-    inputValue: inputValue,
+    pattern: inputValue,
     rewrite: rewrite,
-    includeFile: uri.fsPath,
+    includeFiles: [uri.fsPath],
   })
   let newBuffer = new Uint8Array(bytes.byteLength)
   let srcOffset = 0
