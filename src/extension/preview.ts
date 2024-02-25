@@ -17,12 +17,14 @@ import {
   workspace,
   TextEditorRevealType,
 } from 'vscode'
-import type { ChildToParent, SgSearch } from '../types'
+import type { ChildToParent, SearchQuery, SgSearch } from '../types'
 import { parentPort, streamedPromise } from './common'
 import { buildCommand } from './search'
 import path from 'path'
 
 const SCHEME = 'sgpreview'
+let lastPattern = ''
+let lastRewrite = ''
 
 /**
  * NB A file will only have one preview at a time
@@ -107,8 +109,26 @@ async function previewDiff({
     window.activeTextEditor?.revealRange(range, TextEditorRevealType.InCenter)
   }
 }
+
+function refreshDiff(query: SearchQuery) {
+  try {
+    if (query.inputValue !== lastPattern) {
+      console.log('TODO: close all diff!')
+      return
+    }
+    if (query.rewrite === lastRewrite) {
+      return
+    }
+    console.log('TODO: refreshDiff!!')
+  } finally {
+    // use finally to ensure updated
+    lastPattern = query.inputValue
+    lastRewrite = query.rewrite
+  }
+}
 parentPort.onMessage('openFile', openFile)
 parentPort.onMessage('previewDiff', previewDiff)
+parentPort.onMessage('search', refreshDiff)
 
 /**
  *  set up replace preview and open file
