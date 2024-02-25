@@ -23,9 +23,10 @@ const SearchInput = ({
     },
     [onChange],
   )
-  const onKeyUp = useCallback(
+  const onKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
-      if (event.key === 'Enter') {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault()
         onKeyEnterUp()
       }
     },
@@ -40,7 +41,7 @@ const SearchInput = ({
       value={value}
       placeholder={placeholder}
       onInput={handleInput}
-      onKeyUp={onKeyUp}
+      onKeyDown={onKeyDown}
     ></VSCodeTextArea>
   )
 }
