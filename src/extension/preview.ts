@@ -16,6 +16,7 @@ import {
   window,
   workspace,
   TextEditorRevealType,
+  TabInputTextDiff,
 } from 'vscode'
 import type { ChildToParent, SearchQuery, SgSearch } from '../types'
 import { parentPort, streamedPromise } from './common'
@@ -109,17 +110,28 @@ async function previewDiff({
     window.activeTextEditor?.revealRange(range, TextEditorRevealType.InCenter)
   }
 }
+function closeAllDiffs() {
+  console.debug('Search pattern changed. Closing all diffs.')
+  const tabs = window.tabGroups.all.flatMap(tg => tg.tabs)
+  for (const tab of tabs) {
+    const input = tab.input
+    if (input instanceof TabInputTextDiff && isSgPreviewUri(input.modified)) {
+      window.tabGroups.close(tab)
+    }
+  }
+}
 
 function refreshDiff(query: SearchQuery) {
   try {
     if (query.inputValue !== lastPattern) {
-      console.log('TODO: close all diff!')
+      closeAllDiffs()
       return
     }
     if (query.rewrite === lastRewrite) {
       return
     }
-    console.log('TODO: refreshDiff!!')
+    // TODO: refresh diff content!
+    closeAllDiffs()
   } finally {
     // use finally to ensure updated
     lastPattern = query.inputValue
