@@ -151,12 +151,12 @@ export function openAction(payload: OpenPayload) {
 }
 
 export const useSearchResult = () => {
-  useSyncExternalStore(subscribe, getSnapshot)
+  let groupedByFileSearchResult = useSyncExternalStore(subscribe, getSnapshot)
   return {
     queryInFlight,
     searching,
     searchError,
-    groupedByFileSearchResult: grouped,
+    groupedByFileSearchResult,
   }
 }
 export { postSearch }
