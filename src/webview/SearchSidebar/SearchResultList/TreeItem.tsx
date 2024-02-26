@@ -1,6 +1,6 @@
 import { VscChevronDown, VscChevronRight } from 'react-icons/vsc'
 import { useBoolean } from 'react-use'
-import type { DisplayResult } from '../../../../types'
+import type { DisplayResult } from '../../../types'
 import { CodeBlock } from './CodeBlock'
 import { FileLink } from './FileLink'
 import { VSCodeBadge } from '@vscode/webview-ui-toolkit/react'
