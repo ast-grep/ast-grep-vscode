@@ -2,23 +2,15 @@ import { VscChevronDown, VscChevronRight } from 'react-icons/vsc'
 import { useBoolean } from 'react-use'
 import type { DisplayResult } from '../../../types'
 import { CodeBlock } from './CodeBlock'
+import { Actions } from './Actions'
 import { FileLink } from './FileLink'
 import { VSCodeBadge } from '@vscode/webview-ui-toolkit/react'
 import { memo, useEffect, useRef } from 'react'
 import * as stylex from '@stylexjs/stylex'
 
 const styles = stylex.create({
-  show: {
-    display: 'flex',
-  },
-  hide: {
-    display: 'none',
-  },
-  codeList: {
-    flexDirection: 'column',
-  },
   codeItem: {
-    flex: '1 0 100%',
+    display: 'flex',
     paddingLeft: '38px',
     listStyle: 'none',
     ':hover': {
@@ -77,6 +69,7 @@ const CodeBlockList = memo(({ matches }: CodeBlockListProps) => {
             key={file + byteOffset.start + byteOffset.end}
           >
             <CodeBlock match={match} />
+            <Actions />
           </li>
         )
       })}
@@ -135,12 +128,7 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
           {matches.length}
         </VSCodeBadge>
       </div>
-      <ul
-        {...stylex.props(
-          styles.codeList,
-          isExpanded ? styles.show : styles.hide,
-        )}
-      >
+      <ul style={{ display: isExpanded ? '' : 'none' }}>
         <CodeBlockList matches={matches} />
       </ul>
     </div>
