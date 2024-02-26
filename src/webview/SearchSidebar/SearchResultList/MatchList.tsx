@@ -13,6 +13,10 @@ const styles = stylex.create({
     ':hover': {
       background: 'var(--vscode-list-inactiveSelectionBackground)',
     },
+    // https://github.com/facebook/stylex/issues/373
+    ':hover > .actions': {
+      width: 'auto',
+    },
   },
 })
 
@@ -31,7 +35,7 @@ export const MatchList = memo(({ matches }: CodeBlockListProps) => {
             key={file + byteOffset.start + byteOffset.end}
           >
             <CodeBlock match={match} />
-            <Actions />
+            <Actions className="actions" />
           </li>
         )
       })}
