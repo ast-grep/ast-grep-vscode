@@ -13,6 +13,7 @@ const styles = stylex.create({
     ':hover': {
       background: 'var(--vscode-list-inactiveSelectionBackground)',
     },
+    // a hack to avoid setHover state, see also Actions.tsx
     // https://github.com/facebook/stylex/issues/373
     ':hover > .actions': {
       width: 'auto',
@@ -35,7 +36,7 @@ export const MatchList = memo(({ matches }: CodeBlockListProps) => {
             key={file + byteOffset.start + byteOffset.end}
           >
             <CodeBlock match={match} />
-            <Actions className="actions" />
+            <Actions className="actions" match={match} />
           </li>
         )
       })}

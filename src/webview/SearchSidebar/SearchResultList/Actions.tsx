@@ -1,3 +1,5 @@
+import type { DisplayResult } from '../../../types'
+
 import * as stylex from '@stylexjs/stylex'
 import { VscReplace } from 'react-icons/vsc'
 
@@ -6,7 +8,6 @@ const styles = stylex.create({
     listStyle: 'none',
     display: 'flex',
     flexDirection: 'row',
-    boxSizing: 'border-box',
     // see https://github.com/facebook/stylex/issues/373
     width: '0',
   },
@@ -34,10 +35,14 @@ const styles = stylex.create({
 
 interface ActionsProps {
   className: string
+  match: DisplayResult
 }
 
-export function Actions({ className: parent }: ActionsProps) {
+export function Actions({ className: parent, match }: ActionsProps) {
   const { className: local } = stylex.props(styles.list)
+  if (!match.replacement) {
+    return null
+  }
   return (
     <ul className={`${local} ${parent}`} role="toolbar">
       {/* VSCode supports shortcut Replace (⇧⌘1)*/}
