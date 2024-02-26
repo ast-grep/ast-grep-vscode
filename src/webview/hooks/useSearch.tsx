@@ -14,7 +14,7 @@ const MOD = 1e9 + 7
 
 // maintain the latest search task id and callback
 let id = 0
-let grouped: [string, DisplayResult[]][] = []
+let grouped: Map<string, DisplayResult[]> = new Map()
 let queryInFlight: SearchQuery = {
   inputValue: '',
   includeFile: '',
@@ -45,10 +45,10 @@ childPort.onMessage('searchResultStreaming', event => {
   if (hasStaleResult) {
     // empty previous result
     hasStaleResult = false
-    grouped = []
+    grouped = new Map()
   }
   queryInFlight = query
-  grouped = merge(groupBy(event.searchResult))
+  grouped = merge(grouped, groupBy(event.searchResult))
   notify()
 })
 
@@ -59,7 +59,7 @@ childPort.onMessage('searchEnd', event => {
   }
   searching = false
   if (hasStaleResult) {
-    grouped = []
+    grouped = new Map()
   }
   hasStaleResult = false
   queryInFlight = query
@@ -72,7 +72,7 @@ childPort.onMessage('error', event => {
   }
   searchError = event.error
   searching = false
-  grouped = []
+  grouped = new Map()
   notify()
 })
 
@@ -87,22 +87,42 @@ function groupBy(matches: DisplayResult[]) {
   return groups
 }
 
-function merge(newEntries: Map<string, DisplayResult[]>) {
-  // first, clone the old map for react
-  let temp = new Map(grouped)
-  for (const [file, newList] of newEntries) {
-    const existing = temp.get(file) || []
-    temp.set(file, existing.concat(newList))
+function merge(
+  previousEntries: Map<string, DisplayResult[]>,
+  newEntries: Map<string, DisplayResult[]>,
+) {
+  if (newEntries.size === 0) {
+    return previousEntries
   }
-  return [...temp.entries()]
+
+  // calculate all group keys after merging.
+  const currentGroupKeys = new Set(previousEntries.keys())
+  for (const key of newEntries.keys()) {
+    currentGroupKeys.add(key)
+  }
+
+  const currentEntries = new Map()
+  for (const key of currentGroupKeys) {
+    const newItemsInGroup = newEntries.get(key)
+    if (newItemsInGroup === undefined) {
+      // this group is not changed, reuse the existed array.
+      currentEntries.set(key, previousEntries.get(key))
+      continue
+    }
+
+    const previousItemsInGroup = previousEntries.get(key)
+    if (previousItemsInGroup) {
+      currentEntries.set(key, previousItemsInGroup.concat(newItemsInGroup))
+    } else {
+      currentEntries.set(key, newItemsInGroup)
+    }
+  }
+
+  return currentEntries
 }
 
-// version is for react to update view
-let version = 114514
 function subscribe(onChange: () => void): () => void {
   notify = () => {
-    // snapshot should precede onChange
-    version = (version + 1) % MOD
     onChange()
   }
   return () => {
@@ -112,7 +132,7 @@ function subscribe(onChange: () => void): () => void {
 }
 
 function getSnapshot() {
-  return version // symbolic snapshot for react
+  return grouped
 }
 
 /**

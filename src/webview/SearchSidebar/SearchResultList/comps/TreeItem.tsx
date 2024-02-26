@@ -112,7 +112,7 @@ interface TreeItemProps {
   matches: DisplayResult[]
 }
 
-const TreeItem = ({ filePath, matches }: TreeItemProps) => {
+const TreeItem = memo(({ filePath, matches }: TreeItemProps) => {
   const [isExpanded, toggleIsExpanded] = useBoolean(true)
   const { isScrolled, ref } = useStickyShadow()
 
@@ -145,5 +145,5 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
       </ul>
     </div>
   )
-}
+})
 export default TreeItem

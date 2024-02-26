@@ -52,7 +52,7 @@ function Empty({ query }: { query: SearchQuery }) {
 
 interface SearchProviderMessageProps {
   query: SearchQuery
-  results: [string, DisplayResult[]][]
+  results: Map<string, DisplayResult[]>
   error: Error | null
 }
 
@@ -74,8 +74,11 @@ const SearchProviderMessage = memo(
         </div>
       )
     }
-    const resultCount = results.reduce((a, l) => a + l[1].length, 0)
-    const fileCount = results.length
+    let resultCount = 0
+    for (const files of results.values()) {
+      resultCount += files.length
+    }
+    const fileCount = results.size
     return (
       <>
         {resultCount === 0 ? (
