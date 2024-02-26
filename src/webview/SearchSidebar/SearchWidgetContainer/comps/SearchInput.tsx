@@ -8,6 +8,13 @@ interface SearchInputProps {
   onKeyEnterUp: () => void
 }
 
+const style = {
+  width: '100%',
+  // vscode ui kit does not allow modify textarea padding
+  // the --design-unit is a magic css property to override it
+  '--design-unit': '2',
+}
+
 const SearchInput = ({
   value,
   onChange,
@@ -36,7 +43,7 @@ const SearchInput = ({
 
   return (
     <VSCodeTextArea
-      style={{ width: '100%' }}
+      style={style}
       rows={rows}
       value={value}
       placeholder={placeholder}
