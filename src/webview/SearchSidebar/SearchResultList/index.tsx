@@ -6,7 +6,7 @@ interface SearchResultListProps {
   matches: Map<string, DisplayResult[]>
 }
 
-const SearchResultList = memo(({ matches }: SearchResultListProps) => {
+const SearchResultList = ({ matches }: SearchResultListProps) => {
   return (
     <div style={{ flexGrow: '1', overflowY: 'scroll' }}>
       {Array.from(matches.entries()).map(([filePath, match]) => {
@@ -14,6 +14,6 @@ const SearchResultList = memo(({ matches }: SearchResultListProps) => {
       })}
     </div>
   )
-})
+}
 
 export default memo(SearchResultList)
