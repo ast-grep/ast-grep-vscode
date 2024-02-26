@@ -1,22 +1,13 @@
 import { VscChevronDown, VscChevronRight } from 'react-icons/vsc'
 import { useBoolean } from 'react-use'
 import type { DisplayResult } from '../../../types'
-import { CodeBlock } from './CodeBlock'
-import { Actions } from './Actions'
 import { FileLink } from './FileLink'
+import { MatchList } from './MatchList'
 import { VSCodeBadge } from '@vscode/webview-ui-toolkit/react'
-import { memo, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import * as stylex from '@stylexjs/stylex'
 
 const styles = stylex.create({
-  codeItem: {
-    display: 'flex',
-    paddingLeft: '38px',
-    listStyle: 'none',
-    ':hover': {
-      background: 'var(--vscode-list-inactiveSelectionBackground)',
-    },
-  },
   treeItem: {
     position: 'relative',
     background: 'var(--vscode-sideBar-background)',
@@ -51,30 +42,6 @@ const styles = stylex.create({
     marginLeft: 'auto',
     flex: '0 0 auto',
   },
-})
-
-interface CodeBlockListProps {
-  matches: DisplayResult[]
-}
-
-const CodeBlockList = memo(({ matches }: CodeBlockListProps) => {
-  return (
-    <>
-      {matches?.map(match => {
-        const { file, range } = match
-        const { byteOffset } = range
-        return (
-          <li
-            {...stylex.props(styles.codeItem)}
-            key={file + byteOffset.start + byteOffset.end}
-          >
-            <CodeBlock match={match} />
-            <Actions />
-          </li>
-        )
-      })}
-    </>
-  )
 })
 
 function useStickyShadow() {
@@ -129,7 +96,7 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
         </VSCodeBadge>
       </div>
       <ul style={{ display: isExpanded ? '' : 'none' }}>
-        <CodeBlockList matches={matches} />
+        <MatchList matches={matches} />
       </ul>
     </div>
   )
