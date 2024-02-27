@@ -4,7 +4,7 @@ import type { DisplayResult } from '../../../types'
 import { FileLink } from './FileLink'
 import { MatchList } from './MatchList'
 import { VSCodeBadge } from '@vscode/webview-ui-toolkit/react'
-import { useEffect, useRef } from 'react'
+import { memo, useEffect, useRef } from 'react'
 import * as stylex from '@stylexjs/stylex'
 
 const styles = stylex.create({
@@ -101,4 +101,4 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
     </div>
   )
 }
-export default TreeItem
+export default memo(TreeItem)
