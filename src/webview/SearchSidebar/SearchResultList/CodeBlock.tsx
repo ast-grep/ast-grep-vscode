@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { memo, useCallback } from 'react'
 import type { DisplayResult } from '../../../types'
 import { openAction } from '../../hooks/useSearch'
 import * as stylex from '@stylexjs/stylex'
@@ -68,7 +68,7 @@ function Highlight({
 interface CodeBlockProps {
   match: DisplayResult
 }
-export const CodeBlock = ({ match }: CodeBlockProps) => {
+export const CodeBlock = memo(({ match }: CodeBlockProps) => {
   const { startIdx, endIdx, displayLine, lineSpan, file, range } = match
   const onClick = useCallback(() => {
     openAction({ filePath: file, locationsToSelect: range })
@@ -82,4 +82,4 @@ export const CodeBlock = ({ match }: CodeBlockProps) => {
       {displayLine.slice(endIdx)}
     </div>
   )
-}
+})
