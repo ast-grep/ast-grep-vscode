@@ -140,3 +140,8 @@ export const useSearchResult = () => {
   }
 }
 export { postSearch }
+
+export function clearOneFile(file: string) {
+  grouped = grouped.filter(n => n[0] !== file)
+  notify()
+}

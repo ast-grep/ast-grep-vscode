@@ -75,6 +75,14 @@ export interface ChildToParent {
     inputValue: string
     rewrite: string
   }
+  commitChange: {
+    filePath: string
+    replacement: string
+    range: {
+      start: Position
+      end: Position
+    }
+  }
 }
 
 export type Definition = {

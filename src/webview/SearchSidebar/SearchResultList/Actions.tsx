@@ -1,4 +1,7 @@
+import { useCallback } from 'react'
 import type { DisplayResult } from '../../../types'
+import { commitChange } from '../../postMessage'
+import { clearOneFile } from '../../hooks/useSearch'
 
 import * as stylex from '@stylexjs/stylex'
 import { VscReplace } from 'react-icons/vsc'
@@ -40,6 +43,14 @@ interface ActionsProps {
 
 export function Actions({ className: parent, match }: ActionsProps) {
   const { className: local } = stylex.props(styles.list)
+  const onClick = useCallback(() => {
+    clearOneFile(match.file)
+    commitChange({
+      filePath: match.file,
+      replacement: match.replacement!,
+      range: match.range,
+    })
+  }, [match])
   if (!match.replacement) {
     return null
   }
@@ -51,9 +62,7 @@ export function Actions({ className: parent, match }: ActionsProps) {
         role="button"
         title="Replace"
         tabIndex={0}
-        onClick={() => {
-          console.log(123)
-        }}
+        onClick={onClick}
       >
         <VscReplace />
       </li>

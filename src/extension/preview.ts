@@ -22,6 +22,7 @@ import type { ChildToParent, SearchQuery, SgSearch } from '../types'
 import { parentPort, streamedPromise } from './common'
 import { buildCommand } from './search'
 import path from 'path'
+import { commitChange } from '../webview/postMessage'
 
 const SCHEME = 'sgpreview'
 let lastPattern = ''
@@ -141,6 +142,11 @@ function refreshDiff(query: SearchQuery) {
 parentPort.onMessage('openFile', openFile)
 parentPort.onMessage('previewDiff', previewDiff)
 parentPort.onMessage('search', refreshDiff)
+parentPort.onMessage('commitChange', doChange)
+
+function doChange(args: ChildToParent['commitChange']) {
+  console.log(args)
+}
 
 /**
  *  set up replace preview and open file

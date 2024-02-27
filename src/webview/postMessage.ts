@@ -26,3 +26,7 @@ export const openFile = (data: OpenPayload) => {
 export function previewDiff(data: ChildToParent['previewDiff']) {
   childPort.postMessage('previewDiff', data)
 }
+
+export function commitChange(diff: ChildToParent['commitChange']) {
+  childPort.postMessage('commitChange', diff)
+}
