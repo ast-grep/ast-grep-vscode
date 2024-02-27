@@ -141,7 +141,11 @@ function refreshDiff(query: SearchQuery) {
 parentPort.onMessage('openFile', openFile)
 parentPort.onMessage('previewDiff', previewDiff)
 parentPort.onMessage('search', refreshDiff)
-parentPort.onMessage('commitChange', doChange)
+parentPort.onMessage('commitChange', onCommitChange)
+
+async function onCommitChange(payload: ChildToParent['commitChange']) {
+  await doChange(payload)
+}
 
 async function doChange({
   filePath,

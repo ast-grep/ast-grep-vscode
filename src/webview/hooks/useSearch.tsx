@@ -142,6 +142,11 @@ export const useSearchResult = () => {
 export { postSearch }
 
 export function clearOneFile(file: string) {
-  grouped = grouped.filter(n => n[0] !== file)
+  const pairs = grouped.find(n => n[0] === file)
+  if (!pairs) {
+    return
+  }
+  pairs[1] = []
+  grouped = grouped.slice()
   notify()
 }
