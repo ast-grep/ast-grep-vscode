@@ -22,7 +22,6 @@ import type { ChildToParent, SearchQuery, SgSearch } from '../types'
 import { parentPort, streamedPromise } from './common'
 import { buildCommand } from './search'
 import path from 'path'
-import { commitChange } from '../webview/postMessage'
 
 const SCHEME = 'sgpreview'
 let lastPattern = ''
@@ -144,8 +143,27 @@ parentPort.onMessage('previewDiff', previewDiff)
 parentPort.onMessage('search', refreshDiff)
 parentPort.onMessage('commitChange', doChange)
 
-function doChange(args: ChildToParent['commitChange']) {
-  console.log(args)
+async function doChange({
+  filePath,
+  range,
+  replacement,
+}: ChildToParent['commitChange']) {
+  const uris = workspace.workspaceFolders
+  const { joinPath } = Uri
+  if (!uris?.length) {
+    return
+  }
+  const fileUri = joinPath(uris?.[0].uri, filePath)
+  const bytes = await workspace.fs.readFile(fileUri)
+  const replaceBytes = new TextEncoder().encode(replacement)
+  const newBytes = new Uint8Array(bytes.byteLength + replaceBytes.byteLength)
+  newBytes.set(bytes.slice(0, range.byteOffset.start), 0)
+  newBytes.set(replaceBytes, range.byteOffset.start)
+  newBytes.set(
+    bytes.slice(range.byteOffset.end),
+    range.byteOffset.start + replaceBytes.byteLength,
+  )
+  await workspace.fs.writeFile(fileUri, newBytes)
 }
 
 /**

@@ -78,10 +78,7 @@ export interface ChildToParent {
   commitChange: {
     filePath: string
     replacement: string
-    range: {
-      start: Position
-      end: Position
-    }
+    range: RangeInfo
   }
 }
 
