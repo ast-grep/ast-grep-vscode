@@ -91,7 +91,7 @@ function groupBy(matches: DisplayResult[]) {
 
 function merge(newEntries: Map<string, DisplayResult[]>) {
   // first, clone the old map for react
-  let temp = new Map(grouped)
+  const temp = new Map(grouped)
   for (const [file, newList] of newEntries) {
     const existing = temp.get(file) || []
     temp.set(file, existing.concat(newList))

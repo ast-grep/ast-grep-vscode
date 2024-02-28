@@ -220,7 +220,7 @@ async function haveReplace({ bytes, uri, inputValue, rewrite }: ReplaceArg) {
   let srcOffset = 0
   let destOffset = 0
   function resizeBuffer() {
-    let newNewBuffer = new Uint8Array(newBuffer.byteLength * 2)
+    const newNewBuffer = new Uint8Array(newBuffer.byteLength * 2)
     newNewBuffer.set(newBuffer)
     newBuffer = newNewBuffer
   }

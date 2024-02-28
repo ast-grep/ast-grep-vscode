@@ -53,13 +53,13 @@ export function activateLsp(context: ExtensionContext) {
   // instantiate and set input which updates the view
   // If the extension is launched in debug mode then the debug server options are used
   // Otherwise the run options are used
-  let serverOptions: ServerOptions = {
+  const serverOptions: ServerOptions = {
     run: getExecutable(false),
     debug: getExecutable(true),
   }
 
   // Options to control the language client
-  let clientOptions: LanguageClientOptions = {
+  const clientOptions: LanguageClientOptions = {
     diagnosticCollectionName,
     // Register the server for plain text documents
     documentSelector: [{ scheme: 'file', language: '*' }],

@@ -4,7 +4,7 @@ export type { DisplayResult, RangeInfo } from '../types'
 export type OpenPayload = ChildToParent['openFile']
 
 // @ts-expect-error
-let vscode = acquireVsCodeApi()
+const vscode = acquireVsCodeApi()
 
 export const childPort: ChildPort = new Unport()
 

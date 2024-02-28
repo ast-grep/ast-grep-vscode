@@ -18,7 +18,7 @@ function useObserveDark() {
   const [isDark, setIsDark] = useState(getIsDark())
   useEffect(() => {
     const observer = new MutationObserver((mutationsList, _observer) => {
-      for (let mutation of mutationsList) {
+      for (const mutation of mutationsList) {
         if (mutation.attributeName === BODY_DARK_ATTRIBUTE) {
           setIsDark(() => getIsDark())
         }

@@ -53,7 +53,7 @@ export function splitByHighLightToken(search: SgSearch): DisplayResult {
   // truncate long lines
   if (startIdx > PRE_CTX + 3) {
     displayLine = '...' + displayLine.substring(startIdx - PRE_CTX)
-    let length = endIdx - startIdx
+    const length = endIdx - startIdx
     startIdx = PRE_CTX + 3
     endIdx = startIdx + length
   }

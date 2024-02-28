@@ -118,7 +118,7 @@ export async function getActualCodeActions(
   range: vscode.Range,
 ): Promise<vscode.CodeAction[]> {
   try {
-    let executedCommand = await vscode.commands.executeCommand(
+    const executedCommand = await vscode.commands.executeCommand(
       'vscode.executeCodeActionProvider',
       docUri,
       range,

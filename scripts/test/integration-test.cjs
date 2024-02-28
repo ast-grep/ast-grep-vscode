@@ -19,7 +19,7 @@ async function run() {
    * So you could play with sort order on the tests to investigate
    */
   const testsRoot = path.join(__dirname, '../../src/test')
-  let files = await glob('**.test.ts', { cwd: testsRoot })
+  const files = await glob('**.test.ts', { cwd: testsRoot })
   // Add files to the test suite
   files.sort((a, b) => {
     return a.localeCompare(b)

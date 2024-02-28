@@ -19,7 +19,7 @@ export function streamedPromise<T>(
   // stream parsing JSON
   proc.stdout.on('data', (data: string) => {
     // collect results in this batch
-    let result: T[] = []
+    const result: T[] = []
     const lines = (trailingLine + data).split(/\r?\n/)
     trailingLine = ''
     for (let i = 0; i < lines.length; i++) {
