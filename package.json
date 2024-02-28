@@ -105,7 +105,7 @@
     "test": "node ./scripts/test/runTest.mjs",
     "compile": "node ./scripts/build.mjs",
     "typecheck": "tsc --noEmit",
-    "lint": "npx @biomejs/biome lint",
+    "lint": "biome lint .",
     "format:check": "biome format .",
     "watch": "node ./scripts/build.mjs --watch",
     "prepare": "husky install"
@@ -130,7 +130,6 @@
     "husky": "9.0.11",
     "lint-staged": "15.2.2",
     "mocha": "10.3.0",
-    "prettier": "3.2.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "5.0.1",

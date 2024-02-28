@@ -53,9 +53,6 @@ devDependencies:
   mocha:
     specifier: 10.3.0
     version: 10.3.0
-  prettier:
-    specifier: 3.2.5
-    version: 3.2.5
   react:
     specifier: 18.2.0
     version: 18.2.0
@@ -1998,12 +1995,6 @@ packages:
 
   /postcss-value-parser@4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
-    dev: true
-
-  /prettier@3.2.5:
-    resolution: {integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==}
-    engines: {node: '>=14'}
-    hasBin: true
     dev: true
 
   /process-nextick-args@2.0.1:
