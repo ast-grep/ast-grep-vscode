@@ -19,6 +19,8 @@ jobs:
         run: pnpm install
       - name: Style Check
         run: pnpm run format:check
+      - name: Lint Check
+        run: pnpm run lint
       - name: Type Check
         run: pnpm run typecheck
   test:

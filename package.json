@@ -111,7 +111,7 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "**/!(package.json)*": "biome format --write",
+    "**/*": "biome format --write --no-errors-on-unmatched",
     "*.{ts, js}": "biome lint"
   },
   "devDependencies": {
