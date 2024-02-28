@@ -31,6 +31,6 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "ignore": ["dist", "out", ".vscode-test"]
+    "ignore": ["out", ".vscode-test"]
   }
 }

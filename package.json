@@ -111,7 +111,8 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "**/*": "biome format --write"
+    "**/!(package.json)*": "biome format --write",
+    "*.{ts, js}": "biome lint"
   },
   "devDependencies": {
     "@biomejs/biome": "1.5.3",
