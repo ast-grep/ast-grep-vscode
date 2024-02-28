@@ -122,7 +122,7 @@
     "@types/node": "20.11.20",
     "@types/react": "18.2.59",
     "@types/react-dom": "18.2.19",
-    "@types/vscode": "1.86.0",
+    "@types/vscode": "1.87.0",
     "@vscode/test-electron": "2.3.9",
     "@vscode/webview-ui-toolkit": "1.4.0",
     "esbuild": "0.20.1",
