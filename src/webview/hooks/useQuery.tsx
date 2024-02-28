@@ -28,7 +28,7 @@ export function useSearchField(key: keyof SearchQuery) {
   // this useEffect and useDebounce is silly
   useEffect(() => {
     searchQuery[key] = field
-  }, [field])
+  }, [field, key])
   useDebounce(refreshResult, 150, [field])
   return [field, setField] as const
 }
@@ -42,7 +42,7 @@ export function useSearchOption() {
       setIncludeFile(val.includeFile)
       toggleOptions(true)
     })
-  }, [])
+  }, [toggleOptions, setIncludeFile])
   return {
     includeFile,
     setIncludeFile,

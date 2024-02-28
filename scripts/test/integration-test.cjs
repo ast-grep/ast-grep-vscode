@@ -24,9 +24,9 @@ async function run() {
   files.sort((a, b) => {
     return a.localeCompare(b)
   })
-  files.forEach(f => {
+  for (const f of files) {
     mocha.addFile(path.resolve(testsRoot, f))
-  })
+  }
 
   return new Promise((resolve, reject) => {
     // Run the mocha test

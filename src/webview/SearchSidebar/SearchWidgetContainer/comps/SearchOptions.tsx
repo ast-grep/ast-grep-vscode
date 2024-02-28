@@ -30,7 +30,11 @@ export default function SearchOptions() {
     useSearchOption()
   return (
     <div {...stylex.props(styles.options)}>
-      <button {...stylex.props(styles.button)} onClick={toggleOptions}>
+      <button
+        type="button"
+        {...stylex.props(styles.button)}
+        onClick={toggleOptions}
+      >
         <VscEllipsis />
       </button>
       {showOptions && (

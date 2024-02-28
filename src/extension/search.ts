@@ -14,6 +14,7 @@ export function activateSearch(context: ExtensionContext) {
   )
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: todo
 function findInFolder(data: any) {
   const workspacePath = workspace.workspaceFolders?.[0].uri.fsPath
   // compute relative path to the workspace folder
@@ -97,7 +98,7 @@ async function uniqueCommand(
     // interrupted proc will be replaced by latter proc
     child = undefined
   } catch (e) {
-    console.info(`search aborted: `, e)
+    console.info('search aborted: ', e)
   }
 }
 

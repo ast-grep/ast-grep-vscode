@@ -55,14 +55,8 @@ export function Actions({ className: parent, match }: ActionsProps) {
   return (
     <ul className={`${local} ${parent}`} role="toolbar">
       {/* VSCode supports shortcut Replace (⇧⌘1)*/}
-      <li
-        {...stylex.props(styles.action)}
-        role="button"
-        title="Replace"
-        tabIndex={0}
-        onClick={onClick}
-      >
-        <VscReplace />
+      <li {...stylex.props(styles.action)} onClick={onClick}>
+        <VscReplace role="button" title="Replace" tabIndex={0} />
       </li>
     </ul>
   )

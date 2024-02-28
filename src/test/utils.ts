@@ -137,7 +137,7 @@ const MAX_RETRIES = 3
  */
 export function testAndRetry(name: string, fn: () => Promise<void>) {
   return test(name, async () => {
-    const errors: Array<any> = []
+    const errors: Array<unknown> = []
     const startTime = Date.now()
     /* perform retries */
     let retries = 0

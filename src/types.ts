@@ -58,7 +58,7 @@ export interface ParentToChild {
 
 export interface ChildToParent {
   search: WithId<SearchQuery>
-  reload: {}
+  reload: unknown
   openFile: {
     filePath: string
     locationsToSelect?: {

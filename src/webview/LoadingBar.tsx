@@ -24,6 +24,8 @@ export default function LoadingBar({ loading }: LoadingBarProps) {
       {...stylex.props(styles.progressBar)}
       role="progressbar"
       aria-valuemin={0}
+      aria-valuenow={5}
+      aria-valuemax={10}
       aria-hidden={!loading}
     >
       <div className="progressBar" style={style} />

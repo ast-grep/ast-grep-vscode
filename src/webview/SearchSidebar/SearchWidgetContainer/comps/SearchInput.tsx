@@ -21,9 +21,9 @@ const SearchInput = ({
   onKeyEnterUp,
   placeholder,
 }: SearchInputProps) => {
-  // onInput event has wrong type signature.
-  // I know any better
   const handleInput = useCallback(
+    // I know any better
+    // biome-ignore lint/suspicious/noExplicitAny: onInput event has wrong type signature.
     (e: any) => {
       const newValue = e.target.value || ''
       onChange(newValue)
@@ -49,7 +49,7 @@ const SearchInput = ({
       placeholder={placeholder}
       onInput={handleInput}
       onKeyDown={onKeyDown}
-    ></VSCodeTextArea>
+    />
   )
 }
 

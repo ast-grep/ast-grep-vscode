@@ -35,11 +35,10 @@ function splitPath(path: string) {
       fileName: path,
       basePath: '',
     }
-  } else {
-    return {
-      fileName: path.slice(lastSlash + 1),
-      basePath: path.slice(0, lastSlash),
-    }
+  }
+  return {
+    fileName: path.slice(lastSlash + 1),
+    basePath: path.slice(0, lastSlash),
   }
 }
 

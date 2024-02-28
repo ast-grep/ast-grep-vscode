@@ -32,7 +32,9 @@ function useObserveDark() {
 
 export const UseDarkContextProvider = ({ children }: PropsWithChildren) => {
   const isDark = useObserveDark()
-  return <UseDarkContext.Provider value={isDark} children={children} />
+  return (
+    <UseDarkContext.Provider value={isDark}>{children}</UseDarkContext.Provider>
+  )
 }
 
 export function useDark() {
