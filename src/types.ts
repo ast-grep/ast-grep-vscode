@@ -75,11 +75,13 @@ export interface ChildToParent {
     inputValue: string
     rewrite: string
   }
-  commitChange: {
+  commitChange: WithId<{
     filePath: string
     replacement: string
     range: RangeInfo
-  }
+    inputValue: string
+    rewrite: string
+  }>
 }
 
 export type Definition = {

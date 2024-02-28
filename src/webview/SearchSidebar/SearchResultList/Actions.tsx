@@ -1,7 +1,6 @@
 import { useCallback } from 'react'
 import type { DisplayResult } from '../../../types'
-import { commitChange } from '../../postMessage'
-import { clearOneFile } from '../../hooks/useSearch'
+import { acceptChangeAndRefresh } from '../../hooks/useSearch'
 
 import * as stylex from '@stylexjs/stylex'
 import { VscReplace } from 'react-icons/vsc'
@@ -44,8 +43,7 @@ interface ActionsProps {
 export function Actions({ className: parent, match }: ActionsProps) {
   const { className: local } = stylex.props(styles.list)
   const onClick = useCallback(() => {
-    clearOneFile(match.file)
-    commitChange({
+    acceptChangeAndRefresh({
       filePath: match.file,
       replacement: match.replacement!,
       range: match.range,

@@ -20,7 +20,7 @@ import {
 } from 'vscode'
 import type { ChildToParent, SearchQuery, SgSearch } from '../types'
 import { parentPort, streamedPromise } from './common'
-import { buildCommand } from './search'
+import { buildCommand, splitByHighLightToken } from './search'
 import path from 'path'
 
 const SCHEME = 'sgpreview'
@@ -40,6 +40,7 @@ class AstGrepPreviewProvider implements TextDocumentContentProvider {
     return previewContents.get(uri.path) || ''
   }
 }
+const previewProvider = new AstGrepPreviewProvider()
 
 function isSgPreviewUri(uri: Uri) {
   return uri.scheme === SCHEME
@@ -144,20 +145,26 @@ parentPort.onMessage('search', refreshDiff)
 parentPort.onMessage('commitChange', onCommitChange)
 
 async function onCommitChange(payload: ChildToParent['commitChange']) {
-  await doChange(payload)
-}
-
-async function doChange({
-  filePath,
-  range,
-  replacement,
-}: ChildToParent['commitChange']) {
   const uris = workspace.workspaceFolders
   const { joinPath } = Uri
   if (!uris?.length) {
     return
   }
+  const { filePath, inputValue, rewrite } = payload
   const fileUri = joinPath(uris?.[0].uri, filePath)
+  await doChange(fileUri, payload)
+  await generatePreview(fileUri, inputValue, rewrite)
+  await refreshSearchResult(payload.id, {
+    inputValue,
+    rewrite,
+    includeFile: filePath,
+  })
+}
+
+async function doChange(
+  fileUri: Uri,
+  { range, replacement }: ChildToParent['commitChange'],
+) {
   const bytes = await workspace.fs.readFile(fileUri)
   const replaceBytes = new TextEncoder().encode(replacement)
   const newBytes = new Uint8Array(bytes.byteLength + replaceBytes.byteLength)
@@ -170,12 +177,26 @@ async function doChange({
   await workspace.fs.writeFile(fileUri, newBytes)
 }
 
+async function refreshSearchResult(id: number, query: SearchQuery) {
+  const command = buildCommand({
+    pattern: query.inputValue,
+    rewrite: query.rewrite,
+    includeFiles: [query.includeFile],
+  })
+  await streamedPromise(command!, (results: SgSearch[]) => {
+    // TODO, change this
+    parentPort.postMessage('searchResultStreaming', {
+      id,
+      ...query,
+      searchResult: results.map(splitByHighLightToken),
+    })
+  })
+}
+
 /**
  *  set up replace preview and open file
  **/
 export function activatePreview({ subscriptions }: ExtensionContext) {
-  const previewProvider = new AstGrepPreviewProvider()
-
   subscriptions.push(
     workspace.registerTextDocumentContentProvider(SCHEME, previewProvider),
     workspace.onDidCloseTextDocument(cleanupDocument),

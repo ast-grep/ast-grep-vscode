@@ -1,6 +1,6 @@
 import type { ChildPort, ChildToParent } from '../types'
 import { Unport } from 'unport'
-export type { DisplayResult } from '../types'
+export type { DisplayResult, RangeInfo } from '../types'
 export type OpenPayload = ChildToParent['openFile']
 
 // @ts-expect-error

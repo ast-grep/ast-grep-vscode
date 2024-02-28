@@ -32,7 +32,7 @@ const LEADING_SPACES_RE = /^\s*/
 const PRE_CTX = 30
 const POST_CTX = 100
 
-function splitByHighLightToken(search: SgSearch): DisplayResult {
+export function splitByHighLightToken(search: SgSearch): DisplayResult {
   const { start, end } = search.range
   let startIdx = start.column
   let endIdx = end.column

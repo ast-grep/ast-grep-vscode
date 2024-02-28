@@ -3,8 +3,10 @@ import {
   OpenPayload,
   openFile,
   previewDiff,
+  commitChange,
+  childPort,
+  RangeInfo,
 } from '../postMessage'
-import { childPort } from '../postMessage'
 import { useSyncExternalStore } from 'react'
 import { SearchQuery } from './useQuery'
 
@@ -141,7 +143,7 @@ export const useSearchResult = () => {
 }
 export { postSearch }
 
-export function clearOneFile(file: string) {
+function clearOneFile(file: string) {
   const pairs = grouped.find(n => n[0] === file)
   if (!pairs) {
     return
@@ -149,4 +151,17 @@ export function clearOneFile(file: string) {
   pairs[1] = []
   grouped = grouped.slice()
   notify()
+}
+
+export function acceptChangeAndRefresh(args: {
+  filePath: string
+  replacement: string
+  range: RangeInfo
+}) {
+  clearOneFile(args.filePath)
+  commitChange({
+    id,
+    ...queryInFlight,
+    ...args,
+  })
 }
