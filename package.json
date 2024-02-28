@@ -105,14 +105,16 @@
     "test": "node ./scripts/test/runTest.mjs",
     "compile": "node ./scripts/build.mjs",
     "typecheck": "tsc --noEmit",
-    "prettier:check": "prettier --check .",
+    "lint": "npx @biomejs/biome lint",
+    "format:check": "biome format .",
     "watch": "node ./scripts/build.mjs --watch",
     "prepare": "husky install"
   },
   "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
+    "**/*": "biome format --write"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.5.3",
     "@stylexjs/esbuild-plugin": "^0.5.1",
     "@stylexjs/stylex": "0.5.1",
     "@types/glob": "8.1.0",
