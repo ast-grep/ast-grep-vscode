@@ -63,19 +63,22 @@ function workspaceUriFromFilePath(filePath: string) {
   return joinPath(uris?.[0].uri, filePath)
 }
 
+function locationToRange(
+  locations: ChildToParent['previewDiff']['locationsToSelect'],
+) {
+  const { start, end } = locations
+  return new Range(
+    new Position(start.line, start.column),
+    new Position(end.line, end.column),
+  )
+}
+
 function openFile({ filePath, locationsToSelect }: ChildToParent['openFile']) {
   const fileUri = workspaceUriFromFilePath(filePath)
   if (!fileUri) {
     return
   }
-  let range: undefined | Range
-  if (locationsToSelect) {
-    const { start, end } = locationsToSelect
-    range = new Range(
-      new Position(start.line, start.column),
-      new Position(end.line, end.column),
-    )
-  }
+  const range = locationToRange(locationsToSelect)
   commands.executeCommand('vscode.open', fileUri, {
     selection: range,
     preserveFocus: true,
@@ -105,14 +108,8 @@ async function previewDiff({
       preserveFocus: true,
     },
   )
-  if (locationsToSelect) {
-    const { start, end } = locationsToSelect
-    const range = new Range(
-      new Position(start.line, start.column),
-      new Position(end.line, end.column),
-    )
-    window.activeTextEditor?.revealRange(range, TextEditorRevealType.InCenter)
-  }
+  const range = locationToRange(locationsToSelect)
+  window.activeTextEditor?.revealRange(range, TextEditorRevealType.InCenter)
 }
 function closeAllDiffs() {
   console.debug('Search pattern changed. Closing all diffs.')

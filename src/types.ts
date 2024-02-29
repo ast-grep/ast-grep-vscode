@@ -61,14 +61,14 @@ export interface ChildToParent {
   reload: unknown
   openFile: {
     filePath: string
-    locationsToSelect?: {
+    locationsToSelect: {
       start: Position
       end: Position
     }
   }
   previewDiff: {
     filePath: string
-    locationsToSelect?: {
+    locationsToSelect: {
       start: Position
       end: Position
     }
