@@ -168,11 +168,13 @@ async function doChange(
   const newBytes = new Uint8Array(bytes.byteLength + replaceBytes.byteLength)
   newBytes.set(bytes.slice(0, range.byteOffset.start), 0)
   newBytes.set(replaceBytes, range.byteOffset.start)
-  newBytes.set(
-    bytes.slice(range.byteOffset.end),
-    range.byteOffset.start + replaceBytes.byteLength,
+  const slice = bytes.slice(range.byteOffset.end)
+  newBytes.set(slice, range.byteOffset.start + replaceBytes.byteLength)
+  const final = newBytes.slice(
+    0,
+    range.byteOffset.start + replaceBytes.byteLength + slice.byteLength,
   )
-  await workspace.fs.writeFile(fileUri, newBytes)
+  await workspace.fs.writeFile(fileUri, final)
 }
 
 async function refreshSearchResult(
@@ -226,9 +228,9 @@ function bufferMaker(bytes: Uint8Array) {
   let srcOffset = 0
   let destOffset = 0
   function resizeBuffer() {
-    const newNewBuffer = new Uint8Array(newBuffer.byteLength * 2)
-    newNewBuffer.set(newBuffer)
-    newBuffer = newNewBuffer
+    const temp = new Uint8Array(newBuffer.byteLength * 2)
+    temp.set(newBuffer)
+    newBuffer = temp
   }
   function receiveResult(r: SgSearch) {
     // skip overlapping replacement
