@@ -164,16 +164,9 @@ async function doChange(
   { range, replacement }: ChildToParent['commitChange'],
 ) {
   const bytes = await workspace.fs.readFile(fileUri)
-  const replaceBytes = new TextEncoder().encode(replacement)
-  const newBytes = new Uint8Array(bytes.byteLength + replaceBytes.byteLength)
-  newBytes.set(bytes.slice(0, range.byteOffset.start), 0)
-  newBytes.set(replaceBytes, range.byteOffset.start)
-  const slice = bytes.slice(range.byteOffset.end)
-  newBytes.set(slice, range.byteOffset.start + replaceBytes.byteLength)
-  const final = newBytes.slice(
-    0,
-    range.byteOffset.start + replaceBytes.byteLength + slice.byteLength,
-  )
+  const { receiveResult, conclude } = bufferMaker(bytes)
+  receiveResult(replacement, range.byteOffset)
+  const final = conclude()
   await workspace.fs.writeFile(fileUri, final)
 }
 
@@ -197,7 +190,7 @@ async function refreshSearchResult(
       searchResult: results.map(splitByHighLightToken),
     })
     for (const r of results) {
-      receiveResult(r)
+      receiveResult(r.replacement!, r.range.byteOffset)
     }
   })
   const final = conclude()
@@ -232,13 +225,16 @@ function bufferMaker(bytes: Uint8Array) {
     temp.set(newBuffer)
     newBuffer = temp
   }
-  function receiveResult(r: SgSearch) {
+  function receiveResult(
+    replace: string,
+    byteOffset: { start: number; end: number },
+  ) {
     // skip overlapping replacement
-    if (r.range.byteOffset.start < srcOffset) {
+    if (byteOffset.start < srcOffset) {
       return
     }
-    const slice = bytes.slice(srcOffset, r.range.byteOffset.start)
-    const replacement = encoder.encode(r.replacement!)
+    const slice = bytes.slice(srcOffset, byteOffset.start)
+    const replacement = encoder.encode(replace)
     const expectedLength =
       destOffset + slice.byteLength + replacement.byteLength
     while (expectedLength > newBuffer.byteLength) {
@@ -248,7 +244,7 @@ function bufferMaker(bytes: Uint8Array) {
     destOffset += slice.byteLength
     newBuffer.set(replacement, destOffset)
     destOffset += replacement.byteLength
-    srcOffset = r.range.byteOffset.end
+    srcOffset = byteOffset.end
   }
   function conclude() {
     const slice = bytes.slice(srcOffset, bytes.byteLength)
@@ -273,7 +269,7 @@ async function haveReplace({ bytes, uri, inputValue, rewrite }: ReplaceArg) {
   const { receiveResult, conclude } = bufferMaker(bytes)
   await streamedPromise(command!, (results: SgSearch[]) => {
     for (const r of results) {
-      receiveResult(r)
+      receiveResult(r.replacement!, r.range.byteOffset)
     }
   })
   const final = conclude()
