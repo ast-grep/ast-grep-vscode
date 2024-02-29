@@ -54,15 +54,20 @@ function cleanupDocument(doc: TextDocument) {
   previewContents.delete(uri.path)
 }
 
-function openFile({ filePath, locationsToSelect }: ChildToParent['openFile']) {
+function workspaceUriFromFilePath(filePath: string) {
   const uris = workspace.workspaceFolders
   const { joinPath } = Uri
-
   if (!uris?.length) {
     return
   }
+  return joinPath(uris?.[0].uri, filePath)
+}
 
-  const fileUri: Uri = joinPath(uris?.[0].uri, filePath)
+function openFile({ filePath, locationsToSelect }: ChildToParent['openFile']) {
+  const fileUri = workspaceUriFromFilePath(filePath)
+  if (!fileUri) {
+    return
+  }
   let range: undefined | Range
   if (locationsToSelect) {
     const { start, end } = locationsToSelect
@@ -83,12 +88,10 @@ async function previewDiff({
   inputValue,
   rewrite,
 }: ChildToParent['previewDiff']) {
-  const uris = workspace.workspaceFolders
-  const { joinPath } = Uri
-  if (!uris?.length) {
+  const fileUri = workspaceUriFromFilePath(filePath)
+  if (!fileUri) {
     return
   }
-  const fileUri = joinPath(uris?.[0].uri, filePath)
   await generatePreview(fileUri, inputValue, rewrite)
   const previewUri = fileUri.with({ scheme: SCHEME })
   const filename = path.basename(filePath)
@@ -145,13 +148,11 @@ parentPort.onMessage('search', refreshDiff)
 parentPort.onMessage('commitChange', onCommitChange)
 
 async function onCommitChange(payload: ChildToParent['commitChange']) {
-  const uris = workspace.workspaceFolders
-  const { joinPath } = Uri
-  if (!uris?.length) {
+  const { filePath, inputValue, rewrite } = payload
+  const fileUri = workspaceUriFromFilePath(filePath)
+  if (!fileUri) {
     return
   }
-  const { filePath, inputValue, rewrite } = payload
-  const fileUri = joinPath(uris?.[0].uri, filePath)
   await doChange(fileUri, payload)
   await generatePreview(fileUri, inputValue, rewrite)
   await refreshSearchResult(payload.id, {
