@@ -151,6 +151,7 @@ async function onCommitChange(payload: ChildToParent['commitChange']) {
     return
   }
   await doChange(fileUri, payload)
+  // TODO: we can use Promise.all after preview has onChange event
   await generatePreview(fileUri, inputValue, rewrite)
   await refreshSearchResult(payload.id, {
     inputValue,
@@ -208,12 +209,8 @@ interface ReplaceArg {
   rewrite: string
 }
 
-async function haveReplace({ bytes, uri, inputValue, rewrite }: ReplaceArg) {
-  const command = buildCommand({
-    pattern: inputValue,
-    rewrite: rewrite,
-    includeFiles: [uri.fsPath],
-  })
+function bufferMaker(bytes: Uint8Array) {
+  const encoder = new TextEncoder()
   let newBuffer = new Uint8Array(bytes.byteLength)
   let srcOffset = 0
   let destOffset = 0
@@ -222,33 +219,51 @@ async function haveReplace({ bytes, uri, inputValue, rewrite }: ReplaceArg) {
     newNewBuffer.set(newBuffer)
     newBuffer = newNewBuffer
   }
-  const encoder = new TextEncoder()
+  function receiveResult(r: SgSearch) {
+    // skip overlapping replacement
+    if (r.range.byteOffset.start < srcOffset) {
+      return
+    }
+    const slice = bytes.slice(srcOffset, r.range.byteOffset.start)
+    const replacement = encoder.encode(r.replacement!)
+    const expectedLength =
+      destOffset + slice.byteLength + replacement.byteLength
+    while (expectedLength > newBuffer.byteLength) {
+      resizeBuffer()
+    }
+    newBuffer.set(slice, destOffset)
+    destOffset += slice.byteLength
+    newBuffer.set(replacement, destOffset)
+    destOffset += replacement.byteLength
+    srcOffset = r.range.byteOffset.end
+  }
+  function conclude() {
+    const slice = bytes.slice(srcOffset, bytes.byteLength)
+    while (destOffset + slice.byteLength > newBuffer.byteLength) {
+      resizeBuffer()
+    }
+    newBuffer.set(slice, destOffset)
+    return newBuffer.slice(0, destOffset + slice.byteLength)
+  }
+  return {
+    receiveResult,
+    conclude,
+  }
+}
+
+async function haveReplace({ bytes, uri, inputValue, rewrite }: ReplaceArg) {
+  const command = buildCommand({
+    pattern: inputValue,
+    rewrite: rewrite,
+    includeFiles: [uri.fsPath],
+  })
+  const { receiveResult, conclude } = bufferMaker(bytes)
   await streamedPromise(command!, (results: SgSearch[]) => {
     for (const r of results) {
-      // skip overlapping replacement
-      if (r.range.byteOffset.start < srcOffset) {
-        continue
-      }
-      const slice = bytes.slice(srcOffset, r.range.byteOffset.start)
-      const replacement = encoder.encode(r.replacement!)
-      const expectedLength =
-        destOffset + slice.byteLength + replacement.byteLength
-      while (expectedLength > newBuffer.byteLength) {
-        resizeBuffer()
-      }
-      newBuffer.set(slice, destOffset)
-      destOffset += slice.byteLength
-      newBuffer.set(replacement, destOffset)
-      destOffset += replacement.byteLength
-      srcOffset = r.range.byteOffset.end
+      receiveResult(r)
     }
   })
-  const slice = bytes.slice(srcOffset, bytes.byteLength)
-  while (destOffset + slice.byteLength > newBuffer.byteLength) {
-    resizeBuffer()
-  }
-  newBuffer.set(slice, destOffset)
-  const final = newBuffer.slice(0, destOffset + slice.byteLength)
+  const final = conclude()
   return new TextDecoder('utf-8').decode(final)
 }
 
