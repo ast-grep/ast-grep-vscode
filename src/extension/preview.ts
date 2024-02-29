@@ -272,7 +272,6 @@ async function generatePreview(uri: Uri, inputValue: string, rewrite: string) {
     return
   }
   // TODO, maybe we also need a rewrite change event?
-  // TODO, implement close preview on new search at first
   const bytes = await workspace.fs.readFile(uri)
   const replaced = await haveReplace({
     bytes,
