@@ -152,8 +152,7 @@ async function onCommitChange(payload: ChildToParent['commitChange']) {
   }
   await doChange(fileUri, payload)
   // TODO: we can use Promise.all after preview has onChange event
-  await generatePreview(fileUri, inputValue, rewrite)
-  await refreshSearchResult(payload.id, {
+  await refreshSearchResult(payload.id, fileUri, {
     inputValue,
     rewrite,
     includeFile: filePath,
@@ -176,12 +175,18 @@ async function doChange(
   await workspace.fs.writeFile(fileUri, newBytes)
 }
 
-async function refreshSearchResult(id: number, query: SearchQuery) {
+async function refreshSearchResult(
+  id: number,
+  fileUri: Uri,
+  query: SearchQuery,
+) {
   const command = buildCommand({
     pattern: query.inputValue,
     rewrite: query.rewrite,
     includeFiles: [query.includeFile],
   })
+  const bytes = await workspace.fs.readFile(fileUri)
+  const { receiveResult, conclude } = bufferMaker(bytes)
   await streamedPromise(command!, (results: SgSearch[]) => {
     // TODO, change this
     parentPort.postMessage('searchResultStreaming', {
@@ -189,7 +194,13 @@ async function refreshSearchResult(id: number, query: SearchQuery) {
       ...query,
       searchResult: results.map(splitByHighLightToken),
     })
+    for (const r of results) {
+      receiveResult(r)
+    }
   })
+  const final = conclude()
+  const replaced = new TextDecoder('utf-8').decode(final)
+  previewContents.set(fileUri.path, replaced)
 }
 
 /**
