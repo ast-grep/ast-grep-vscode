@@ -1,7 +1,7 @@
 {
   "name": "ast-grep-vscode",
   "version": "0.0.8",
-  "description": "VSCode extension for ast-grep language server",
+  "description": "ast-grep VSCode is a structural search and replace extension for many languages.",
   "keywords": [
     "ast",
     "ast-grep",
@@ -21,7 +21,7 @@
   ],
   "publisher": "ast-grep",
   "preview": true,
-  "displayName": "ast-grep VSCode",
+  "displayName": "ast-grep VSCode: Structural Search, Replace and more",
   "homepage": "https://ast-grep.github.io",
   "repository": "https://github.com/ast-grep/ast-grep-vscode",
   "author": "Herrington Darkholme",
