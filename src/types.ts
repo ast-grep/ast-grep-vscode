@@ -54,6 +54,10 @@ export interface ParentToChild {
   setIncludeFile: {
     includeFile: string
   }
+  refreshSearchResult: {
+    id: number
+    updatedResults: DisplayResult[]
+  }
 }
 
 export interface ChildToParent {

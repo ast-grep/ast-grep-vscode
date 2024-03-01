@@ -18,7 +18,12 @@ import {
   TextEditorRevealType,
   TabInputTextDiff,
 } from 'vscode'
-import type { ChildToParent, SearchQuery, SgSearch } from '../types'
+import type {
+  ChildToParent,
+  DisplayResult,
+  SearchQuery,
+  SgSearch,
+} from '../types'
 import { parentPort, streamedPromise } from './common'
 import { buildCommand, splitByHighLightToken } from './search'
 import path from 'path'
@@ -182,20 +187,20 @@ async function refreshSearchResult(
   })
   const bytes = await workspace.fs.readFile(fileUri)
   const { receiveResult, conclude } = bufferMaker(bytes)
+  const updatedResults: DisplayResult[] = []
   await streamedPromise(command!, (results: SgSearch[]) => {
-    // TODO, change this
-    parentPort.postMessage('searchResultStreaming', {
-      id,
-      ...query,
-      searchResult: results.map(splitByHighLightToken),
-    })
     for (const r of results) {
       receiveResult(r.replacement!, r.range.byteOffset)
+      updatedResults.push(splitByHighLightToken(r))
     }
   })
   const final = conclude()
   const replaced = new TextDecoder('utf-8').decode(final)
   previewContents.set(fileUri.path, replaced)
+  parentPort.postMessage('refreshSearchResult', {
+    id,
+    updatedResults,
+  })
 }
 
 /**
