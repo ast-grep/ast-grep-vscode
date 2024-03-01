@@ -57,6 +57,7 @@ export interface ParentToChild {
   refreshSearchResult: {
     id: number
     updatedResults: DisplayResult[]
+    fileName: string
   }
 }
 

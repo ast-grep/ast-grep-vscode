@@ -200,6 +200,7 @@ async function refreshSearchResult(
   parentPort.postMessage('refreshSearchResult', {
     id,
     updatedResults,
+    fileName: query.includeFile,
   })
 }
 

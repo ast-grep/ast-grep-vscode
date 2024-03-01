@@ -78,6 +78,21 @@ childPort.onMessage('error', event => {
   notify()
 })
 
+childPort.onMessage('refreshSearchResult', event => {
+  if (event.id !== id) {
+    return
+  }
+  const { fileName, updatedResults } = event
+  const temp = new Map(grouped)
+  if (updatedResults.length === 0) {
+    temp.delete(fileName)
+  } else {
+    temp.set(fileName, updatedResults)
+  }
+  grouped = [...temp.entries()]
+  notify()
+})
+
 function groupBy(matches: DisplayResult[]) {
   const groups = new Map<string, DisplayResult[]>()
   for (const match of matches) {
@@ -95,6 +110,18 @@ function merge(newEntries: Map<string, DisplayResult[]>) {
   for (const [file, newList] of newEntries) {
     const existing = temp.get(file) || []
     temp.set(file, existing.concat(newList))
+  }
+  return [...temp.entries()]
+}
+
+function updateResult(newEntries: Map<string, DisplayResult[]>) {
+  // first, clone the old map for react
+  for (const [fileName, results] of newEntries) {
+    if (results.length === 0) {
+      temp.delete(fileName)
+    } else {
+      temp.set(fileName, results)
+    }
   }
   return [...temp.entries()]
 }
@@ -143,22 +170,11 @@ export const useSearchResult = () => {
 }
 export { postSearch }
 
-function clearOneFile(file: string) {
-  const pairs = grouped.find(n => n[0] === file)
-  if (!pairs) {
-    return
-  }
-  pairs[1] = []
-  grouped = grouped.slice()
-  notify()
-}
-
 export function acceptChangeAndRefresh(args: {
   filePath: string
   replacement: string
   range: RangeInfo
 }) {
-  clearOneFile(args.filePath)
   commitChange({
     id,
     ...queryInFlight,
