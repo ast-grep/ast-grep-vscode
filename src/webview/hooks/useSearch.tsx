@@ -114,18 +114,6 @@ function merge(newEntries: Map<string, DisplayResult[]>) {
   return [...temp.entries()]
 }
 
-function updateResult(newEntries: Map<string, DisplayResult[]>) {
-  // first, clone the old map for react
-  for (const [fileName, results] of newEntries) {
-    if (results.length === 0) {
-      temp.delete(fileName)
-    } else {
-      temp.set(fileName, results)
-    }
-  }
-  return [...temp.entries()]
-}
-
 // version is for react to update view
 let version = 114514
 function subscribe(onChange: () => void): () => void {
