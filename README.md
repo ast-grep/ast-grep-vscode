@@ -91,6 +91,6 @@ See the introduction on YouTube! Please give it a like~
 
 <div align="center">
   <a href="https://www.youtube.com/watch?v=1ZM4RfIvWKc" target="_blank">
-     <img src="https://img.youtube.com/vi/1ZM4RfIvWKc/0.jpg" >
+   <img src="https://github.com/ast-grep/ast-grep-vscode/assets/2883231/62face2b-3ee4-4f70-b1e0-4a922471794d" alt="ast-grep VSCode introduction"/>    
   </a>
 </div>
