@@ -25,7 +25,7 @@ const styles = stylex.create({
     alignItems: 'center',
     background: 'var(--vscode-sideBar-background)',
     ':hover': {
-      background: 'var(--vscode-list-inactiveSelectionBackground)',
+      background: 'var( --vscode-list-hoverBackground)',
     },
   },
   scrolled: {

@@ -11,7 +11,7 @@ const styles = stylex.create({
     paddingLeft: '38px',
     listStyle: 'none',
     ':hover': {
-      background: 'var(--vscode-list-inactiveSelectionBackground)',
+      background: 'var( --vscode-list-hoverBackground)',
     },
     // a hack to avoid setHover state, see also Actions.tsx
     // https://github.com/facebook/stylex/issues/373
