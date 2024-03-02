@@ -11,6 +11,17 @@ const styles = stylex.create({
   treeItem: {
     position: 'relative',
     background: 'var(--vscode-sideBar-background)',
+    '::before': {
+      content: '',
+      display: 'block',
+      position: 'absolute',
+      top: '22px',
+      bottom: 0,
+      left: '13px', // left 16px - translateX 3px
+      width: '1px',
+      backgroundColor: 'var(--vscode-tree-inactiveIndentGuidesStroke)',
+      transition: '0.1s opacity linear',
+    },
   },
   fileName: {
     position: 'sticky',
