@@ -1,12 +1,12 @@
 # ast-grep VSCode
 
-ast-grep VSCode, a structural search and replace extension.
+_ast-grep VSCode, a structural search and replace extension._
 
 It uses ASTs to find and modify code patterns. No more tedious and error-prone text manipulation.
 
 ## Introduction
 
-Have you ever spent hours trying to find and replace a code pattern using plain text or regular expressions? If so, you know how tedious and error-prone it can be. However, there is a better way to do this: *Structural Search and Replace*, a [technique](https://www.jetbrains.com/help/idea/structural-search-and-replace.html) that allows you to find and modify code patterns based on their syntax and semantics, not just their text.
+Have you ever spent hours trying to find and replace a code pattern using plain text or regular expressions? If so, you know how tedious and error-prone it can be. However, there is a better way to do this: **Structural Search and Replace**, a [technique](https://www.jetbrains.com/help/idea/structural-search-and-replace.html) that allows you to find and modify code patterns based on their syntax and semantics, not just their text.
 
 [ast-grep](https://ast-grep.github.io/) is a structural search/replace tool that uses abstract syntax trees (ASTs) to represent the syntax and structure of your code, and lets you write patterns as if you are writing ordinary code.
 
@@ -89,4 +89,8 @@ This extension contributes the following settings:
 
 See the introduction on YouTube! Please give it a like~
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/1ZM4RfIvWKc/0.jpg)](https://www.youtube.com/watch?v=1ZM4RfIvWKc)
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=1ZM4RfIvWKc" target="_blank">
+     <img src="https://img.youtube.com/vi/1ZM4RfIvWKc/0.jpg" >
+  </a>
+</div>
