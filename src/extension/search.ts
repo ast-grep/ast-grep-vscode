@@ -83,12 +83,15 @@ type StreamingHandler = (r: SgSearch[]) => void
 let child: ChildProcessWithoutNullStreams | undefined
 
 async function uniqueCommand(
-  proc: ChildProcessWithoutNullStreams,
+  proc: ChildProcessWithoutNullStreams | undefined,
   handler: StreamingHandler,
 ) {
   // kill previous search
   if (child) {
     child.kill('SIGTERM')
+  }
+  if (!proc) {
+    return Promise.resolve()
   }
   try {
     // set current proc to child
@@ -140,13 +143,12 @@ function getPatternRes(query: SearchQuery, handlers: Handlers) {
     includeFiles: [query.includeFile],
     rewrite: query.rewrite,
   })
-  if (!proc) {
-    return Promise.resolve()
+  if (proc) {
+    proc.on('error', error => {
+      console.debug('ast-grep CLI runs error')
+      handlers.onError(error)
+    })
   }
-  proc.on('error', error => {
-    console.debug('ast-grep CLI runs error')
-    handlers.onError(error)
-  })
   return uniqueCommand(proc, handlers.onData)
 }
 
