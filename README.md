@@ -1,21 +1,39 @@
-# ast-grep-vscode
+# ast-grep VSCode
 
 ast-grep VSCode, a structural search and replace extension.
 
 It uses ASTs to find and modify code patterns. No more tedious and error-prone text manipulation.
 
+## Introduction
+
+Have you ever spent hours trying to find and replace a code pattern in your project using plain text or regular expressions? If so, you know how tedious and error-prone this process can be. However, there is a better way to search and replace code patterns: structural search and replace.
+
+Structural search and replace is a technique that allows you to find and modify code patterns based on their syntax and semantics, not just their text.
+
+ast-grep is a structural search/replace tool that uses abstract syntax trees (ASTs) to represent the syntax and structure of your code, and lets you write patterns as if you are writing ordinary code.
+
+It can help you search and replace code elements more precisely and efficiently than using regular expressions or plain text.
+
+You can also use ast-grep to perform linting and rewriting tasks, and write your own rules using YAML configuration.
+
 ## Features
 
-ast-grep is a tool that allows you to search and replace code patterns based on their structure, not just their text. It uses abstract syntax trees (ASTs) to represent the syntax and structure of your code, and lets you write patterns as if you are writing ordinary code. You can also use ast-grep to perform linting and rewriting tasks, and write your own rules using YAML configuration.
+The ast-grep VSCode is an extension to bridge the power of ast-grep CLI/LSP to the beloved editor VSCode.
 
-The VSCode extension includes two parts: a UI for ast-grep CLI and a client for ast-grep LSP.
+It includes two parts: a UI for ast-grep CLI and a client for ast-grep LSP.
 
 ### Code search
+
+Use [pattern](https://ast-grep.github.io/guide/pattern-syntax.html) to structural search your codebase.
+
 |Search Pattern|Search In Folder|
 |--|--|
 |<img src="https://github.com/ast-grep/ast-grep-vscode/blob/master/readme/search-pattern.png?raw=true">|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/master/readme/search-in-folder.png?raw=true">|
 
 ### Code Replace
+
+Use [pattern](https://ast-grep.github.io/guide/rewrite-code.html) to replace matching code.
+
 |Replace Preview|Commit Replace|
 |--|--|
 |<img src="https://github.com/ast-grep/ast-grep-vscode/blob/master/readme/replace.png?raw=true">|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/master/readme/commit-replace.png?raw=true">|
@@ -23,9 +41,9 @@ The VSCode extension includes two parts: a UI for ast-grep CLI and a client for 
 ### Code Linting and Actions(\*)
 *Require LSP setup*
 
-<img src="https://github.com/ast-grep/ast-grep-vscode/blob/master/readme/replace.png?raw=true">|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/master/readme/linter.png?raw=true">
+Code linting and code actions require [setting up `sgconfig.yml`](https://ast-grep.github.io/guide/scan-project.html) in your workspace root.
 
-Note, code linting and code actions requires [setting up `sgconfig.yml`](https://ast-grep.github.io/guide/scan-project.html) in your workspace root.
+<img src="https://github.com/ast-grep/ast-grep-vscode/blob/master/readme/replace.png?raw=true">|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/master/readme/linter.png?raw=true">
 
 ## Requirements
 
@@ -73,6 +91,6 @@ This extension contributes the following settings:
 
 ## Video Introduction
 
-See the introduction on YouTube! Please give a thumbup~
+See the introduction on YouTube! Please give it a like~
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/1ZM4RfIvWKc?si=dp0SAtQYeUpAOhSk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
