@@ -1,4 +1,4 @@
-import { useSearchField, refreshResult } from '../../../hooks/useQuery'
+import { useSearchField, refreshResult } from '../../hooks/useQuery'
 import { SearchInput } from './SearchInput'
 import { useBoolean } from 'react-use'
 import { VscChevronRight, VscChevronDown } from 'react-icons/vsc'

@@ -1,6 +1,6 @@
 import { memo } from 'react'
-import SearchOptions from './comps/SearchOptions'
-import SearchWidget from './comps/SearchWidget'
+import SearchOptions from './SearchOptions'
+import SearchWidget from './SearchWidget'
 
 function SearchWidgetContainer() {
   return (

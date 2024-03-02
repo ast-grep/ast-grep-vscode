@@ -1,7 +1,7 @@
 import { VscEllipsis } from 'react-icons/vsc'
 import IncludeFile from './IncludeFile'
 import * as stylex from '@stylexjs/stylex'
-import { useSearchOption, refreshResult } from '../../../hooks/useQuery'
+import { useSearchOption, refreshResult } from '../../hooks/useQuery'
 
 const styles = stylex.create({
   button: {
