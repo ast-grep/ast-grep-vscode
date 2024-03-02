@@ -6,19 +6,15 @@ It uses ASTs to find and modify code patterns. No more tedious and error-prone t
 
 ## Introduction
 
-Have you ever spent hours trying to find and replace a code pattern in your project using plain text or regular expressions? If so, you know how tedious and error-prone this process can be. However, there is a better way to search and replace code patterns: structural search and replace.
+Have you ever spent hours trying to find and replace a code pattern using plain text or regular expressions? If so, you know how tedious and error-prone it can be. However, there is a better way to do this: *Structural Search and Replace*, a [technique](https://www.jetbrains.com/help/idea/structural-search-and-replace.html) that allows you to find and modify code patterns based on their syntax and semantics, not just their text.
 
-Structural search and replace is a technique that allows you to find and modify code patterns based on their syntax and semantics, not just their text.
+[ast-grep](https://ast-grep.github.io/) is a structural search/replace tool that uses abstract syntax trees (ASTs) to represent the syntax and structure of your code, and lets you write patterns as if you are writing ordinary code.
 
-ast-grep is a structural search/replace tool that uses abstract syntax trees (ASTs) to represent the syntax and structure of your code, and lets you write patterns as if you are writing ordinary code.
-
-It can help you search and replace code elements more precisely and efficiently than using regular expressions or plain text.
-
-You can also use ast-grep to perform linting and rewriting tasks, and write your own rules using YAML configuration.
+It can help you search and replace code elements more precisely and efficiently than using regular expressions or plain text. You can also use ast-grep to perform linting and rewriting tasks, and write your own rules using YAML configuration.
 
 ## Features
 
-The ast-grep VSCode is an extension to bridge the power of ast-grep CLI/LSP to the beloved editor VSCode.
+The ast-grep VSCode is an extension to bridge the power of ast-grep and the beloved editor VSCode.
 
 It includes two parts: a UI for ast-grep CLI and a client for ast-grep LSP.
 
@@ -28,22 +24,22 @@ Use [pattern](https://ast-grep.github.io/guide/pattern-syntax.html) to structura
 
 |Search Pattern|Search In Folder|
 |--|--|
-|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/master/readme/search-pattern.png?raw=true">|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/master/readme/search-in-folder.png?raw=true">|
+|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/main/readme/search-pattern.png?raw=true">|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/main/readme/search-in-folder.png?raw=true">|
 
 ### Code Replace
 
-Use [pattern](https://ast-grep.github.io/guide/rewrite-code.html) to replace matching code.
+Use pattern to [replace](https://ast-grep.github.io/guide/rewrite-code.html) matching code.
 
 |Replace Preview|Commit Replace|
 |--|--|
-|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/master/readme/replace.png?raw=true">|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/master/readme/commit-replace.png?raw=true">|
+|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/main/readme/replace.png?raw=true">|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/main/readme/commit-replace.png?raw=true">|
 
 ### Code Linting and Actions(\*)
 *Require LSP setup*
 
 Code linting and code actions require [setting up `sgconfig.yml`](https://ast-grep.github.io/guide/scan-project.html) in your workspace root.
 
-<img src="https://github.com/ast-grep/ast-grep-vscode/blob/master/readme/replace.png?raw=true">|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/master/readme/linter.png?raw=true">
+<img src="https://github.com/ast-grep/ast-grep-vscode/blob/main/readme/linter.png?raw=true">
 
 ## Requirements
 
@@ -93,4 +89,4 @@ This extension contributes the following settings:
 
 See the introduction on YouTube! Please give it a like~
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/1ZM4RfIvWKc?si=dp0SAtQYeUpAOhSk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/1ZM4RfIvWKc/0.jpg)](https://www.youtube.com/watch?v=1ZM4RfIvWKc)

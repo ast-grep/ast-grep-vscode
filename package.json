@@ -33,6 +33,7 @@
   "icon": "media/favicon.png",
   "categories": [
     "Linters",
+    "Programming Languages",
     "Other"
   ],
   "activationEvents": [
