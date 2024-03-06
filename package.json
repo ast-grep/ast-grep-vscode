@@ -138,7 +138,7 @@
     "react-use": "17.5.0",
     "tslib": "2.6.2",
     "tsx": "4.7.1",
-    "typescript": "5.3.3",
+    "typescript": "5.4.2",
     "unport": "0.5.0",
     "vscode-languageclient": "9.0.1"
   }
