@@ -27,7 +27,7 @@ jobs:
       - name: Package VSCE
         run: vsce package -o ast-grep-vscode.vsix
       - name: Create GH Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: ast-grep-vscode.vsix
       - name: Publish extension
