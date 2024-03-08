@@ -74,7 +74,7 @@ export function splitByHighLightToken(search: SgSearch): DisplayResult {
 
 function handleReplacement(replacement?: string) {
   if (replacement) {
-    return { replacement: replacement.split(/\r?\n/, 1)[0] }
+    return { replacement }
   }
   return {}
 }

@@ -55,10 +55,11 @@ function Highlight({
 }: DisplayResult) {
   const matched = displayLine.slice(startIdx, endIdx)
   if (replacement) {
+    const displayDiff = replacement.split(/\r?\n/, 1)[0]
     return (
       <>
         <span {...stylex.props(styles.deleted)}>{matched}</span>
-        <span {...stylex.props(styles.inserted)}>{replacement}</span>
+        <span {...stylex.props(styles.inserted)}>{displayDiff}</span>
       </>
     )
   }
