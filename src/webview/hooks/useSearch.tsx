@@ -173,5 +173,15 @@ export function acceptChangeAndRefresh(args: {
 }
 
 export function acceptFileChanges(filePath: string) {
+  const changes = grouped.find(g => g[0] === filePath)?.[1] || []
   // TODO
+  commitChange({
+    id,
+    ...queryInFlight,
+    filePath,
+    changes: changes.map(c => ({
+      replacement: c.replacement!,
+      range: c.range,
+    })),
+  })
 }

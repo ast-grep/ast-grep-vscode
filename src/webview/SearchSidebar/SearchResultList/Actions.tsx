@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { MouseEvent, useCallback } from 'react'
 import type { DisplayResult } from '../../../types'
 import {
   acceptChangeAndRefresh,
@@ -81,9 +81,13 @@ export function FileActions({
   hasReplace,
 }: FileActionsProps) {
   const { className: local } = stylex.props(styles.list)
-  const onClick = useCallback(() => {
-    acceptFileChanges(filePath)
-  }, [filePath])
+  const onClick = useCallback(
+    (e: MouseEvent<HTMLLIElement>) => {
+      e.stopPropagation()
+      acceptFileChanges(filePath)
+    },
+    [filePath],
+  )
   if (!hasReplace) {
     return null
   }
