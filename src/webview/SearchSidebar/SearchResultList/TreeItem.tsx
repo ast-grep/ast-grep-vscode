@@ -1,9 +1,7 @@
-import { VscChevronDown, VscChevronRight } from 'react-icons/vsc'
 import { useBoolean } from 'react-use'
+import TreeHeader from './TreeHeader'
 import type { DisplayResult } from '../../../types'
-import { FileLink } from './FileLink'
 import { MatchList } from './MatchList'
-import { VSCodeBadge } from '@vscode/webview-ui-toolkit/react'
 import { memo, useEffect, useRef } from 'react'
 import * as stylex from '@stylexjs/stylex'
 
@@ -22,36 +20,6 @@ const styles = stylex.create({
       backgroundColor: 'var(--vscode-tree-inactiveIndentGuidesStroke)',
       transition: '0.1s opacity linear',
     },
-  },
-  fileName: {
-    position: 'sticky',
-    zIndex: 1, // not occluded by cover
-    top: 0,
-    cursor: 'pointer',
-    display: 'flex',
-    paddingLeft: 8,
-    paddingRight: 2,
-    lineHeight: '22px',
-    height: '22px',
-    alignItems: 'center',
-    background: 'var(--vscode-sideBar-background)',
-    ':hover': {
-      background: 'var( --vscode-list-hoverBackground)',
-    },
-  },
-  scrolled: {
-    boxShadow: 'var(--vscode-scrollbar-shadow) 0 0 6px',
-  },
-  toggleButton: {
-    flex: 0,
-    display: 'flex',
-    alignItems: 'center',
-    color: 'var(--vscode-foreground)',
-    paddingRight: '4px',
-  },
-  badge: {
-    marginLeft: 'auto',
-    flex: '0 0 auto',
   },
 })
 
@@ -90,22 +58,13 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
   return (
     <div {...stylex.props(styles.treeItem)}>
       <div className="scroll-observer" ref={ref} />
-      <div
-        {...stylex.props(styles.fileName, isScrolled && styles.scrolled)}
-        onClick={toggleIsExpanded}
-      >
-        <div
-          {...stylex.props(styles.toggleButton)}
-          aria-label="expand/collapse button"
-          role="button"
-        >
-          {isExpanded ? <VscChevronDown /> : <VscChevronRight />}
-        </div>
-        <FileLink filePath={filePath} />
-        <VSCodeBadge {...stylex.props(styles.badge)}>
-          {matches.length}
-        </VSCodeBadge>
-      </div>
+      <TreeHeader
+        filePath={filePath}
+        isExpanded={isExpanded}
+        toggleIsExpanded={toggleIsExpanded}
+        matchCount={matches.length}
+        isScrolled={isScrolled}
+      />
       <ul style={{ display: isExpanded ? '' : 'none' }}>
         <MatchList matches={matches} />
       </ul>
