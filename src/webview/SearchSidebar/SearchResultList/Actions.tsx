@@ -1,9 +1,12 @@
 import { useCallback } from 'react'
 import type { DisplayResult } from '../../../types'
-import { acceptChangeAndRefresh } from '../../hooks/useSearch'
+import {
+  acceptChangeAndRefresh,
+  acceptFileChanges,
+} from '../../hooks/useSearch'
 
 import * as stylex from '@stylexjs/stylex'
-import { VscReplace } from 'react-icons/vsc'
+import { VscReplace, VscReplaceAll } from 'react-icons/vsc'
 
 const styles = stylex.create({
   list: {
@@ -40,7 +43,7 @@ interface ActionsProps {
   match: DisplayResult
 }
 
-export function Actions({ className: parent, match }: ActionsProps) {
+export function MatchActions({ className: parent, match }: ActionsProps) {
   const { className: local } = stylex.props(styles.list)
   const onClick = useCallback(() => {
     acceptChangeAndRefresh({
@@ -61,6 +64,34 @@ export function Actions({ className: parent, match }: ActionsProps) {
       {/* VSCode supports shortcut Replace (⇧⌘1)*/}
       <li {...stylex.props(styles.action)} onClick={onClick}>
         <VscReplace role="button" title="Replace" tabIndex={0} />
+      </li>
+    </ul>
+  )
+}
+
+interface FileActionsProps {
+  className: string
+  filePath: string
+  hasReplace: boolean
+}
+
+export function FileActions({
+  className: parent,
+  filePath,
+  hasReplace,
+}: FileActionsProps) {
+  const { className: local } = stylex.props(styles.list)
+  const onClick = useCallback(() => {
+    acceptFileChanges(filePath)
+  }, [filePath])
+  if (!hasReplace) {
+    return null
+  }
+  return (
+    <ul className={`${local} ${parent}`} role="toolbar">
+      {/* VSCode supports shortcut Replace (⇧⌘1)*/}
+      <li {...stylex.props(styles.action)} onClick={onClick}>
+        <VscReplaceAll role="button" title="Replace All" tabIndex={0} />
       </li>
     </ul>
   )

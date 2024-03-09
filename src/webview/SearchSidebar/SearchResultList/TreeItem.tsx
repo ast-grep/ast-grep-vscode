@@ -59,10 +59,9 @@ const TreeItem = ({ filePath, matches }: TreeItemProps) => {
     <div {...stylex.props(styles.treeItem)}>
       <div className="scroll-observer" ref={ref} />
       <TreeHeader
-        filePath={filePath}
         isExpanded={isExpanded}
         toggleIsExpanded={toggleIsExpanded}
-        matchCount={matches.length}
+        matches={matches}
         isScrolled={isScrolled}
       />
       <ul style={{ display: isExpanded ? '' : 'none' }}>

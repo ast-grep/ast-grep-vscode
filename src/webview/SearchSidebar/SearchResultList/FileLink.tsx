@@ -1,4 +1,5 @@
 import * as stylex from '@stylexjs/stylex'
+import { memo } from 'react'
 interface FileLinkProps {
   filePath: string
 }
@@ -42,7 +43,7 @@ function splitPath(path: string) {
   }
 }
 
-export const FileLink = ({ filePath }: FileLinkProps) => {
+export const FileLink = memo(({ filePath }: FileLinkProps) => {
   const { fileName, basePath } = splitPath(filePath)
   return (
     <div {...stylex.props(styles.fileLink)}>
@@ -50,4 +51,4 @@ export const FileLink = ({ filePath }: FileLinkProps) => {
       <span {...stylex.props(styles.basePath)}>{basePath}</span>
     </div>
   )
-}
+})

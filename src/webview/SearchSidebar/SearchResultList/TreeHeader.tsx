@@ -1,7 +1,10 @@
 import { FileLink } from './FileLink'
+import { FileActions } from './Actions'
+import type { DisplayResult } from '../../../types'
 import { VscChevronDown, VscChevronRight } from 'react-icons/vsc'
 import { VSCodeBadge } from '@vscode/webview-ui-toolkit/react'
 import * as stylex from '@stylexjs/stylex'
+import { useHover } from 'react-use'
 
 const styles = stylex.create({
   fileName: {
@@ -18,6 +21,9 @@ const styles = stylex.create({
     background: 'var(--vscode-sideBar-background)',
     ':hover': {
       background: 'var( --vscode-list-hoverBackground)',
+    },
+    ':hover > .actions': {
+      width: 'auto',
     },
   },
   scrolled: {
@@ -36,36 +42,46 @@ const styles = stylex.create({
   },
 })
 interface TreeHeaderProps {
-  filePath: string
   isExpanded: boolean
   toggleIsExpanded: () => void
-  matchCount: number
+  matches: DisplayResult[]
   isScrolled: boolean
 }
 
 export default function TreeHeader({
-  filePath,
   isExpanded,
   toggleIsExpanded,
-  matchCount,
+  matches,
   isScrolled,
 }: TreeHeaderProps) {
-  return (
-    <>
+  const filePath = matches[0].file
+  const hasReplace = Boolean(matches[0].replacement)
+  const element = (hovered: boolean) => (
+    <div
+      {...stylex.props(styles.fileName, isScrolled && styles.scrolled)}
+      onClick={toggleIsExpanded}
+    >
       <div
-        {...stylex.props(styles.fileName, isScrolled && styles.scrolled)}
-        onClick={toggleIsExpanded}
+        {...stylex.props(styles.toggleButton)}
+        aria-label="expand/collapse button"
+        role="button"
       >
-        <div
-          {...stylex.props(styles.toggleButton)}
-          aria-label="expand/collapse button"
-          role="button"
-        >
-          {isExpanded ? <VscChevronDown /> : <VscChevronRight />}
-        </div>
-        <FileLink filePath={filePath} />
-        <VSCodeBadge {...stylex.props(styles.badge)}>{matchCount}</VSCodeBadge>
+        {isExpanded ? <VscChevronDown /> : <VscChevronRight />}
       </div>
-    </>
+      <FileLink filePath={filePath} />
+      {hovered ? (
+        <FileActions
+          className="actions"
+          filePath={filePath}
+          hasReplace={hasReplace}
+        />
+      ) : (
+        <VSCodeBadge {...stylex.props(styles.badge)}>
+          {matches.length}
+        </VSCodeBadge>
+      )}
+    </div>
   )
+  const [hoverable] = useHover(element)
+  return hoverable
 }

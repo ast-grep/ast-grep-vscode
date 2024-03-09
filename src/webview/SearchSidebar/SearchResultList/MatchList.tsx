@@ -1,5 +1,5 @@
 import { CodeBlock } from './CodeBlock'
-import { Actions } from './Actions'
+import { MatchActions } from './Actions'
 import type { DisplayResult } from '../../../types'
 
 import { memo } from 'react'
@@ -36,7 +36,7 @@ export const MatchList = memo(({ matches }: CodeBlockListProps) => {
             key={file + byteOffset.start + byteOffset.end}
           >
             <CodeBlock match={match} />
-            <Actions className="actions" match={match} />
+            <MatchActions className="actions" match={match} />
           </li>
         )
       })}

@@ -171,3 +171,7 @@ export function acceptChangeAndRefresh(args: {
     ...args,
   })
 }
+
+export function acceptFileChanges(filePath: string) {
+  // TODO
+}
