@@ -65,10 +65,10 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
 
   private getHtmlForWebview(webview: vscode.Webview) {
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'out', 'webview', 'index.js'),
+      vscode.Uri.joinPath(this._extensionUri, 'out', 'webview.js'),
     )
     const stylexUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'out', 'webview', 'index.css'),
+      vscode.Uri.joinPath(this._extensionUri, 'out', 'webview.css'),
     )
 
     const stylesResetUri = webview.asWebviewUri(

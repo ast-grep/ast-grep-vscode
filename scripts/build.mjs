@@ -17,11 +17,11 @@ const extension = {
 const webview = {
   entryPoints: ['src/webview/index.tsx'],
   bundle: true,
-  outfile: 'out/webview/index.js',
+  outfile: 'out/webview.js',
   plugins: [
     stylexPlugin({
       useCSSLayers: true,
-      generatedCSSFileName: 'out/webview/index.css',
+      generatedCSSFileName: 'out/webview.css',
       stylexImports: ['@stylexjs/stylex'],
     }),
   ],
