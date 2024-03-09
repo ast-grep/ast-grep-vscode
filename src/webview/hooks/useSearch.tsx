@@ -185,3 +185,18 @@ export function acceptFileChanges(filePath: string) {
     })),
   })
 }
+
+export function dismissOneMatch(match: DisplayResult) {
+  for (const group of grouped) {
+    if (group[0] !== match.file) {
+      continue
+    }
+    group[1] = group[1].filter(m => m !== match)
+  }
+  grouped = [...grouped]
+  notify()
+}
+export function dismissOneFile(filePath: string) {
+  grouped = grouped.filter(g => g[0] !== filePath)
+  notify()
+}

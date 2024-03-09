@@ -3,10 +3,12 @@ import type { DisplayResult } from '../../../types'
 import {
   acceptChangeAndRefresh,
   acceptFileChanges,
+  dismissOneMatch,
+  dismissOneFile,
 } from '../../hooks/useSearch'
 
 import * as stylex from '@stylexjs/stylex'
-import { VscReplace, VscReplaceAll } from 'react-icons/vsc'
+import { VscReplace, VscReplaceAll, VscClose } from 'react-icons/vsc'
 
 const styles = stylex.create({
   list: {
@@ -33,7 +35,7 @@ const styles = stylex.create({
       marginLeft: '0.4em',
     },
     ':last-child': {
-      marginRight: '0.4em',
+      marginRight: '0.2em',
     },
   },
 })
@@ -56,14 +58,20 @@ export function MatchActions({ className: parent, match }: ActionsProps) {
       ],
     })
   }, [match])
-  if (!match.replacement) {
-    return null
-  }
+  const onDismiss = useCallback(() => {
+    dismissOneMatch(match)
+  }, [match])
   return (
     <ul className={`${local} ${parent}`} role="toolbar">
       {/* VSCode supports shortcut Replace (⇧⌘1)*/}
-      <li {...stylex.props(styles.action)} onClick={onClick}>
-        <VscReplace role="button" title="Replace" tabIndex={0} />
+      {match.replacement ? (
+        <li {...stylex.props(styles.action)} onClick={onClick}>
+          <VscReplace role="button" title="Replace" tabIndex={0} />
+        </li>
+      ) : null}
+      {/* VSCode supports shortcut Dismiss (⌘Backspace)*/}
+      <li {...stylex.props(styles.action)} onClick={onDismiss}>
+        <VscClose role="button" title="Dismiss" tabIndex={0} />
       </li>
     </ul>
   )
@@ -88,14 +96,24 @@ export function FileActions({
     },
     [filePath],
   )
-  if (!hasReplace) {
-    return null
-  }
+  const onDismiss = useCallback(
+    (e: MouseEvent<HTMLLIElement>) => {
+      e.stopPropagation()
+      dismissOneFile(filePath)
+    },
+    [filePath],
+  )
   return (
     <ul className={`${local} ${parent}`} role="toolbar">
       {/* VSCode supports shortcut Replace (⇧⌘1)*/}
-      <li {...stylex.props(styles.action)} onClick={onClick}>
-        <VscReplaceAll role="button" title="Replace All" tabIndex={0} />
+      {hasReplace && (
+        <li {...stylex.props(styles.action)} onClick={onClick}>
+          <VscReplaceAll role="button" title="Replace All" tabIndex={0} />
+        </li>
+      )}
+      {/* VSCode supports shortcut Dismiss (⌘Backspace)*/}
+      <li {...stylex.props(styles.action)} onClick={onDismiss}>
+        <VscClose role="button" title="Dismiss" tabIndex={0} />
       </li>
     </ul>
   )
