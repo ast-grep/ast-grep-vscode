@@ -166,11 +166,13 @@ async function onCommitChange(payload: ChildToParent['commitChange']) {
 
 async function doChange(
   fileUri: Uri,
-  { range, replacement }: ChildToParent['commitChange'],
+  { changes }: ChildToParent['commitChange'],
 ) {
   const bytes = await workspace.fs.readFile(fileUri)
   const { receiveResult, conclude } = bufferMaker(bytes)
-  receiveResult(replacement, range.byteOffset)
+  for (const { range, replacement } of changes) {
+    receiveResult(replacement, range.byteOffset)
+  }
   const final = conclude()
   await workspace.fs.writeFile(fileUri, final)
 }

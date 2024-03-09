@@ -160,8 +160,10 @@ export { postSearch }
 
 export function acceptChangeAndRefresh(args: {
   filePath: string
-  replacement: string
-  range: RangeInfo
+  changes: {
+    replacement: string
+    range: RangeInfo
+  }[]
 }) {
   commitChange({
     id,

@@ -82,8 +82,10 @@ export interface ChildToParent {
   }
   commitChange: WithId<{
     filePath: string
-    replacement: string
-    range: RangeInfo
+    changes: {
+      replacement: string
+      range: RangeInfo
+    }[]
     inputValue: string
     rewrite: string
   }>
