@@ -196,6 +196,16 @@ export function dismissOneMatch(match: DisplayResult) {
       continue
     }
     group[1] = group[1].filter(m => m !== match)
+    previewDiff({
+      filePath: match.file,
+      diffs: group[1].map(d => ({
+        replacement: d.replacement!,
+        range: d.range,
+      })),
+      forceReload: true,
+      locationsToSelect: match.range,
+    })
+    break
   }
   grouped = [...grouped]
   notify()

@@ -83,6 +83,7 @@ export interface ChildToParent {
       end: Position
     }
     diffs: Diff[]
+    forceReload?: boolean
   }
   commitChange: WithId<{
     filePath: string

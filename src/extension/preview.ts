@@ -17,6 +17,7 @@ import {
   workspace,
   TextEditorRevealType,
   TabInputTextDiff,
+  EventEmitter,
 } from 'vscode'
 import type {
   ChildToParent,
@@ -41,9 +42,16 @@ let lastRewrite = ''
 const previewContents: Map<string, string> = new Map()
 
 class AstGrepPreviewProvider implements TextDocumentContentProvider {
+  private emitter = new EventEmitter<Uri>()
+  onDidChange = this.emitter.event
+
   // TODO: add cancellation
   provideTextDocumentContent(uri: Uri, _token: CancellationToken): string {
     return previewContents.get(uri.path) || ''
+  }
+
+  notifyDiffChange(uri: Uri) {
+    this.emitter.fire(uri)
   }
 }
 const previewProvider = new AstGrepPreviewProvider()
@@ -95,12 +103,13 @@ async function previewDiff({
   filePath,
   locationsToSelect,
   diffs,
+  forceReload = false,
 }: ChildToParent['previewDiff']) {
   const fileUri = workspaceUriFromFilePath(filePath)
   if (!fileUri) {
     return
   }
-  await generatePreview(fileUri, diffs)
+  await generatePreview(fileUri, diffs, forceReload)
   const previewUri = fileUri.with({ scheme: SCHEME })
   const filename = path.basename(filePath)
   // https://github.com/microsoft/vscode/blob/d63202a5382aa104f5515ea09053a2a21a2587c6/src/vs/workbench/api/common/extHostApiCommands.ts#L422
@@ -156,7 +165,6 @@ async function onCommitChange(payload: ChildToParent['commitChange']) {
     return
   }
   await doChange(fileUri, payload)
-  // TODO: we can use Promise.all after preview has onChange event
   await refreshSearchResult(payload.id, fileUri, {
     inputValue,
     rewrite,
@@ -199,6 +207,8 @@ async function refreshSearchResult(
   const final = conclude()
   const replaced = new TextDecoder('utf-8').decode(final)
   previewContents.set(fileUri.path, replaced)
+  // refresh diff
+  previewProvider.notifyDiffChange(fileUri)
   parentPort.postMessage('refreshSearchResult', {
     id,
     updatedResults,
@@ -261,8 +271,8 @@ function bufferMaker(bytes: Uint8Array) {
   }
 }
 
-async function generatePreview(uri: Uri, diffs: Diff[]) {
-  if (previewContents.has(uri.path)) {
+async function generatePreview(uri: Uri, diffs: Diff[], forceReload: boolean) {
+  if (previewContents.has(uri.path) && !forceReload) {
     return
   }
   // TODO, maybe we also need a rewrite change event?
@@ -274,4 +284,8 @@ async function generatePreview(uri: Uri, diffs: Diff[]) {
   const final = conclude()
   const replaced = new TextDecoder('utf-8').decode(final)
   previewContents.set(uri.path, replaced)
+  if (forceReload) {
+    const previewUri = uri.with({ scheme: SCHEME })
+    previewProvider.notifyDiffChange(previewUri)
+  }
 }
