@@ -5,6 +5,8 @@ import { VscChevronDown, VscChevronRight } from 'react-icons/vsc'
 import { VSCodeBadge } from '@vscode/webview-ui-toolkit/react'
 import * as stylex from '@stylexjs/stylex'
 import { useHover } from 'react-use'
+import { FC, memo } from 'react'
+import { useStickyShadow } from './hooks'
 
 const styles = stylex.create({
   fileName: {
@@ -38,19 +40,19 @@ const styles = stylex.create({
     flex: '0 0 auto',
   },
 })
-interface TreeHeaderProps {
+export interface TreeHeaderProps {
   isExpanded: boolean
   toggleIsExpanded: () => void
   matches: DisplayResult[]
   isScrolled: boolean
 }
 
-export default function TreeHeader({
+const TreeHeader: FC<TreeHeaderProps> = ({
   isExpanded,
   toggleIsExpanded,
   matches,
   isScrolled,
-}: TreeHeaderProps) {
+}) => {
   const filePath = matches[0].file
   const hasReplace = Boolean(matches[0].replacement)
   const element = (hovered: boolean) => (
@@ -78,3 +80,31 @@ export default function TreeHeader({
   const [hoverable] = useHover(element)
   return hoverable
 }
+
+export const ComposeTreeHeader: FC<
+  Omit<TreeHeaderProps, 'isScrolled'> & {
+    scrollContainerEl: HTMLElement | null
+  }
+> = ({
+  isExpanded,
+
+  scrollContainerEl,
+  matches,
+  toggleIsExpanded,
+}) => {
+  const { ref, isScrolled } = useStickyShadow(scrollContainerEl)
+  console.log(isScrolled, 'isScrolled')
+  return (
+    <>
+      <div className="scroll-observer" ref={ref} />
+      <TreeHeader
+        isExpanded={isExpanded}
+        toggleIsExpanded={toggleIsExpanded}
+        matches={matches}
+        isScrolled={isScrolled}
+      />
+    </>
+  )
+}
+
+export default memo(TreeHeader)

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useTransition } from 'react'
 import { useLocalStorage, useDebounce, useBoolean } from 'react-use'
 import { SearchQuery } from '../../types'
 import { childPort } from '../postMessage'
@@ -26,10 +26,15 @@ export function refreshResult() {
 export function useSearchField(key: keyof SearchQuery) {
   const [field = '', setField] = useLocalStorage(LS_KEYS[key], '')
   // this useEffect and useDebounce is silly
+  const [isLoading, startTransition] = useTransition()
   useEffect(() => {
     searchQuery[key] = field
+    startTransition(() => {
+      refreshResult()
+    })
   }, [field, key])
-  useDebounce(refreshResult, 150, [field])
+  // useDebounce(refreshResult, 150, [field])
+
   return [field, setField] as const
 }
 
