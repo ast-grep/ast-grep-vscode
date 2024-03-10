@@ -23,6 +23,7 @@ import type {
   DisplayResult,
   SearchQuery,
   SgSearch,
+  Diff,
 } from '../types'
 import { parentPort, streamedPromise } from './common'
 import { buildCommand, splitByHighLightToken } from './search'
@@ -93,14 +94,13 @@ function openFile({ filePath, locationsToSelect }: ChildToParent['openFile']) {
 async function previewDiff({
   filePath,
   locationsToSelect,
-  inputValue,
-  rewrite,
+  diffs,
 }: ChildToParent['previewDiff']) {
   const fileUri = workspaceUriFromFilePath(filePath)
   if (!fileUri) {
     return
   }
-  await generatePreview(fileUri, inputValue, rewrite)
+  await generatePreview(fileUri, diffs)
   const previewUri = fileUri.with({ scheme: SCHEME })
   const filename = path.basename(filePath)
   // https://github.com/microsoft/vscode/blob/d63202a5382aa104f5515ea09053a2a21a2587c6/src/vs/workbench/api/common/extHostApiCommands.ts#L422
@@ -166,11 +166,11 @@ async function onCommitChange(payload: ChildToParent['commitChange']) {
 
 async function doChange(
   fileUri: Uri,
-  { changes }: ChildToParent['commitChange'],
+  { diffs }: ChildToParent['commitChange'],
 ) {
   const bytes = await workspace.fs.readFile(fileUri)
   const { receiveResult, conclude } = bufferMaker(bytes)
-  for (const { range, replacement } of changes) {
+  for (const { range, replacement } of diffs) {
     receiveResult(replacement, range.byteOffset)
   }
   const final = conclude()
@@ -214,13 +214,6 @@ export function activatePreview({ subscriptions }: ExtensionContext) {
     workspace.registerTextDocumentContentProvider(SCHEME, previewProvider),
     workspace.onDidCloseTextDocument(cleanupDocument),
   )
-}
-
-interface ReplaceArg {
-  bytes: Uint8Array
-  uri: Uri
-  inputValue: string
-  rewrite: string
 }
 
 function bufferMaker(bytes: Uint8Array) {
@@ -268,33 +261,17 @@ function bufferMaker(bytes: Uint8Array) {
   }
 }
 
-async function haveReplace({ bytes, uri, inputValue, rewrite }: ReplaceArg) {
-  const command = buildCommand({
-    pattern: inputValue,
-    rewrite: rewrite,
-    includeFiles: [uri.fsPath],
-  })
-  const { receiveResult, conclude } = bufferMaker(bytes)
-  await streamedPromise(command!, (results: SgSearch[]) => {
-    for (const r of results) {
-      receiveResult(r.replacement!, r.range.byteOffset)
-    }
-  })
-  const final = conclude()
-  return new TextDecoder('utf-8').decode(final)
-}
-
-async function generatePreview(uri: Uri, inputValue: string, rewrite: string) {
+async function generatePreview(uri: Uri, diffs: Diff[]) {
   if (previewContents.has(uri.path)) {
     return
   }
   // TODO, maybe we also need a rewrite change event?
   const bytes = await workspace.fs.readFile(uri)
-  const replaced = await haveReplace({
-    bytes,
-    uri,
-    inputValue,
-    rewrite,
-  })
+  const { receiveResult, conclude } = bufferMaker(bytes)
+  for (const { range, replacement } of diffs) {
+    receiveResult(replacement, range.byteOffset)
+  }
+  const final = conclude()
+  const replaced = new TextDecoder('utf-8').decode(final)
   previewContents.set(uri.path, replaced)
 }

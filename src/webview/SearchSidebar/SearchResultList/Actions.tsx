@@ -50,7 +50,7 @@ export function MatchActions({ className: parent, match }: ActionsProps) {
   const onClick = useCallback(() => {
     acceptChangeAndRefresh({
       filePath: match.file,
-      changes: [
+      diffs: [
         {
           replacement: match.replacement!,
           range: match.range,

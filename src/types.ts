@@ -61,6 +61,11 @@ export interface ParentToChild {
   }
 }
 
+export interface Diff {
+  replacement: string
+  range: RangeInfo
+}
+
 export interface ChildToParent {
   search: WithId<SearchQuery>
   reload: unknown
@@ -77,15 +82,11 @@ export interface ChildToParent {
       start: Position
       end: Position
     }
-    inputValue: string
-    rewrite: string
+    diffs: Diff[]
   }
   commitChange: WithId<{
     filePath: string
-    changes: {
-      replacement: string
-      range: RangeInfo
-    }[]
+    diffs: Diff[]
     inputValue: string
     rewrite: string
   }>

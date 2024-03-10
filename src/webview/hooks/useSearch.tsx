@@ -136,15 +136,20 @@ function getSnapshot() {
  * Either open a file or preview the diff
  */
 export function openAction(payload: OpenPayload) {
-  if (queryInFlight.rewrite) {
-    previewDiff({
-      ...payload,
-      rewrite: queryInFlight.rewrite,
-      inputValue: queryInFlight.inputValue,
-    })
-  } else {
+  if (!queryInFlight.rewrite) {
     openFile(payload)
+    return
   }
+  const diffs = grouped
+    .find(g => g[0] === payload.filePath)![1]
+    .map(n => ({
+      replacement: n.replacement!,
+      range: n.range,
+    }))
+  previewDiff({
+    ...payload,
+    diffs,
+  })
 }
 
 export const useSearchResult = () => {
@@ -160,7 +165,7 @@ export { postSearch }
 
 export function acceptChangeAndRefresh(args: {
   filePath: string
-  changes: {
+  diffs: {
     replacement: string
     range: RangeInfo
   }[]
@@ -173,13 +178,12 @@ export function acceptChangeAndRefresh(args: {
 }
 
 export function acceptFileChanges(filePath: string) {
-  const changes = grouped.find(g => g[0] === filePath)?.[1] || []
-  // TODO
+  const diffs = grouped.find(g => g[0] === filePath)?.[1] || []
   commitChange({
     id,
     ...queryInFlight,
     filePath,
-    changes: changes.map(c => ({
+    diffs: diffs.map(c => ({
       replacement: c.replacement!,
       range: c.range,
     })),
