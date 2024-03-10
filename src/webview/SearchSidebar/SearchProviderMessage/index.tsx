@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { VSCodeLink } from '@vscode/webview-ui-toolkit/react'
-import { DisplayResult, SearchQuery } from '../../../types'
+import type { DisplayResult, SearchQuery } from '../../../types'
 
 const style = {
   color: 'var(--vscode-search-resultsInfoForeground)',

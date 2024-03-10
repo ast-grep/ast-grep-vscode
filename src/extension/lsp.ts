@@ -1,9 +1,9 @@
-import { workspace, ExtensionContext, window, commands } from 'vscode'
+import { workspace, type ExtensionContext, window, commands } from 'vscode'
 import {
   LanguageClient,
-  LanguageClientOptions,
-  ServerOptions,
-  Executable,
+  type LanguageClientOptions,
+  type ServerOptions,
+  type Executable,
 } from 'vscode-languageclient/node'
 import { resolveBinary } from './common'
 

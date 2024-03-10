@@ -1,5 +1,5 @@
-import path from 'path'
-import { ExtensionContext, commands, workspace, window } from 'vscode'
+import path from 'node:path'
+import { type ExtensionContext, commands, workspace, window } from 'vscode'
 import { type ChildProcessWithoutNullStreams, spawn } from 'node:child_process'
 
 import { parentPort, resolveBinary, streamedPromise } from './common'

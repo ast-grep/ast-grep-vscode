@@ -1,7 +1,7 @@
 import type { ParentPort } from '../types'
 import { Unport } from 'unport'
 import { workspace } from 'vscode'
-import { type ChildProcessWithoutNullStreams } from 'node:child_process'
+import type { ChildProcessWithoutNullStreams } from 'node:child_process'
 
 export function resolveBinary() {
   return workspace.getConfiguration('astGrep').get('serverPath', 'ast-grep')

@@ -5,12 +5,12 @@
 // See relevant comments for TextDocumentContentProvider
 // custom scheme comes from https://stackoverflow.com/a/69384899/2198656
 import {
-  CancellationToken,
-  ExtensionContext,
+  type CancellationToken,
+  type ExtensionContext,
   Position,
   Range,
-  TextDocument,
-  TextDocumentContentProvider,
+  type TextDocument,
+  type TextDocumentContentProvider,
   Uri,
   commands,
   window,
@@ -28,7 +28,7 @@ import type {
 } from '../types'
 import { parentPort, streamedPromise } from './common'
 import { buildCommand, splitByHighLightToken } from './search'
-import path from 'path'
+import path from 'node:path'
 
 const SCHEME = 'sgpreview'
 let lastPattern = ''

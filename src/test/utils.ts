@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
-import * as path from 'path'
-import * as assert from 'assert'
+import * as path from 'node:path'
+import * as assert from 'node:assert'
 
 export let doc: vscode.TextDocument
 export let editor: vscode.TextEditor

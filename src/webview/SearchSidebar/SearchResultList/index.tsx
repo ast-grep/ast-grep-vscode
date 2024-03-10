@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react'
-import { DisplayResult } from '../../../types'
+import type { DisplayResult } from '../../../types'
 import TreeItem from './TreeItem'
 import * as stylex from '@stylexjs/stylex'
 import { Virtuoso } from 'react-virtuoso'

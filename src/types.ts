@@ -1,4 +1,4 @@
-import { Unport } from 'unport'
+import type { Unport } from 'unport'
 
 type WithId<T> = T & { id: number }
 

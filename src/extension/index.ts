@@ -1,4 +1,4 @@
-import { ExtensionContext } from 'vscode'
+import type { ExtensionContext } from 'vscode'
 import { activatePreview } from './preview'
 import { activateWebview } from './webview'
 import { activateLsp } from './lsp'
