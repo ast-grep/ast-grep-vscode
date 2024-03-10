@@ -47,16 +47,17 @@ function useStickyShadow() {
 }
 
 interface TreeItemProps {
-  filePath: string
+  className: string
   matches: DisplayResult[]
 }
 
-const TreeItem = ({ filePath, matches }: TreeItemProps) => {
+const TreeItem = ({ className, matches }: TreeItemProps) => {
   const [isExpanded, toggleIsExpanded] = useBoolean(true)
   const { isScrolled, ref } = useStickyShadow()
+  const props = stylex.props(styles.treeItem)
 
   return (
-    <div {...stylex.props(styles.treeItem)}>
+    <div className={`${className} ${props.className}`} style={props.style}>
       <div className="scroll-observer" ref={ref} />
       <TreeHeader
         isExpanded={isExpanded}

@@ -1,16 +1,17 @@
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 import { DisplayResult } from '../../../types'
 import TreeItem from './TreeItem'
 import * as stylex from '@stylexjs/stylex'
+import { Virtuoso } from 'react-virtuoso'
 
 const styles = stylex.create({
   resultList: {
     flexGrow: 1,
     overflowY: 'scroll',
-    ':not(:hover) > div::before': {
+    ':not(:hover) .sg-match-tree-item::before': {
       opacity: 0,
     },
-    ':hover > div::before': {
+    ':hover .sg-match-tree-item::before': {
       opacity: 1,
     },
   },
@@ -21,12 +22,25 @@ interface SearchResultListProps {
 }
 
 const SearchResultList = ({ matches }: SearchResultListProps) => {
+  const render = useCallback(
+    (index: number) => {
+      const [filePath, match] = matches[index]
+      return (
+        <TreeItem
+          className={'sg-match-tree-item'}
+          matches={match}
+          key={filePath}
+        />
+      )
+    },
+    [matches],
+  )
   return (
-    <div {...stylex.props(styles.resultList)}>
-      {matches.map(([filePath, match]) => {
-        return <TreeItem filePath={filePath} matches={match} key={filePath} />
-      })}
-    </div>
+    <Virtuoso
+      {...stylex.props(styles.resultList)}
+      totalCount={matches.length}
+      itemContent={render}
+    />
   )
 }
 

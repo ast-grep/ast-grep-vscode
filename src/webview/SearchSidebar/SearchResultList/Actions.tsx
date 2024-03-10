@@ -17,6 +17,7 @@ const styles = stylex.create({
     flexDirection: 'row',
     // see https://github.com/facebook/stylex/issues/373
     width: '0',
+    overflow: 'hidden',
   },
   action: {
     display: 'flex',
