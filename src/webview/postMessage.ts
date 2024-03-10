@@ -27,6 +27,10 @@ export function previewDiff(data: ChildToParent['previewDiff']) {
   childPort.postMessage('previewDiff', data)
 }
 
+export function dismissDiff(data: ChildToParent['dismissDiff']) {
+  childPort.postMessage('dismissDiff', data)
+}
+
 export function commitChange(diff: ChildToParent['commitChange']) {
   childPort.postMessage('commitChange', diff)
 }

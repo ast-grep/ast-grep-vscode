@@ -83,7 +83,14 @@ export interface ChildToParent {
       end: Position
     }
     diffs: Diff[]
-    forceReload?: boolean
+  }
+  dismissDiff: {
+    filePath: string
+    locationsToSelect: {
+      start: Position
+      end: Position
+    }
+    diffs: Diff[]
   }
   commitChange: WithId<{
     filePath: string

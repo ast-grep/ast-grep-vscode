@@ -3,6 +3,7 @@ import {
   OpenPayload,
   openFile,
   previewDiff,
+  dismissDiff,
   commitChange,
   childPort,
   RangeInfo,
@@ -196,17 +197,17 @@ export function dismissOneMatch(match: DisplayResult) {
       continue
     }
     group[1] = group[1].filter(m => m !== match)
-    previewDiff({
+    dismissDiff({
       filePath: match.file,
       diffs: group[1].map(d => ({
         replacement: d.replacement!,
         range: d.range,
       })),
-      forceReload: true,
       locationsToSelect: match.range,
     })
     break
   }
+  // remove files if user deleted all matches
   grouped = grouped.filter(g => g[1].length > 0)
   notify()
 }

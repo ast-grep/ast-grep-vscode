@@ -99,17 +99,23 @@ function openFile({ filePath, locationsToSelect }: ChildToParent['openFile']) {
   })
 }
 
-async function previewDiff({
-  filePath,
-  locationsToSelect,
-  diffs,
-  forceReload = false,
-}: ChildToParent['previewDiff']) {
+async function previewDiff(param: ChildToParent['previewDiff']) {
+  const { filePath, diffs } = param
   const fileUri = workspaceUriFromFilePath(filePath)
   if (!fileUri) {
     return
   }
-  await generatePreview(fileUri, diffs, forceReload)
+  // if preview not in the preview provider, generate it
+  if (!previewContents.has(fileUri.path)) {
+    await generatePreview(fileUri, diffs)
+  }
+  doPreview(fileUri, param)
+}
+
+async function doPreview(
+  fileUri: Uri,
+  { filePath, locationsToSelect }: ChildToParent['previewDiff'],
+) {
   const previewUri = fileUri.with({ scheme: SCHEME })
   const filename = path.basename(filePath)
   // https://github.com/microsoft/vscode/blob/d63202a5382aa104f5515ea09053a2a21a2587c6/src/vs/workbench/api/common/extHostApiCommands.ts#L422
@@ -125,6 +131,23 @@ async function previewDiff({
   const range = locationToRange(locationsToSelect)
   window.activeTextEditor?.revealRange(range, TextEditorRevealType.InCenter)
 }
+
+async function dismissDiff(param: ChildToParent['dismissDiff']) {
+  const { filePath, diffs } = param
+  const fileUri = workspaceUriFromFilePath(filePath)
+  if (!fileUri) {
+    return
+  }
+  // if preview not in the preview provider, skip generate
+  if (!previewContents.has(fileUri.path)) {
+    return
+  }
+  await generatePreview(fileUri, diffs)
+  // update the preview snapshot
+  const previewUri = fileUri.with({ scheme: SCHEME })
+  previewProvider.notifyDiffChange(previewUri)
+}
+
 function closeAllDiffs() {
   console.debug('Search pattern changed. Closing all diffs.')
   const tabs = window.tabGroups.all.flatMap(tg => tg.tabs)
@@ -155,6 +178,7 @@ function refreshDiff(query: SearchQuery) {
 }
 parentPort.onMessage('openFile', openFile)
 parentPort.onMessage('previewDiff', previewDiff)
+parentPort.onMessage('dismissDiff', dismissDiff)
 parentPort.onMessage('search', refreshDiff)
 parentPort.onMessage('commitChange', onCommitChange)
 
@@ -271,10 +295,7 @@ function bufferMaker(bytes: Uint8Array) {
   }
 }
 
-async function generatePreview(uri: Uri, diffs: Diff[], forceReload: boolean) {
-  if (previewContents.has(uri.path) && !forceReload) {
-    return
-  }
+async function generatePreview(uri: Uri, diffs: Diff[]) {
   // TODO, maybe we also need a rewrite change event?
   const bytes = await workspace.fs.readFile(uri)
   const { receiveResult, conclude } = bufferMaker(bytes)
@@ -284,8 +305,4 @@ async function generatePreview(uri: Uri, diffs: Diff[], forceReload: boolean) {
   const final = conclude()
   const replaced = new TextDecoder('utf-8').decode(final)
   previewContents.set(uri.path, replaced)
-  if (forceReload) {
-    const previewUri = uri.with({ scheme: SCHEME })
-    previewProvider.notifyDiffChange(previewUri)
-  }
 }
