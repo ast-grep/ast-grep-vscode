@@ -1,6 +1,7 @@
 import { CodeBlock } from './CodeBlock'
 import { MatchActions } from './Actions'
 import type { DisplayResult } from '../../../types'
+import { useHover } from 'react-use'
 
 import { memo } from 'react'
 import * as stylex from '@stylexjs/stylex'
@@ -13,13 +14,20 @@ const styles = stylex.create({
     ':hover': {
       background: 'var( --vscode-list-hoverBackground)',
     },
-    // a hack to avoid setHover state, see also Actions.tsx
-    // https://github.com/facebook/stylex/issues/373
-    ':hover > .actions': {
-      width: 'auto',
-    },
   },
 })
+
+function OneMatch({ match }: { match: DisplayResult }) {
+  const [hoverable] = useHover(hovered => {
+    return (
+      <li {...stylex.props(styles.codeItem)}>
+        <CodeBlock match={match} />
+        {hovered && <MatchActions match={match} />}
+      </li>
+    )
+  })
+  return hoverable
+}
 
 interface CodeBlockListProps {
   matches: DisplayResult[]
@@ -30,15 +38,8 @@ export const MatchList = memo(({ matches }: CodeBlockListProps) => {
       {matches?.map(match => {
         const { file, range } = match
         const { byteOffset } = range
-        return (
-          <li
-            {...stylex.props(styles.codeItem)}
-            key={file + byteOffset.start + byteOffset.end}
-          >
-            <CodeBlock match={match} />
-            <MatchActions className="actions" match={match} />
-          </li>
-        )
+        const key = file + byteOffset.start + byteOffset.end
+        return <OneMatch key={key} match={match} />
       })}
     </>
   )

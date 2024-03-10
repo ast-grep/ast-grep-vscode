@@ -15,8 +15,6 @@ const styles = stylex.create({
     listStyle: 'none',
     display: 'flex',
     flexDirection: 'row',
-    // see https://github.com/facebook/stylex/issues/373
-    width: '0',
     overflow: 'hidden',
   },
   action: {
@@ -42,12 +40,10 @@ const styles = stylex.create({
 })
 
 interface ActionsProps {
-  className: string
   match: DisplayResult
 }
 
-export function MatchActions({ className: parent, match }: ActionsProps) {
-  const { className: local } = stylex.props(styles.list)
+export function MatchActions({ match }: ActionsProps) {
   const onClick = useCallback(() => {
     acceptChangeAndRefresh({
       filePath: match.file,
@@ -63,7 +59,7 @@ export function MatchActions({ className: parent, match }: ActionsProps) {
     dismissOneMatch(match)
   }, [match])
   return (
-    <ul className={`${local} ${parent}`} role="toolbar">
+    <ul {...stylex.props(styles.list)} role="toolbar">
       {/* VSCode supports shortcut Replace (⇧⌘1)*/}
       {match.replacement ? (
         <li {...stylex.props(styles.action)} onClick={onClick}>
@@ -79,17 +75,11 @@ export function MatchActions({ className: parent, match }: ActionsProps) {
 }
 
 interface FileActionsProps {
-  className: string
   filePath: string
   hasReplace: boolean
 }
 
-export function FileActions({
-  className: parent,
-  filePath,
-  hasReplace,
-}: FileActionsProps) {
-  const { className: local } = stylex.props(styles.list)
+export function FileActions({ filePath, hasReplace }: FileActionsProps) {
   const onClick = useCallback(
     (e: MouseEvent<HTMLLIElement>) => {
       e.stopPropagation()
@@ -105,7 +95,7 @@ export function FileActions({
     [filePath],
   )
   return (
-    <ul className={`${local} ${parent}`} role="toolbar">
+    <ul {...stylex.props(styles.list)} role="toolbar">
       {/* VSCode supports shortcut Replace (⇧⌘1)*/}
       {hasReplace && (
         <li {...stylex.props(styles.action)} onClick={onClick}>

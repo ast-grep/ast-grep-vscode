@@ -22,9 +22,6 @@ const styles = stylex.create({
     ':hover': {
       background: 'var( --vscode-list-hoverBackground)',
     },
-    ':hover > .actions': {
-      width: 'auto',
-    },
   },
   scrolled: {
     boxShadow: 'var(--vscode-scrollbar-shadow) 0 0 6px',
@@ -70,11 +67,7 @@ export default function TreeHeader({
       </div>
       <FileLink filePath={filePath} />
       {hovered ? (
-        <FileActions
-          className="actions"
-          filePath={filePath}
-          hasReplace={hasReplace}
-        />
+        <FileActions filePath={filePath} hasReplace={hasReplace} />
       ) : (
         <VSCodeBadge {...stylex.props(styles.badge)}>
           {matches.length}
