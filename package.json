@@ -28,7 +28,7 @@
   "license": "MIT",
   "main": "./out/extension.js",
   "engines": {
-    "vscode": "^1.86.0"
+    "vscode": "^1.87.0"
   },
   "icon": "media/favicon.png",
   "categories": ["Linters", "Programming Languages", "Other"],
