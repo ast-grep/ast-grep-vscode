@@ -207,7 +207,7 @@ export function dismissOneMatch(match: DisplayResult) {
     })
     break
   }
-  grouped = [...grouped]
+  grouped = grouped.filter(g => g[1].length > 0)
   notify()
 }
 export function dismissOneFile(filePath: string) {
