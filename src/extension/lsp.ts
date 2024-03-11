@@ -47,6 +47,20 @@ async function testBinaryExist() {
   })
 }
 
+async function fileExists(pathFromRoot: string): Promise<boolean> {
+  const workspaceFolders = workspace.workspaceFolders
+  if (!workspaceFolders) {
+    return false
+  }
+  const uri = Uri.joinPath(workspaceFolders[0].uri, pathFromRoot)
+  try {
+    await workspace.fs.stat(uri)
+    return true
+  } catch {
+    return false
+  }
+}
+
 /**
  * Set up language server/client
  */
@@ -109,8 +123,11 @@ export async function activateLsp(context: ExtensionContext) {
     clientOptions,
   )
 
-  // Start the client. This will also launch the server
-  client.start()
+  // Automatically start the client only if we can find a config file
+  if (await fileExists('sgconfig.yml')) {
+    // Start the client. This will also launch the server
+    client.start()
+  }
 }
 
 async function restart(): Promise<void> {
