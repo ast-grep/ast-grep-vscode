@@ -38,7 +38,9 @@ function refreshResultIfStale() {
     // empty previous result
     hasStaleResult = false
     grouped = []
-    resultChangeCallbacks.forEach(f => f())
+    for (const f of resultChangeCallbacks) {
+      f()
+    }
   }
 }
 export function onResultChange(f: () => void) {
