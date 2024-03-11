@@ -3,8 +3,13 @@
 
 import { useCallback } from 'react'
 import { useBoolean } from 'react-use'
+import { onResultChange } from '../../hooks/useSearch'
 
 const collapseMap = new Map<string, boolean>()
+
+onResultChange(() => {
+  collapseMap.clear()
+})
 
 export function useToggleResult(filePath: string) {
   const collapsedBefore = collapseMap.get(filePath)

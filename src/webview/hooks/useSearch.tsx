@@ -26,9 +26,27 @@ let queryInFlight: SearchQuery = {
 let searching = true
 let notify = () => {}
 let searchError: Error | null = null
+
 // we will not immediately drop previous result
 // instead, use a stale flag and update it on streaming or end
+// TODO: refactor this state
 let hasStaleResult = false
+const resultChangeCallbacks: Set<() => void> = new Set()
+
+function refreshResultIfStale() {
+  if (hasStaleResult) {
+    // empty previous result
+    hasStaleResult = false
+    grouped = []
+    resultChangeCallbacks.forEach(f => f())
+  }
+}
+export function onResultChange(f: () => void) {
+  resultChangeCallbacks.add(f)
+  return () => {
+    resultChangeCallbacks.delete(f)
+  }
+}
 
 // this function is also called in useQuery
 function postSearch(searchQuery: SearchQuery) {
@@ -45,11 +63,7 @@ childPort.onMessage('searchResultStreaming', event => {
   if (eventId !== id) {
     return
   }
-  if (hasStaleResult) {
-    // empty previous result
-    hasStaleResult = false
-    grouped = []
-  }
+  refreshResultIfStale()
   queryInFlight = query
   grouped = merge(groupBy(event.searchResult))
   notify()
@@ -61,10 +75,7 @@ childPort.onMessage('searchEnd', event => {
     return
   }
   searching = false
-  if (hasStaleResult) {
-    grouped = []
-  }
-  hasStaleResult = false
+  refreshResultIfStale()
   queryInFlight = query
   notify()
 })
