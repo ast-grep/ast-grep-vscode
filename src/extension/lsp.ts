@@ -1,4 +1,4 @@
-import { workspace, type ExtensionContext, window, commands } from 'vscode'
+import { workspace, type ExtensionContext, window, commands, Uri } from 'vscode'
 import {
   LanguageClient,
   type LanguageClientOptions,
@@ -6,6 +6,7 @@ import {
   type Executable,
 } from 'vscode-languageclient/node'
 import { resolveBinary } from './common'
+import { execFile } from 'node:child_process'
 
 let client: LanguageClient
 const diagnosticCollectionName = 'ast-grep-diagnostics'
@@ -29,10 +30,27 @@ function getExecutable(isDebug: boolean): Executable {
   }
 }
 
+async function testBinaryExist() {
+  const command = resolveBinary()
+  return new Promise(r => {
+    execFile(
+      command,
+      ['-h'],
+      {
+        // for windows
+        shell: true,
+      },
+      err => {
+        r(!err)
+      },
+    )
+  })
+}
+
 /**
  * Set up language server/client
  */
-export function activateLsp(context: ExtensionContext) {
+export async function activateLsp(context: ExtensionContext) {
   context.subscriptions.push(
     commands.registerCommand('ast-grep.restartLanguageServer', async () => {
       console.log(
@@ -50,6 +68,23 @@ export function activateLsp(context: ExtensionContext) {
     }),
   )
 
+  if (!(await testBinaryExist())) {
+    window
+      .showErrorMessage(
+        'ast-grep cannot be started. Make sure it is installed.',
+        'See doc',
+      )
+      .then(() => {
+        commands.executeCommand(
+          'vscode.open',
+          Uri.parse(
+            'https://ast-grep.github.io/guide/quick-start.html#installation',
+          ),
+        )
+      })
+    return
+  }
+
   // instantiate and set input which updates the view
   // If the extension is launched in debug mode then the debug server options are used
   // Otherwise the run options are used
@@ -63,7 +98,7 @@ export function activateLsp(context: ExtensionContext) {
     diagnosticCollectionName,
     // Register the server for plain text documents
     documentSelector: [{ scheme: 'file', language: '*' }],
-    outputChannel: window.createOutputChannel(outputChannelName),
+    outputChannelName,
   }
 
   // Create the language client and start the client.
