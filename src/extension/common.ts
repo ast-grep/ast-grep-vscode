@@ -3,8 +3,10 @@ import { Unport } from 'unport'
 import { workspace } from 'vscode'
 import type { ChildProcessWithoutNullStreams } from 'node:child_process'
 
+const defaultBinary = process.platform === 'win32' ? 'ast-grep.exe' : 'ast-grep'
+
 export function resolveBinary() {
-  return workspace.getConfiguration('astGrep').get('serverPath', 'ast-grep')
+  return workspace.getConfiguration('astGrep').get('serverPath', defaultBinary)
 }
 
 export const parentPort: ParentPort = new Unport()
