@@ -3,6 +3,7 @@ import TreeHeader from './TreeHeader'
 import type { DisplayResult } from '../../../types'
 import { MatchList } from './MatchList'
 import { memo, useEffect, useRef } from 'react'
+import { useToggleResult } from './useListState'
 import * as stylex from '@stylexjs/stylex'
 
 const styles = stylex.create({
@@ -52,7 +53,7 @@ interface TreeItemProps {
 }
 
 const TreeItem = ({ className, matches }: TreeItemProps) => {
-  const [isExpanded, toggleIsExpanded] = useBoolean(true)
+  const [isExpanded, toggleIsExpanded] = useToggleResult(matches[0].file)
   const { isScrolled, ref } = useStickyShadow()
   const props = stylex.props(styles.treeItem)
 
