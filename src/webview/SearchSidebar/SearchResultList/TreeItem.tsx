@@ -1,9 +1,8 @@
-import { useBoolean } from 'react-use'
 import TreeHeader from './TreeHeader'
 import type { DisplayResult } from '../../../types'
 import { MatchList } from './MatchList'
-import { memo, useEffect, useRef } from 'react'
-import { useToggleResult } from './useListState'
+import { memo } from 'react'
+import { useToggleResult, useStickyShadow } from './useListState'
 import * as stylex from '@stylexjs/stylex'
 
 const styles = stylex.create({
@@ -24,37 +23,15 @@ const styles = stylex.create({
   },
 })
 
-function useStickyShadow() {
-  const [isScrolled, setScrolled] = useBoolean(false)
-  const ref = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    const observer = new IntersectionObserver(entries => {
-      const entry = entries[0]
-      if (entry.isIntersecting) {
-        setScrolled(false)
-      } else {
-        setScrolled(true)
-      }
-    })
-    observer.observe(ref.current!)
-    return () => {
-      observer.disconnect()
-    }
-  })
-  return {
-    isScrolled,
-    ref,
-  }
-}
-
 interface TreeItemProps {
   className: string
   matches: DisplayResult[]
 }
 
 const TreeItem = ({ className, matches }: TreeItemProps) => {
-  const [isExpanded, toggleIsExpanded] = useToggleResult(matches[0].file)
-  const { isScrolled, ref } = useStickyShadow()
+  const filePath = matches[0].file
+  const [isExpanded, toggleIsExpanded] = useToggleResult(filePath)
+  const { isScrolled, ref } = useStickyShadow(filePath)
   const props = stylex.props(styles.treeItem)
 
   return (

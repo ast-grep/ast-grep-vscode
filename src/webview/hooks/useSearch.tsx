@@ -50,7 +50,7 @@ export function onResultChange(f: () => void) {
   }
 }
 
-function byFileName(a: [string, unknown], b: [string, unknown]) {
+function byFilePath(a: [string, unknown], b: [string, unknown]) {
   return a[0].localeCompare(b[0])
 }
 
@@ -72,7 +72,7 @@ childPort.onMessage('searchResultStreaming', event => {
   refreshResultIfStale()
   queryInFlight = query
   grouped = merge(groupBy(event.searchResult))
-  grouped.sort(byFileName)
+  grouped.sort(byFilePath)
   notify()
 })
 
@@ -109,7 +109,7 @@ childPort.onMessage('refreshSearchResult', event => {
     temp.set(fileName, updatedResults)
   }
   grouped = [...temp.entries()]
-  grouped.sort(byFileName)
+  grouped.sort(byFilePath)
   notify()
 })
 
@@ -233,4 +233,8 @@ export function dismissOneMatch(match: DisplayResult) {
 export function dismissOneFile(filePath: string) {
   grouped = grouped.filter(g => g[0] !== filePath)
   notify()
+}
+
+export function findIndex(filePath: string) {
+  return grouped.findIndex(g => g[0] === filePath)
 }

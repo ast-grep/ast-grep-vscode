@@ -1,9 +1,9 @@
 // maintains data list's UI state
 // e.g. toggle expand selected item
 
-import { useCallback } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useBoolean } from 'react-use'
-import { onResultChange } from '../../hooks/useSearch'
+import { onResultChange, findIndex } from '../../hooks/useSearch'
 import type { VirtuosoHandle } from 'react-virtuoso'
 
 let ref: VirtuosoHandle
@@ -24,19 +24,49 @@ export function useToggleResult(filePath: string) {
   const toggleIsExpanded = useCallback(() => {
     toggleResult(filePath)
     toggle()
-    if (isExpanded) {
-      // TODO
-      // ref.scrollToIndex(10)
+    if (isExpanded && lastActiveFile === filePath) {
+      const index = findIndex(filePath)
+      if (index) {
+        ref.scrollToIndex(index)
+      }
     }
   }, [filePath, toggle, isExpanded])
   return [isExpanded, toggleIsExpanded] as const
 }
+
+let lastActiveFile = ''
 
 function toggleResult(filePath: string) {
   if (collapseMap.has(filePath)) {
     collapseMap.delete(filePath)
   } else {
     collapseMap.set(filePath, true)
+  }
+}
+
+export function useStickyShadow(filePath: string) {
+  const [isScrolled, setScrolled] = useBoolean(false)
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const observer = new IntersectionObserver(entries => {
+      const entry = entries[0]
+      if (entry.isIntersecting) {
+        setScrolled(false)
+      } else {
+        setScrolled(true)
+        if (!isScrolled) {
+          lastActiveFile = filePath
+        }
+      }
+    })
+    observer.observe(ref.current!)
+    return () => {
+      observer.disconnect()
+    }
+  }, [isScrolled])
+  return {
+    isScrolled,
+    ref,
   }
 }
 
