@@ -4,6 +4,13 @@
 import { useCallback } from 'react'
 import { useBoolean } from 'react-use'
 import { onResultChange } from '../../hooks/useSearch'
+import type { VirtuosoHandle } from 'react-virtuoso'
+
+let ref: VirtuosoHandle
+
+export function refScroller(handle: VirtuosoHandle) {
+  ref = handle
+}
 
 const collapseMap = new Map<string, boolean>()
 
@@ -17,7 +24,11 @@ export function useToggleResult(filePath: string) {
   const toggleIsExpanded = useCallback(() => {
     toggleResult(filePath)
     toggle()
-  }, [filePath, toggle])
+    if (isExpanded) {
+      // TODO
+      // ref.scrollToIndex(10)
+    }
+  }, [filePath, toggle, isExpanded])
   return [isExpanded, toggleIsExpanded] as const
 }
 

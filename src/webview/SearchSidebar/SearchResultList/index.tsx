@@ -1,6 +1,7 @@
 import { memo, useCallback } from 'react'
 import type { DisplayResult } from '../../../types'
 import TreeItem from './TreeItem'
+import { refScroller } from './useListState'
 import * as stylex from '@stylexjs/stylex'
 import { Virtuoso } from 'react-virtuoso'
 
@@ -37,6 +38,7 @@ const SearchResultList = ({ matches }: SearchResultListProps) => {
   )
   return (
     <Virtuoso
+      ref={refScroller}
       {...stylex.props(styles.resultList)}
       totalCount={matches.length}
       itemContent={render}

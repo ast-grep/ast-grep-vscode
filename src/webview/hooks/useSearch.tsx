@@ -50,6 +50,10 @@ export function onResultChange(f: () => void) {
   }
 }
 
+function byFileName(a: [string, unknown], b: [string, unknown]) {
+  return a[0].localeCompare(b[0])
+}
+
 // this function is also called in useQuery
 function postSearch(searchQuery: SearchQuery) {
   id = (id + 1) % MOD
@@ -68,6 +72,7 @@ childPort.onMessage('searchResultStreaming', event => {
   refreshResultIfStale()
   queryInFlight = query
   grouped = merge(groupBy(event.searchResult))
+  grouped.sort(byFileName)
   notify()
 })
 
@@ -104,6 +109,7 @@ childPort.onMessage('refreshSearchResult', event => {
     temp.set(fileName, updatedResults)
   }
   grouped = [...temp.entries()]
+  grouped.sort(byFileName)
   notify()
 })
 
