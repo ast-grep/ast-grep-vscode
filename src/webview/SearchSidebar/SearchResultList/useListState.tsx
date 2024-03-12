@@ -16,6 +16,7 @@ const collapseMap = new Map<string, boolean>()
 
 onResultChange(() => {
   collapseMap.clear()
+  lastActiveFile = ''
 })
 
 export function useToggleResult(filePath: string) {
@@ -24,6 +25,7 @@ export function useToggleResult(filePath: string) {
   const toggleIsExpanded = useCallback(() => {
     toggleResult(filePath)
     toggle()
+    // jump to toggled files, only if it is at the top
     if (isExpanded && lastActiveFile === filePath) {
       const index = findIndex(filePath)
       if (index) {
