@@ -63,7 +63,7 @@ export function useStickyShadow(filePath: string) {
     return () => {
       observer.disconnect()
     }
-  }, [isScrolled])
+  }, [isScrolled, setScrolled, filePath])
   return {
     isScrolled,
     ref,
