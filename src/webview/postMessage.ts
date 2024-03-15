@@ -34,3 +34,7 @@ export function dismissDiff(data: ChildToParent['dismissDiff']) {
 export function commitChange(diff: ChildToParent['commitChange']) {
   childPort.postMessage('commitChange', diff)
 }
+
+export function applyEdit(payload: ChildToParent['applyEdit']) {
+  childPort.postMessage('applyEdit', payload)
+}
