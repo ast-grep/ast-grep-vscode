@@ -136,7 +136,7 @@ function merge(newEntries: Map<string, DisplayResult[]>) {
 
 // version is for react to update view
 let version = 114514
-let watchers: Set<() => void> = new Set()
+const watchers: Set<() => void> = new Set()
 function notify() {
   // snapshot should precede onChange
   version = (version + 1) % MOD
