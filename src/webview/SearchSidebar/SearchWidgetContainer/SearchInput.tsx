@@ -21,7 +21,7 @@ const style = {
 // the builtin vscode component has weird padding
 // biome-ignore lint/suspicious/noExplicitAny: ignore vscode hacking
 function hackTextareaPadding(vscodeInput: any) {
-  const textarea = vscodeInput.shadowRoot!.querySelector('textarea')
+  const textarea = vscodeInput?.shadowRoot?.querySelector('textarea')
   if (textarea) {
     textarea.style.padding = '3px 0 3px 6px'
     textarea.style.lineHeight = '18px'

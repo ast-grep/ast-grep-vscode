@@ -24,7 +24,6 @@ let queryInFlight: SearchQuery = {
   rewrite: '',
 }
 let searching = true
-let notify = () => {}
 let searchError: Error | null = null
 
 // we will not immediately drop previous result
@@ -136,15 +135,19 @@ function merge(newEntries: Map<string, DisplayResult[]>) {
 
 // version is for react to update view
 let version = 114514
-function subscribe(onChange: () => void): () => void {
-  notify = () => {
-    // snapshot should precede onChange
-    version = (version + 1) % MOD
-    onChange()
+let watchers: Set<() => void> = new Set()
+function notify() {
+  // snapshot should precede onChange
+  version = (version + 1) % MOD
+  for (const watcher of watchers) {
+    watcher()
   }
+}
+
+function subscribe(onChange: () => void): () => void {
+  watchers.add(onChange)
   return () => {
-    // TODO: cleanup is not correct
-    notify = () => {}
+    watchers.delete(onChange)
   }
 }
 

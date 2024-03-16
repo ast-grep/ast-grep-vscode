@@ -50,3 +50,7 @@ export function useSearchOption() {
     toggleOptions,
   }
 }
+
+export function hasInitialRewrite() {
+  return Boolean(localStorage.getItem(LS_KEYS.rewrite))
+}

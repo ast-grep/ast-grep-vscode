@@ -1,4 +1,9 @@
-import { useSearchField, refreshResult } from '../../hooks/useQuery'
+import {
+  useSearchField,
+  refreshResult,
+  hasInitialRewrite,
+} from '../../hooks/useQuery'
+import { useSearchResult } from '../../hooks/useSearch'
 import { SearchInput } from './SearchInput'
 import { useBoolean } from 'react-use'
 import { VscChevronRight, VscChevronDown, VscReplaceAll } from 'react-icons/vsc'
@@ -42,16 +47,41 @@ const styles = stylex.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: '5px',
+    background: 'transparent',
+    color: 'inherit',
     ':hover': {
       background: 'var(--vscode-toolbar-hoverBackground)',
+    },
+    ':disabled': {
+      color: 'var(--vscode-disabledForeground)',
+      pointerEvents: 'none',
     },
   },
 })
 
+function ReplaceBar() {
+  const [rewrite, setRewrite] = useSearchField('rewrite')
+  const { searching, groupedByFileSearchResult } = useSearchResult()
+  const disabled =
+    !rewrite || searching || groupedByFileSearchResult.length === 0
+  return (
+    <div {...stylex.props(styles.replaceToolbar)}>
+      <SearchInput
+        placeholder="Replace"
+        value={rewrite}
+        onChange={setRewrite}
+        onKeyEnterUp={refreshResult}
+      />
+      <button {...stylex.props(styles.replaceAll)} disabled={disabled}>
+        <VscReplaceAll />
+      </button>
+    </div>
+  )
+}
+
 function SearchWidgetContainer() {
   const [inputValue, setInputValue] = useSearchField('inputValue')
-  const [rewrite, setRewrite] = useSearchField('rewrite')
-  const [isExpanded, toggleIsExpanded] = useBoolean(Boolean(rewrite))
+  const [isExpanded, toggleIsExpanded] = useBoolean(hasInitialRewrite())
   return (
     <div {...stylex.props(styles.container)}>
       <div {...stylex.props(styles.replaceToggle)} onClick={toggleIsExpanded}>
@@ -64,19 +94,7 @@ function SearchWidgetContainer() {
           onChange={setInputValue}
           onKeyEnterUp={refreshResult}
         />
-        {isExpanded ? (
-          <div {...stylex.props(styles.replaceToolbar)}>
-            <SearchInput
-              placeholder="Replace"
-              value={rewrite}
-              onChange={setRewrite}
-              onKeyEnterUp={refreshResult}
-            />
-            <span {...stylex.props(styles.replaceAll)}>
-              <VscReplaceAll />
-            </span>
-          </div>
-        ) : null}
+        {isExpanded ? <ReplaceBar /> : null}
       </div>
     </div>
   )
