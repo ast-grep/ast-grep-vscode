@@ -16,7 +16,7 @@ const styles = stylex.create({
     flex: '0 0 auto',
     position: 'absolute',
     top: '0',
-    right: '-2px',
+    right: '-2px', // vscode has two 2px right
   },
   options: {
     minHeight: '16px',

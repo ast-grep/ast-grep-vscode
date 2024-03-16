@@ -72,7 +72,11 @@ function ReplaceBar() {
         onChange={setRewrite}
         onKeyEnterUp={refreshResult}
       />
-      <button {...stylex.props(styles.replaceAll)} disabled={disabled}>
+      <button
+        type="button"
+        {...stylex.props(styles.replaceAll)}
+        disabled={disabled}
+      >
         <VscReplaceAll />
       </button>
     </div>
