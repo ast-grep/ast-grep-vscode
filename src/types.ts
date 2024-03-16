@@ -98,6 +98,13 @@ export interface ChildToParent {
     inputValue: string
     rewrite: string
   }>
+  applyEdit: readonly {
+    filePath: string
+    replacements: readonly {
+      range: RangeInfo
+      text: string
+    }[]
+  }[]
 }
 
 export type Definition = {

@@ -1,9 +1,10 @@
+import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
 import {
   useSearchField,
   refreshResult,
   hasInitialRewrite,
 } from '../../hooks/useQuery'
-import { useSearchResult } from '../../hooks/useSearch'
+import { useSearchResult, replaceAll } from '../../hooks/useSearch'
 import { SearchInput } from './SearchInput'
 import { useBoolean } from 'react-use'
 import { VscChevronRight, VscChevronDown, VscReplaceAll } from 'react-icons/vsc'
@@ -39,23 +40,7 @@ const styles = stylex.create({
     gap: 4,
   },
   replaceAll: {
-    cursor: 'pointer',
     height: 24,
-    marginRight: -2,
-    padding: '0 3px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: '5px',
-    background: 'transparent',
-    color: 'inherit',
-    ':hover': {
-      background: 'var(--vscode-toolbar-hoverBackground)',
-    },
-    ':disabled': {
-      color: 'var(--vscode-disabledForeground)',
-      pointerEvents: 'none',
-    },
   },
 })
 
@@ -72,13 +57,15 @@ function ReplaceBar() {
         onChange={setRewrite}
         onKeyEnterUp={refreshResult}
       />
-      <button
-        type="button"
-        {...stylex.props(styles.replaceAll)}
+      <VSCodeButton
+        title="Replace All"
+        appearance="icon"
         disabled={disabled}
+        onClick={() => replaceAll()}
+        {...stylex.props(styles.replaceAll)}
       >
         <VscReplaceAll />
-      </button>
+      </VSCodeButton>
     </div>
   )
 }

@@ -18,6 +18,7 @@ import {
   TextEditorRevealType,
   TabInputTextDiff,
   EventEmitter,
+  WorkspaceEdit,
 } from 'vscode'
 import type {
   ChildToParent,
@@ -181,6 +182,31 @@ parentPort.onMessage('previewDiff', previewDiff)
 parentPort.onMessage('dismissDiff', dismissDiff)
 parentPort.onMessage('search', refreshDiff)
 parentPort.onMessage('commitChange', onCommitChange)
+parentPort.onMessage(
+  'applyEdit',
+  async function onApplyEdit(payload: ChildToParent['applyEdit']) {
+    const workspaceEdit = new WorkspaceEdit()
+
+    for (const { filePath, replacements } of payload) {
+      const documentUri = workspaceUriFromFilePath(filePath)!
+
+      for (const { range, text } of replacements) {
+        workspaceEdit.replace(
+          documentUri,
+          new Range(
+            range.start.line,
+            range.start.column,
+            range.end.line,
+            range.end.column,
+          ),
+          text,
+        )
+      }
+    }
+
+    await workspace.applyEdit(workspaceEdit)
+  },
+)
 
 async function onCommitChange(payload: ChildToParent['commitChange']) {
   const { filePath, inputValue, rewrite } = payload
