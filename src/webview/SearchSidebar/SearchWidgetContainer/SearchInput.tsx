@@ -14,9 +14,17 @@ interface SearchInputProps {
 
 const style = {
   width: '100%',
-  // vscode ui kit does not allow modify textarea padding
-  // the --design-unit is a magic css property to override it
-  '--design-unit': '2',
+  // the shadow-dom has lineheight
+  lineHeight: 0,
+}
+
+// the builtin vscode component has weird padding
+function hackTextareaPadding(vscodeInput: HTMLElement) {
+  const textarea = vscodeInput.shadowRoot!.querySelector('textarea')
+  if (textarea) {
+    textarea.style.padding = '3px 0 3px 6px'
+    textarea.style.lineHeight = '18px'
+  }
 }
 
 const SearchInput = ({
@@ -65,6 +73,7 @@ const SearchInput = ({
       placeholder={placeholder}
       onInput={handleInput}
       onKeyDown={onKeyDown}
+      ref={hackTextareaPadding}
     />
   )
 }

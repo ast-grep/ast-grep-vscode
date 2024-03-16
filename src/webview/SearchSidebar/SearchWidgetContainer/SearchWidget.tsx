@@ -1,7 +1,7 @@
 import { useSearchField, refreshResult } from '../../hooks/useQuery'
 import { SearchInput } from './SearchInput'
 import { useBoolean } from 'react-use'
-import { VscChevronRight, VscChevronDown } from 'react-icons/vsc'
+import { VscChevronRight, VscChevronDown, VscReplaceAll } from 'react-icons/vsc'
 import * as stylex from '@stylexjs/stylex'
 
 const styles = stylex.create({
@@ -28,6 +28,24 @@ const styles = stylex.create({
     marginLeft: 18,
     flex: 1,
   },
+  replaceToolbar: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 4,
+  },
+  replaceAll: {
+    cursor: 'pointer',
+    height: 24,
+    marginRight: -2,
+    padding: '0 3px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '5px',
+    ':hover': {
+      background: 'var(--vscode-toolbar-hoverBackground)',
+    },
+  },
 })
 
 function SearchWidgetContainer() {
@@ -47,12 +65,17 @@ function SearchWidgetContainer() {
           onKeyEnterUp={refreshResult}
         />
         {isExpanded ? (
-          <SearchInput
-            placeholder="Replace"
-            value={rewrite}
-            onChange={setRewrite}
-            onKeyEnterUp={refreshResult}
-          />
+          <div {...stylex.props(styles.replaceToolbar)}>
+            <SearchInput
+              placeholder="Replace"
+              value={rewrite}
+              onChange={setRewrite}
+              onKeyEnterUp={refreshResult}
+            />
+            <span {...stylex.props(styles.replaceAll)}>
+              <VscReplaceAll />
+            </span>
+          </div>
         ) : null}
       </div>
     </div>
