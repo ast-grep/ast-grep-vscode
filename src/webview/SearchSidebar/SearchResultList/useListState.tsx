@@ -95,7 +95,7 @@ export function useActiveItem(item: ActiveItem) {
     return () => {
       refreshers.delete(item)
     }
-  }, [item])
+  }, [item, forceUpdate])
   const set = useCallback(() => {
     setActive(item)
   }, [item])
