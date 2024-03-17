@@ -18,7 +18,6 @@ import {
   TextEditorRevealType,
   TabInputTextDiff,
   EventEmitter,
-  WorkspaceEdit,
 } from 'vscode'
 import type {
   ChildToParent,
@@ -182,9 +181,9 @@ parentPort.onMessage('previewDiff', previewDiff)
 parentPort.onMessage('dismissDiff', dismissDiff)
 parentPort.onMessage('search', refreshDiff)
 parentPort.onMessage('commitChange', onCommitChange)
-parentPort.onMessage('applyEdit', onApplyEdit)
+parentPort.onMessage('replaceAll', onReplaceAll)
 
-async function onApplyEdit(payload: ChildToParent['applyEdit']) {
+async function onReplaceAll(payload: ChildToParent['replaceAll']) {
   const confirmed = await window.showInformationMessage(
     'Replace all occurrences across all files?',
     { modal: true },
@@ -193,24 +192,14 @@ async function onApplyEdit(payload: ChildToParent['applyEdit']) {
   if (confirmed !== 'Replace') {
     return
   }
-  for (const { filePath, replacements } of payload) {
-    const workspaceEdit = new WorkspaceEdit()
-    const documentUri = workspaceUriFromFilePath(filePath)!
-
-    for (const { range, text } of replacements) {
-      workspaceEdit.replace(
-        documentUri,
-        new Range(
-          range.start.line,
-          range.start.column,
-          range.end.line,
-          range.end.column,
-        ),
-        text,
-      )
-    }
-    await workspace.applyEdit(workspaceEdit)
-    await workspace.save(documentUri)
+  const { id, inputValue, rewrite } = payload
+  for (const change of payload.changes) {
+    onCommitChange({
+      id,
+      inputValue,
+      rewrite,
+      ...change,
+    })
   }
 }
 

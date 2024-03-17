@@ -4,7 +4,7 @@ import {
   refreshResult,
   hasInitialRewrite,
 } from '../../hooks/useQuery'
-import { useSearchResult, replaceAll } from '../../hooks/useSearch'
+import { useSearchResult, acceptAllChanges } from '../../hooks/useSearch'
 import { SearchInput } from './SearchInput'
 import { useBoolean } from 'react-use'
 import { VscChevronRight, VscChevronDown, VscReplaceAll } from 'react-icons/vsc'
@@ -62,7 +62,7 @@ function ReplaceBar() {
         title="Replace All"
         appearance="icon"
         disabled={disabled}
-        onClick={replaceAll}
+        onClick={acceptAllChanges}
         {...stylex.props(styles.replaceAll)}
       >
         <VscReplaceAll />

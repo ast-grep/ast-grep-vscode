@@ -35,6 +35,6 @@ export function commitChange(diff: ChildToParent['commitChange']) {
   childPort.postMessage('commitChange', diff)
 }
 
-export function applyEdit(payload: ChildToParent['applyEdit']) {
-  childPort.postMessage('applyEdit', payload)
+export function replaceAll(payload: ChildToParent['replaceAll']) {
+  childPort.postMessage('replaceAll', payload)
 }

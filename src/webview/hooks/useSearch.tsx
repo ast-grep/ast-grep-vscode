@@ -7,7 +7,7 @@ import {
   commitChange,
   childPort,
   type RangeInfo,
-  applyEdit,
+  replaceAll,
 } from '../postMessage'
 import { useSyncExternalStore } from 'react'
 import type { SearchQuery } from './useQuery'
@@ -217,16 +217,16 @@ export function acceptFileChanges(filePath: string) {
 /**
  * Replace all matches in the search results
  */
-export function replaceAll() {
-  applyEdit(
-    grouped.map(([filePath, diffs]) => ({
-      filePath,
-      replacements: diffs.map(d => ({
-        range: d.range,
-        text: d.replacement!,
-      })),
-    })),
-  )
+export function acceptAllChanges() {
+  const changes = grouped.map(([filePath, diffs]) => ({
+    filePath,
+    diffs: diffs.map(d => ({ replacement: d.replacement!, range: d.range })),
+  }))
+  replaceAll({
+    id,
+    ...queryInFlight,
+    changes,
+  })
 }
 
 export function dismissOneMatch(match: DisplayResult) {
