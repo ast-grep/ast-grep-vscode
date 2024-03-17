@@ -29,10 +29,13 @@ const styles = stylex.create({
     boxShadow: 'var(--vscode-scrollbar-shadow) 0 0 6px',
   },
   active: {
-    background: 'var(--vscode-list-activeSelectionBackground)',
-    outline:
-      '1px solid var(--vscode-list-focusAndSelectionOutline, var(--vscode-contrastActiveBorder, var(--vscode-list-focusOutline)))',
-    outlineOffset: -1,
+    background: 'var(--vscode-list-inactiveSelectionBackground)',
+    ':focus': {
+      background: 'var(--vscode-list-activeSelectionBackground)',
+      outline:
+        '1px solid var(--vscode-list-focusAndSelectionOutline, var(--vscode-contrastActiveBorder, var(--vscode-list-focusOutline)))',
+      outlineOffset: -1,
+    },
   },
   toggleButton: {
     flex: 0,
@@ -72,7 +75,8 @@ export default function TreeHeader({
     setActive()
   }, [toggleIsExpanded, setActive])
   const element = (hovered: boolean) => (
-    <div {...styleProps} onClick={onClick}>
+    // biome-ignore lint/a11y/noNoninteractiveTabindex: need it for styling
+    <div {...styleProps} onClick={onClick} tabIndex={0}>
       <div
         {...stylex.props(styles.toggleButton)}
         aria-label="expand/collapse button"
