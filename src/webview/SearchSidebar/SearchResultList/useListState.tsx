@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useBoolean } from 'react-use'
 import { onResultChange, findIndex } from '../../hooks/useSearch'
+import type { DisplayResult } from '../../../types'
 import type { VirtuosoHandle } from 'react-virtuoso'
 
 let ref: VirtuosoHandle
@@ -17,6 +18,7 @@ const collapseMap = new Map<string, boolean>()
 onResultChange(() => {
   collapseMap.clear()
   lastActiveFile = ''
+  activeItem = null
 })
 
 export function useToggleResult(filePath: string) {
@@ -72,8 +74,30 @@ export function useStickyShadow(filePath: string) {
   }
 }
 
-// let activeItem: DisplayResult | null = null
+// Display for one match, Array for active header
+type ActiveItem = DisplayResult | DisplayResult[]
 
-// function setActiveItem(match: DisplayResult) {
+let activeItem: ActiveItem | null = null
+let refreshers: WeakMap<ActiveItem, (b: boolean) => void> = new WeakMap()
 
-// }
+function setActive(item: ActiveItem) {
+  if (activeItem) {
+    refreshers.get(activeItem)?.(false)
+  }
+  refreshers.get(item)?.(true)
+  activeItem = item
+}
+
+export function useActiveItem(item: ActiveItem) {
+  const [active, forceUpdate] = useBoolean(activeItem === item)
+  useEffect(() => {
+    refreshers.set(item, forceUpdate)
+    return () => {
+      refreshers.delete(item)
+    }
+  }, [item])
+  const set = useCallback(() => {
+    setActive(item)
+  }, [item])
+  return [active, set] as const
+}

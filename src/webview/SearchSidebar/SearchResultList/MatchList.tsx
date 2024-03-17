@@ -2,6 +2,7 @@ import { CodeBlock } from './CodeBlock'
 import { MatchActions } from './Actions'
 import type { DisplayResult } from '../../../types'
 import { useHover } from 'react-use'
+import { useActiveItem } from './useListState'
 
 import { memo } from 'react'
 import * as stylex from '@stylexjs/stylex'
@@ -18,9 +19,10 @@ const styles = stylex.create({
 })
 
 function OneMatch({ match }: { match: DisplayResult }) {
+  const [_active, setActive] = useActiveItem(match)
   const [hoverable] = useHover(hovered => {
     return (
-      <li {...stylex.props(styles.codeItem)}>
+      <li {...stylex.props(styles.codeItem)} onClick={setActive}>
         <CodeBlock match={match} />
         {hovered && <MatchActions match={match} />}
       </li>
