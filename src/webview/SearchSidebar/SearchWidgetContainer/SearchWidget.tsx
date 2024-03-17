@@ -41,6 +41,7 @@ const styles = stylex.create({
   },
   replaceAll: {
     height: 24,
+    marginRight: -2,
   },
 })
 
@@ -61,7 +62,7 @@ function ReplaceBar() {
         title="Replace All"
         appearance="icon"
         disabled={disabled}
-        onClick={() => replaceAll()}
+        onClick={replaceAll}
         {...stylex.props(styles.replaceAll)}
       >
         <VscReplaceAll />

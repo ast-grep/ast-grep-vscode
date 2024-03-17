@@ -182,31 +182,37 @@ parentPort.onMessage('previewDiff', previewDiff)
 parentPort.onMessage('dismissDiff', dismissDiff)
 parentPort.onMessage('search', refreshDiff)
 parentPort.onMessage('commitChange', onCommitChange)
-parentPort.onMessage(
-  'applyEdit',
-  async function onApplyEdit(payload: ChildToParent['applyEdit']) {
+parentPort.onMessage('applyEdit', onApplyEdit)
+
+async function onApplyEdit(payload: ChildToParent['applyEdit']) {
+  const confirmed = await window.showInformationMessage(
+    'Replace all occurrences across all files?',
+    { modal: true },
+    'Replace',
+  )
+  if (confirmed !== 'Replace') {
+    return
+  }
+  for (const { filePath, replacements } of payload) {
     const workspaceEdit = new WorkspaceEdit()
+    const documentUri = workspaceUriFromFilePath(filePath)!
 
-    for (const { filePath, replacements } of payload) {
-      const documentUri = workspaceUriFromFilePath(filePath)!
-
-      for (const { range, text } of replacements) {
-        workspaceEdit.replace(
-          documentUri,
-          new Range(
-            range.start.line,
-            range.start.column,
-            range.end.line,
-            range.end.column,
-          ),
-          text,
-        )
-      }
+    for (const { range, text } of replacements) {
+      workspaceEdit.replace(
+        documentUri,
+        new Range(
+          range.start.line,
+          range.start.column,
+          range.end.line,
+          range.end.column,
+        ),
+        text,
+      )
     }
-
     await workspace.applyEdit(workspaceEdit)
-  },
-)
+    await workspace.save(documentUri)
+  }
+}
 
 async function onCommitChange(payload: ChildToParent['commitChange']) {
   const { filePath, inputValue, rewrite } = payload
