@@ -78,7 +78,7 @@ export function useStickyShadow(filePath: string) {
 type ActiveItem = DisplayResult | DisplayResult[]
 
 let activeItem: ActiveItem | null = null
-let refreshers: WeakMap<ActiveItem, (b: boolean) => void> = new WeakMap()
+const refreshers: WeakMap<ActiveItem, (b: boolean) => void> = new WeakMap()
 
 function setActive(item: ActiveItem) {
   if (activeItem) {
