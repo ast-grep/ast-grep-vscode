@@ -194,7 +194,8 @@ async function onReplaceAll(payload: ChildToParent['replaceAll']) {
   }
   const { id, inputValue, rewrite } = payload
   for (const change of payload.changes) {
-    onCommitChange({
+    // TODO: chunk change
+    await onCommitChange({
       id,
       inputValue,
       rewrite,
