@@ -32,6 +32,7 @@ function OneMatch({ match }: { match: DisplayResult }) {
   const styleProps = stylex.props(styles.codeItem, active && styles.active)
   const [hoverable] = useHover(hovered => {
     return (
+      // biome-ignore lint/a11y/noNoninteractiveTabindex: need it for styling
       <li {...styleProps} onClick={setActive} tabIndex={0}>
         <CodeBlock match={match} />
         {(hovered || active) && <MatchActions match={match} />}
