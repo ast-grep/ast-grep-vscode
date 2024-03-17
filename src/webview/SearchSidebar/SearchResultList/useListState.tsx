@@ -79,6 +79,7 @@ type ActiveItem = DisplayResult | DisplayResult[]
 
 let activeItem: ActiveItem | null = null
 const refreshers: WeakMap<ActiveItem, (b: boolean) => void> = new WeakMap()
+const activeFiles: Map<DisplayResult[], (b: boolean) => void> = new Map()
 
 function setActive(item: ActiveItem) {
   if (activeItem) {
@@ -86,8 +87,12 @@ function setActive(item: ActiveItem) {
   }
   refreshers.get(item)?.(true)
   activeItem = item
+  for (const [matches, update] of activeFiles) {
+    update(isActiveFile(matches))
+  }
 }
 
+// is a match/file actively selected
 export function useActiveItem(item: ActiveItem) {
   const [active, forceUpdate] = useBoolean(activeItem === item)
   useEffect(() => {
@@ -100,4 +105,20 @@ export function useActiveItem(item: ActiveItem) {
     setActive(item)
   }, [item])
   return [active, set] as const
+}
+
+function isActiveFile(matches: DisplayResult[]) {
+  return matches === activeItem || matches.some(f => f === activeItem)
+}
+
+// tell if a file is active (has a selected match or file itself selected)
+export function useActiveFile(matches: DisplayResult[]) {
+  const [active, forceUpdate] = useBoolean(isActiveFile(matches))
+  useEffect(() => {
+    activeFiles.set(matches, forceUpdate)
+    return () => {
+      activeFiles.delete(matches)
+    }
+  }, [matches, forceUpdate])
+  return active
 }
