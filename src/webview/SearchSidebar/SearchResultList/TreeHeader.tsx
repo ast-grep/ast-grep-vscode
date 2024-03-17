@@ -1,10 +1,12 @@
 import { FileLink } from './FileLink'
 import { FileActions } from './Actions'
 import type { DisplayResult } from '../../../types'
+import { useActiveItem } from './useListState'
 import { VscChevronDown, VscChevronRight } from 'react-icons/vsc'
 import { VSCodeBadge } from '@vscode/webview-ui-toolkit/react'
 import * as stylex from '@stylexjs/stylex'
 import { useHover } from 'react-use'
+import { useCallback } from 'react'
 
 const styles = stylex.create({
   fileName: {
@@ -25,6 +27,12 @@ const styles = stylex.create({
   },
   scrolled: {
     boxShadow: 'var(--vscode-scrollbar-shadow) 0 0 6px',
+  },
+  active: {
+    background: 'var(--vscode-list-activeSelectionBackground)',
+    outline:
+      '1px solid var(--vscode-list-focusAndSelectionOutline, var(--vscode-contrastActiveBorder, var(--vscode-list-focusOutline)))',
+    outlineOffset: -1,
   },
   toggleButton: {
     flex: 0,
@@ -53,11 +61,18 @@ export default function TreeHeader({
 }: TreeHeaderProps) {
   const filePath = matches[0].file
   const hasReplace = Boolean(matches[0].replacement)
+  const [active, setActive] = useActiveItem(matches)
+  const styleProps = stylex.props(
+    styles.fileName,
+    isScrolled && styles.scrolled,
+    active && styles.active,
+  )
+  const onClick = useCallback(() => {
+    toggleIsExpanded()
+    setActive()
+  }, [toggleIsExpanded, setActive])
   const element = (hovered: boolean) => (
-    <div
-      {...stylex.props(styles.fileName, isScrolled && styles.scrolled)}
-      onClick={toggleIsExpanded}
-    >
+    <div {...styleProps} onClick={onClick}>
       <div
         {...stylex.props(styles.toggleButton)}
         aria-label="expand/collapse button"
