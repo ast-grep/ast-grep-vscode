@@ -128,7 +128,7 @@ export function buildCommand(query: CommandArgs) {
   // TODO: multi-workspaces support
   return spawn(command, args, {
     cwd: uris[0],
-    // shell: true, // it is safe because it is end user input
+    shell: process.platform === 'win32', // it is safe because it is end user input
   })
 }
 

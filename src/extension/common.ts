@@ -2,11 +2,53 @@ import type { ParentPort } from '../types'
 import { Unport } from 'unport'
 import { workspace } from 'vscode'
 import type { ChildProcessWithoutNullStreams } from 'node:child_process'
+import { execFile } from 'node:child_process'
 
-const defaultBinary = process.platform === 'win32' ? 'ast-grep.exe' : 'ast-grep'
+let defaultBinary: string
+
+export async function detectDefaultBinaryAtStart() {
+  if (defaultBinary) {
+    return
+  }
+  if (process.platform !== 'win32') {
+    defaultBinary = 'ast-grep'
+    return
+  }
+  // on windows, binary command is confusing like sh*t
+  // different installation method and different shell will
+  // resolve totally different binary
+  // See:
+  // https://zenn.dev/hd_nvim/articles/e49ef2c812ae8d#comment-0b861171ac40cb
+  // https://github.com/ast-grep/ast-grep-vscode/issues/235
+  // https://github.com/nodejs/node/issues/29532#issue-492569087
+  for (const cmd of ['ast-grep', 'ast-grep.exe', 'ast-grep.cmd']) {
+    if (await testBinaryExist(cmd)) {
+      defaultBinary = cmd
+      return
+    }
+  }
+  // every possible command tried, fallback to ast-grep
+  defaultBinary = 'ast-grep'
+}
 
 export function resolveBinary() {
   return workspace.getConfiguration('astGrep').get('serverPath', defaultBinary)
+}
+
+export async function testBinaryExist(command: string) {
+  return new Promise(r => {
+    execFile(
+      command,
+      ['-h'],
+      {
+        // for windows
+        shell: process.platform === 'win32',
+      },
+      err => {
+        r(!err)
+      },
+    )
+  })
 }
 
 export const parentPort: ParentPort = new Unport()

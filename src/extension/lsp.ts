@@ -5,8 +5,7 @@ import {
   type ServerOptions,
   type Executable,
 } from 'vscode-languageclient/node'
-import { resolveBinary } from './common'
-import { execFile } from 'node:child_process'
+import { resolveBinary, testBinaryExist } from './common'
 
 let client: LanguageClient
 const diagnosticCollectionName = 'ast-grep-diagnostics'
@@ -25,26 +24,9 @@ function getExecutable(isDebug: boolean): Executable {
         ...(isDebug ? { RUST_LOG: 'debug' } : {}),
       },
       // shell is required for Windows cmd to pick up global npm binary
-      shell: true,
+      shell: process.platform === 'win32',
     },
   }
-}
-
-async function testBinaryExist() {
-  const command = resolveBinary()
-  return new Promise(r => {
-    execFile(
-      command,
-      ['-h'],
-      {
-        // for windows
-        shell: true,
-      },
-      err => {
-        r(!err)
-      },
-    )
-  })
 }
 
 async function fileExists(pathFromRoot: string): Promise<boolean> {
@@ -82,7 +64,7 @@ export async function activateLsp(context: ExtensionContext) {
     }),
   )
 
-  if (!(await testBinaryExist())) {
+  if (!(await testBinaryExist(resolveBinary()))) {
     window
       .showErrorMessage(
         'ast-grep cannot be started. Make sure it is installed.',
@@ -124,7 +106,10 @@ export async function activateLsp(context: ExtensionContext) {
   )
 
   // Automatically start the client only if we can find a config file
-  if (await fileExists('sgconfig.yml')) {
+  if (
+    (await fileExists('sgconfig.yml')) ||
+    (await fileExists('sgconfig.yaml'))
+  ) {
     // Start the client. This will also launch the server
     client.start()
   }
