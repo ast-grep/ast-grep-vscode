@@ -133,7 +133,7 @@
     "react-dom": "18.2.0",
     "react-icons": "5.0.1",
     "react-use": "17.5.0",
-    "react-virtuoso": "4.7.2",
+    "react-virtuoso": "4.7.4",
     "tslib": "2.6.2",
     "tsx": "4.7.1",
     "typescript": "5.4.2",
