@@ -64,7 +64,6 @@
         "astGrep.serverPath": {
           "scope": "window",
           "type": "string",
-          "default": "ast-grep",
           "description": "Specify the language server binary path."
         },
         "astGrep.configPath": {

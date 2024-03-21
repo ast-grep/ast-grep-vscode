@@ -32,7 +32,11 @@ export async function detectDefaultBinaryAtStart() {
 }
 
 export function resolveBinary() {
-  return workspace.getConfiguration('astGrep').get('serverPath', defaultBinary)
+  const config = workspace.getConfiguration('astGrep').get('serverPath', '')
+  if (!config) {
+    return defaultBinary
+  }
+  return config
 }
 
 export async function testBinaryExist(command: string) {
