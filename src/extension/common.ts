@@ -40,6 +40,7 @@ export function resolveBinary() {
 }
 
 export async function testBinaryExist(command: string) {
+  const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
   return new Promise(r => {
     execFile(
       command,
@@ -47,6 +48,7 @@ export async function testBinaryExist(command: string) {
       {
         // for windows
         shell: process.platform === 'win32',
+        cwd: uris[0],
       },
       err => {
         r(!err)

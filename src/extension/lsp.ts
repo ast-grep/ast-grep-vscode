@@ -14,6 +14,7 @@ const languageClientId = 'ast-grep-client'
 const languageClientName = 'ast-grep language client'
 
 function getExecutable(isDebug: boolean): Executable {
+  const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
   const command = resolveBinary()
   return {
     command,
@@ -25,6 +26,7 @@ function getExecutable(isDebug: boolean): Executable {
       },
       // shell is required for Windows cmd to pick up global npm binary
       shell: process.platform === 'win32',
+      cwd: uris[0],
     },
   }
 }
