@@ -81,6 +81,23 @@ export async function activateLsp(context: ExtensionContext) {
     return
   }
 
+  setupClient()
+
+  // Automatically start the client only if we can find a config file
+  if (
+    (await fileExists('sgconfig.yml')) ||
+    (await fileExists('sgconfig.yaml'))
+  ) {
+    // Start the client. This will also launch the server
+    client.start()
+  } else {
+    client.outputChannel.appendLine(
+      'no project file sgconfig.yml found in root. Skip starting LSP.',
+    )
+  }
+}
+
+function setupClient() {
   // instantiate and set input which updates the view
   // If the extension is launched in debug mode then the debug server options are used
   // Otherwise the run options are used
@@ -104,20 +121,12 @@ export async function activateLsp(context: ExtensionContext) {
     serverOptions,
     clientOptions,
   )
-
-  // Automatically start the client only if we can find a config file
-  if (
-    (await fileExists('sgconfig.yml')) ||
-    (await fileExists('sgconfig.yaml'))
-  ) {
-    // Start the client. This will also launch the server
-    client.start()
-  }
 }
 
 async function restart(): Promise<void> {
   await deactivate()
   if (client) {
+    setupClient()
     await client.start()
   }
 }
