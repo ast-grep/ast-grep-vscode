@@ -83,7 +83,9 @@ ast-grep new
 
 This extension contributes the following settings:
 
-- `astGrep.serverPath`: Specify the language server binary path.
+- `astGrep.serverPath`: Specify the language server binary path. It can be a relative path to workspace root or an absolute path.
+
+- `astGrep.serverPath`: Customize ast-grep config file path relative. Default is `sgconfig.yml`
 
 ## Video Introduction
 
@@ -91,6 +93,6 @@ See the introduction on YouTube! Please give it a like~
 
 <div align="center">
   <a href="https://www.youtube.com/watch?v=1ZM4RfIvWKc" target="_blank">
-   <img src="https://github.com/ast-grep/ast-grep-vscode/assets/2883231/62face2b-3ee4-4f70-b1e0-4a922471794d" alt="ast-grep VSCode introduction"/>    
+   <img src="https://github.com/ast-grep/ast-grep-vscode/assets/2883231/62face2b-3ee4-4f70-b1e0-4a922471794d" alt="ast-grep VSCode introduction"/>
   </a>
 </div>

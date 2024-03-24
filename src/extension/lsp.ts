@@ -13,12 +13,16 @@ const outputChannelName = 'ast-grep'
 const languageClientId = 'ast-grep-client'
 const languageClientName = 'ast-grep language client'
 
-function getExecutable(isDebug: boolean): Executable {
+function getExecutable(
+  config: string | undefined,
+  isDebug: boolean,
+): Executable {
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
   const command = resolveBinary()
+  const args = config ? ['lsp', '-c', config] : ['lsp']
   return {
     command,
-    args: ['lsp'],
+    args,
     options: {
       env: {
         ...process.env,
@@ -43,6 +47,26 @@ async function fileExists(pathFromRoot: string): Promise<boolean> {
   } catch {
     return false
   }
+}
+
+/** returns the path to the config file if found
+   note: if the default sgconfig.yml is found, return ''
+   returns undefined if no config file is found
+   so you should not use Boolean to check the result
+*/
+async function findConfigFile(): Promise<string | undefined> {
+  const userConfig = workspace.getConfiguration('astGrep').get('configPath', '')
+  if (userConfig) {
+    if (await fileExists(userConfig)) {
+      return userConfig
+    }
+  } else if (
+    (await fileExists('sgconfig.yml')) ||
+    (await fileExists('sgconfig.yaml'))
+  ) {
+    return ''
+  }
+  return undefined
 }
 
 /**
@@ -83,13 +107,10 @@ export async function activateLsp(context: ExtensionContext) {
     return
   }
 
-  setupClient()
+  const setupOkay = await setupClient()
 
   // Automatically start the client only if we can find a config file
-  if (
-    (await fileExists('sgconfig.yml')) ||
-    (await fileExists('sgconfig.yaml'))
-  ) {
+  if (setupOkay) {
     // Start the client. This will also launch the server
     client.start()
   } else {
@@ -99,13 +120,14 @@ export async function activateLsp(context: ExtensionContext) {
   }
 }
 
-function setupClient() {
+async function setupClient() {
+  const configFile = await findConfigFile()
   // instantiate and set input which updates the view
   // If the extension is launched in debug mode then the debug server options are used
   // Otherwise the run options are used
   const serverOptions: ServerOptions = {
-    run: getExecutable(false),
-    debug: getExecutable(true),
+    run: getExecutable(configFile, false),
+    debug: getExecutable(configFile, true),
   }
 
   // Options to control the language client
@@ -123,12 +145,13 @@ function setupClient() {
     serverOptions,
     clientOptions,
   )
+  return configFile !== undefined
 }
 
 async function restart(): Promise<void> {
   await deactivate()
   if (client) {
-    setupClient()
+    await setupClient()
     await client.start()
   }
 }

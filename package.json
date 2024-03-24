@@ -32,10 +32,7 @@
   },
   "icon": "media/favicon.png",
   "categories": ["Linters", "Programming Languages", "Other"],
-  "activationEvents": [
-    "onView:ast-grep-sidebar-view",
-    "workspaceContains:**/sgconfig.{yml,yaml}"
-  ],
+  "activationEvents": ["onStartupFinished"],
   "contributes": {
     "commands": [
       {
@@ -64,7 +61,7 @@
         "astGrep.serverPath": {
           "scope": "window",
           "type": "string",
-          "description": "Specify the language server binary path."
+          "description": "Specify the language server binary path. It can be a relative path to workspace root or an absolute path."
         },
         "astGrep.configPath": {
           "scope": "resource",
