@@ -49,24 +49,26 @@ async function fileExists(pathFromRoot: string): Promise<boolean> {
   }
 }
 
-/** returns the path to the config file if found
-   note: if the default sgconfig.yml is found, return ''
-   returns undefined if no config file is found
-   so you should not use Boolean to check the result
-*/
-async function findConfigFile(): Promise<string | undefined> {
+interface Found {
+  found: boolean
+  // empty path means default config file
+  path: string
+}
+
+/** returns the path to the config file if found */
+async function findConfigFile(): Promise<Found> {
   const userConfig = workspace.getConfiguration('astGrep').get('configPath', '')
+  let found = false
   if (userConfig) {
-    if (await fileExists(userConfig)) {
-      return userConfig
-    }
-  } else if (
-    (await fileExists('sgconfig.yml')) ||
-    (await fileExists('sgconfig.yaml'))
-  ) {
-    return ''
+    found = await fileExists(userConfig)
+  } else {
+    found =
+      (await fileExists('sgconfig.yml')) || (await fileExists('sgconfig.yaml'))
   }
-  return undefined
+  return {
+    found,
+    path: userConfig || '',
+  }
 }
 
 /**
@@ -110,12 +112,16 @@ export async function activateLsp(context: ExtensionContext) {
   const setupOkay = await setupClient()
 
   // Automatically start the client only if we can find a config file
-  if (setupOkay) {
+  if (setupOkay.found) {
     // Start the client. This will also launch the server
     client.start()
   } else {
+    const path = setupOkay.path || 'sgconfig.yml'
     client.outputChannel.appendLine(
-      'no project file sgconfig.yml found in root. Skip starting LSP.',
+      `no project file "${path}" found in root. Skip starting LSP.`,
+    )
+    client.outputChannel.appendLine(
+      'See LSP setup guide https://ast-grep.github.io/guide/tools/editors.html#vscode.',
     )
   }
 }
@@ -126,8 +132,8 @@ async function setupClient() {
   // If the extension is launched in debug mode then the debug server options are used
   // Otherwise the run options are used
   const serverOptions: ServerOptions = {
-    run: getExecutable(configFile, false),
-    debug: getExecutable(configFile, true),
+    run: getExecutable(configFile.path, false),
+    debug: getExecutable(configFile.path, true),
   }
 
   // Options to control the language client
@@ -145,7 +151,7 @@ async function setupClient() {
     serverOptions,
     clientOptions,
   )
-  return configFile !== undefined
+  return configFile
 }
 
 async function restart(): Promise<void> {
