@@ -98,13 +98,15 @@ export async function activateLsp(context: ExtensionContext) {
         'ast-grep cannot be started. Make sure it is installed.',
         'See doc',
       )
-      .then(() => {
-        commands.executeCommand(
-          'vscode.open',
-          Uri.parse(
-            'https://ast-grep.github.io/guide/quick-start.html#installation',
-          ),
-        )
+      .then(selection => {
+        if (selection === 'See doc') {
+          commands.executeCommand(
+            'vscode.open',
+            Uri.parse(
+              'https://ast-grep.github.io/guide/tools/editors.html#faqs',
+            ),
+          )
+        }
       })
     return
   }
