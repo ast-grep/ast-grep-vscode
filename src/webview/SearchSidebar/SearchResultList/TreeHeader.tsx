@@ -42,7 +42,6 @@ const styles = stylex.create({
     flex: 0,
     display: 'flex',
     alignItems: 'center',
-    color: 'var(--vscode-foreground)',
     paddingRight: '4px',
   },
   badge: {
