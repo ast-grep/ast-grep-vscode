@@ -1,4 +1,4 @@
-import { memo, useCallback, useLayoutEffect } from 'react'
+import { memo, useCallback } from 'react'
 import type { DisplayResult } from '../../../types'
 import TreeItem from './TreeItem'
 import { refScroller } from './useListState'
@@ -36,12 +36,6 @@ const SearchResultList = ({ matches }: SearchResultListProps) => {
     },
     [matches],
   )
-  // sadly, Virtuoso does not support overriding viewport
-  useLayoutEffect(function setViewportStyle() {
-    document.querySelector<HTMLElement>(
-      '[data-viewport-type]',
-    )!.style.overflowY = 'scroll'
-  }, [])
   return (
     <Virtuoso
       ref={refScroller}
