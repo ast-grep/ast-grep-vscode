@@ -19,6 +19,7 @@ const styles = stylex.create({
   active: {
     background: 'var(--vscode-list-inactiveSelectionBackground)',
     ':focus': {
+      color: 'var(--vscode-list-activeSelectionForeground)',
       background: 'var(--vscode-list-activeSelectionBackground)',
       outline:
         '1px solid var(--vscode-list-focusAndSelectionOutline, var(--vscode-contrastActiveBorder, var(--vscode-list-focusOutline)))',

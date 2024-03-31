@@ -31,6 +31,7 @@ const styles = stylex.create({
   active: {
     background: 'var(--vscode-list-inactiveSelectionBackground)',
     ':focus': {
+      color: 'var(--vscode-list-activeSelectionForeground)',
       background: 'var(--vscode-list-activeSelectionBackground)',
       outline:
         '1px solid var(--vscode-list-focusAndSelectionOutline, var(--vscode-contrastActiveBorder, var(--vscode-list-focusOutline)))',
@@ -62,7 +63,7 @@ export default function TreeHeader({
   matches,
   isScrolled,
 }: TreeHeaderProps) {
-  const filePath = matches[0].file
+  const { file: filePath, language } = matches[0]
   const hasReplace = Boolean(matches[0].replacement)
   const [active, setActive] = useActiveItem(matches)
   const styleProps = stylex.props(
@@ -84,7 +85,7 @@ export default function TreeHeader({
       >
         {isExpanded ? <VscChevronDown /> : <VscChevronRight />}
       </div>
-      <FileLink filePath={filePath} />
+      <FileLink filePath={filePath} language={language} />
       {hovered ? (
         <FileActions filePath={filePath} hasReplace={hasReplace} />
       ) : (

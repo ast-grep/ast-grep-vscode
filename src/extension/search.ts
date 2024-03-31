@@ -68,6 +68,7 @@ export function splitByHighLightToken(search: SgSearch): DisplayResult {
     lineSpan: end.line - start.line,
     file: search.file,
     range: search.range,
+    language: search.language,
     ...handleReplacement(search.replacement),
   }
 }

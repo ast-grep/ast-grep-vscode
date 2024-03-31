@@ -1,7 +1,10 @@
+import { Icon } from './Icon'
 import * as stylex from '@stylexjs/stylex'
 import { memo } from 'react'
+
 interface FileLinkProps {
   filePath: string
+  language: string
 }
 
 const styles = stylex.create({
@@ -17,7 +20,7 @@ const styles = stylex.create({
   },
   basePath: {
     flex: '1 1 auto',
-    opacity: 0.95,
+    opacity: 0.8,
     marginLeft: '0.5em',
     fontSize: '0.9em',
     whiteSpace: 'pre',
@@ -43,11 +46,13 @@ function splitPath(path: string) {
   }
 }
 
-export const FileLink = memo(({ filePath }: FileLinkProps) => {
+export const FileLink = memo(({ filePath, language }: FileLinkProps) => {
   const { fileName, basePath } = splitPath(filePath)
+  const languageName = language.toLowerCase().replace('-exp', '')
   return (
     <div {...stylex.props(styles.fileLink)}>
-      <a {...stylex.props(styles.fileName)}>{fileName}</a>
+      <Icon name={languageName} />
+      <span {...stylex.props(styles.fileName)}>{fileName}</span>
       <span {...stylex.props(styles.basePath)}>{basePath}</span>
     </div>
   )

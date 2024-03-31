@@ -24,6 +24,7 @@ export interface DisplayResult {
   lineSpan: number
   range: RangeInfo
   replacement?: string
+  language: string
 }
 
 export interface SearchQuery {

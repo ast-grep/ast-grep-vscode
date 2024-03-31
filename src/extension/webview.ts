@@ -77,6 +77,9 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
     const stylesMainUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, 'media', 'vscode.css'),
     )
+    const iconsUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, 'icons'),
+    )
 
     // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce()
@@ -91,6 +94,7 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
       </head>
       <body>
         <div id="root"></div>
+        <script>window.ICON_SRC = '${iconsUri}'</script>
         <script id="main-script" type="module" src="${scriptUri}" nonce="${nonce}"></script>
       </body>
     </html>`
