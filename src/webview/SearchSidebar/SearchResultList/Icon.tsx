@@ -41,5 +41,5 @@ export function Icon({ name }: { name: string }) {
   const iconName = icons.includes(name) ? name : 'file'
   // @ts-expect-error
   const src = window.ICON_SRC + `/${iconName}.svg`
-  return <img src={src} {...stylex.props(styles.icon)} />
+  return <img src={src} {...stylex.props(styles.icon)} alt={iconName} />
 }
