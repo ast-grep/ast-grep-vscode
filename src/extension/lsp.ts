@@ -4,6 +4,7 @@ import {
   type LanguageClientOptions,
   type ServerOptions,
   type Executable,
+  ExecuteCommandRequest,
 } from 'vscode-languageclient/node'
 import { resolveBinary, testBinaryExist } from './common'
 
@@ -49,6 +50,27 @@ async function fileExists(pathFromRoot: string): Promise<boolean> {
   }
 }
 
+async function applyAllFixes() {
+  const textEditor = window.activeTextEditor
+  if (!textEditor) {
+    return
+  }
+  const textDocument = {
+    uri: textEditor.document.uri.toString(),
+    version: textEditor.document.version,
+    text: textEditor.document.getText(),
+  }
+  const params = {
+    command: 'ast-grep.applyAllFixes',
+    arguments: [textDocument],
+  }
+  client.sendRequest(ExecuteCommandRequest.type, params).then(undefined, () => {
+    void window.showErrorMessage(
+      'Failed to apply Ast-grep fixes to the document. Please consider upgrading ast-grep version or opening an issue with steps to reproduce.',
+    )
+  })
+}
+
 interface Found {
   found: boolean
   // empty path means default config file
@@ -76,6 +98,7 @@ async function findConfigFile(): Promise<Found> {
  */
 export async function activateLsp(context: ExtensionContext) {
   context.subscriptions.push(
+    commands.registerCommand('ast-grep.executeAutofix', applyAllFixes),
     commands.registerCommand('ast-grep.restartLanguageServer', async () => {
       console.log(
         'Restart the ast-grep language server by ast-grep.restart command',

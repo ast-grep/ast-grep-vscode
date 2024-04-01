@@ -36,6 +36,11 @@
   "contributes": {
     "commands": [
       {
+        "command": "ast-grep.executeAutofix",
+        "title": "executeAutofix",
+        "category": "ast-grep"
+      },
+      {
         "command": "ast-grep.restartLanguageServer",
         "title": "restart Language Server",
         "category": "ast-grep"
