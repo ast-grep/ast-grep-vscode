@@ -16,7 +16,7 @@ export function activateSearch(context: ExtensionContext) {
 
 // biome-ignore lint/suspicious/noExplicitAny: todo
 function findInFolder(data: any) {
-  const workspacePath = workspace.workspaceFolders?.[0].uri.fsPath
+  const workspacePath = workspace.workspaceFolders?.[0]?.uri?.fsPath
   // compute relative path to the workspace folder
   const relative = workspacePath && path.relative(workspacePath, data.fsPath)
   if (!relative) {
