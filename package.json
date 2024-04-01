@@ -37,12 +37,12 @@
     "commands": [
       {
         "command": "ast-grep.executeAutofix",
-        "title": "executeAutofix",
+        "title": "Fix all auto-fixable Problems",
         "category": "ast-grep"
       },
       {
         "command": "ast-grep.restartLanguageServer",
-        "title": "restart Language Server",
+        "title": "Restart Language Server",
         "category": "ast-grep"
       },
       {
