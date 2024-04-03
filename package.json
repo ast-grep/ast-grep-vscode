@@ -109,7 +109,7 @@
     "*.{ts, js}": "biome lint"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.6.3",
+    "@biomejs/biome": "1.6.4",
     "@stylexjs/esbuild-plugin": "^0.5.1",
     "@stylexjs/stylex": "0.5.1",
     "@types/glob": "8.1.0",
