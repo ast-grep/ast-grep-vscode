@@ -69,6 +69,7 @@ async function applyAllFixes() {
     uri: textEditor.document.uri.toString(),
     version: textEditor.document.version,
     text: textEditor.document.getText(),
+    languageId: textEditor.document.languageId,
   }
   const params = {
     command: 'ast-grep.applyAllFixes',
