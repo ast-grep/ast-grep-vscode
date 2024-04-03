@@ -1,4 +1,11 @@
-import { workspace, type ExtensionContext, window, commands, Uri } from 'vscode'
+import {
+  env,
+  workspace,
+  type ExtensionContext,
+  window,
+  commands,
+  Uri,
+} from 'vscode'
 import {
   LanguageClient,
   type LanguageClientOptions,
@@ -55,6 +62,9 @@ async function applyAllFixes() {
   if (!textEditor) {
     return
   }
+  if (!client) {
+    return
+  }
   const textDocument = {
     uri: textEditor.document.uri.toString(),
     version: textEditor.document.version,
@@ -65,9 +75,21 @@ async function applyAllFixes() {
     arguments: [textDocument],
   }
   client.sendRequest(ExecuteCommandRequest.type, params).then(undefined, () => {
-    void window.showErrorMessage(
-      'Failed to apply Ast-grep fixes to the document. Please consider upgrading ast-grep version or opening an issue with steps to reproduce.',
-    )
+    const actionButtonName = 'Upgrade Document'
+    window
+      .showErrorMessage(
+        'Failed to apply Ast-grep fixes to the document. Please consider upgrading ast-grep version or opening an issue with steps to reproduce.',
+        actionButtonName,
+      )
+      .then(value => {
+        if (value === actionButtonName) {
+          env.openExternal(
+            Uri.parse(
+              'https://ast-grep.github.io/guide/quick-start.html#installation',
+            ),
+          )
+        }
+      })
   })
 }
 
