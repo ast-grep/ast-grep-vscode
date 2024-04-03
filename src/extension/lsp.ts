@@ -76,10 +76,10 @@ async function applyAllFixes() {
     arguments: [textDocument],
   }
   client.sendRequest(ExecuteCommandRequest.type, params).then(undefined, () => {
-    const actionButtonName = 'Upgrade Document'
+    const actionButtonName = 'See Doc'
     window
       .showErrorMessage(
-        'Failed to apply Ast-grep fixes to the document. Please consider upgrading ast-grep version or opening an issue with steps to reproduce.',
+        'Failed to apply ast-grep fixes to the document. Please consider upgrading ast-grep version or opening an issue with steps to reproduce.',
         actionButtonName,
       )
       .then(value => {
