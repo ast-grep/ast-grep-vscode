@@ -48,6 +48,30 @@
       {
         "command": "ast-grep.searchInFolder",
         "title": "SG: Find ast-grep Pattern in Folder"
+      },
+      {
+        "command": "ast-grep.clearSearchResults",
+        "title": "Clear Search Results",
+        "icon": {
+          "light": "media/clear-light.svg",
+          "dark": "media/clear-dark.svg"
+        }
+      },
+      {
+        "command": "ast-grep.refreshSearch",
+        "title": "Refresh Search",
+        "icon": {
+          "light": "media/refresh-light.svg",
+          "dark": "media/refresh-dark.svg"
+        }
+      },
+      {
+        "command": "ast-grep.collapseAll",
+        "title": "Collapse All",
+        "icon": {
+          "light": "media/collapse-light.svg",
+          "dark": "media/collapse-dark.svg"
+        }
       }
     ],
     "menus": {
@@ -56,6 +80,23 @@
           "command": "ast-grep.searchInFolder",
           "group": "4_search",
           "when": "explorerResourceIsFolder"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "ast-grep.collapseAll",
+          "when": "view == ast-grep.search.input",
+          "group": "navigation"
+        },
+        {
+          "command": "ast-grep.clearSearchResults",
+          "when": "view == ast-grep.search.input",
+          "group": "navigation"
+        },
+        {
+          "command": "ast-grep.refreshSearch",
+          "when": "view == ast-grep.search.input",
+          "group": "navigation"
         }
       ]
     },
