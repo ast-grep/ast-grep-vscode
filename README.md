@@ -79,6 +79,9 @@ ast-grep new
 - `ast-grep.searchInFolder`
   Find ast-grep pattern in the specified folder in a project.
 
+- `ast-grep.executeAutofix`
+  Fix all auto-fixable Problems
+
 ## Extension Settings
 
 This extension contributes the following settings:
