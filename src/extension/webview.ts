@@ -1,7 +1,7 @@
 import type { ChannelMessage } from 'unport'
 import { parentPort } from './common'
 import * as vscode from 'vscode'
-import { window } from 'vscode'
+import { window, commands } from 'vscode'
 
 /**
  * Set up webviews for UI display, e.g. sidebar.
@@ -15,6 +15,9 @@ export function activateWebview(context: vscode.ExtensionContext) {
       provider,
       { webviewOptions: { retainContextWhenHidden: true } },
     ),
+    commands.registerCommand('ast-grep.refreshSearch', refreshSearch),
+    commands.registerCommand('ast-grep.clearSearchResults', clearSearchResults),
+    commands.registerCommand('ast-grep.collapseAll', collapseAllSearch),
   )
 }
 
@@ -109,4 +112,16 @@ function getNonce() {
     text += possible.charAt(Math.floor(Math.random() * possible.length))
   }
   return text
+}
+
+function refreshSearch() {
+  // TODO: implement
+}
+
+function clearSearchResults() {
+  // TODO: implement
+}
+
+function collapseAllSearch() {
+  // TODO: implement
 }
