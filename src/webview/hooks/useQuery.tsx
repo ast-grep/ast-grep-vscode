@@ -23,6 +23,10 @@ export function refreshResult() {
   postSearch(searchQuery)
 }
 childPort.onMessage('refreshAllSearch', refreshResult)
+childPort.onMessage('clearSearchResults', () => {
+  searchQuery.inputValue = ''
+  refreshResult()
+})
 
 export function useSearchField(key: keyof SearchQuery) {
   const [field = '', setField] = useLocalStorage(LS_KEYS[key], '')
