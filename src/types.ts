@@ -60,6 +60,8 @@ export interface ParentToChild {
     updatedResults: DisplayResult[]
     fileName: string
   }
+  refreshAllSearch: unknown
+  clearSearchResults: unknown
 }
 
 export interface Diff {

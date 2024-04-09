@@ -22,6 +22,7 @@ const LS_KEYS: Record<keyof SearchQuery, string> = {
 export function refreshResult() {
   postSearch(searchQuery)
 }
+childPort.onMessage('refreshAllSearch', refreshResult)
 
 export function useSearchField(key: keyof SearchQuery) {
   const [field = '', setField] = useLocalStorage(LS_KEYS[key], '')

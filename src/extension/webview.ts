@@ -115,11 +115,11 @@ function getNonce() {
 }
 
 function refreshSearch() {
-  // TODO: implement
+  parentPort.postMessage('refreshAllSearch', {})
 }
 
 function clearSearchResults() {
-  // TODO: implement
+  parentPort.postMessage('clearSearchResults', {})
 }
 
 function collapseAllSearch() {
