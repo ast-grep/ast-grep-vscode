@@ -10,7 +10,8 @@ import * as stylex from '@stylexjs/stylex'
 const styles = stylex.create({
   codeItem: {
     display: 'flex',
-    paddingLeft: '38px',
+    paddingLeft: 38,
+    paddingRight: 2,
     listStyle: 'none',
     ':hover': {
       background: 'var( --vscode-list-hoverBackground)',
