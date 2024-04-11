@@ -4,9 +4,10 @@ import {
   refreshResult,
   hasInitialRewrite,
 } from '../../hooks/useQuery'
+import { childPort } from '../../postMessage'
 import { useSearchResult, acceptAllChanges } from '../../hooks/useSearch'
 import { SearchInput } from './SearchInput'
-import { useBoolean } from 'react-use'
+import { useBoolean, useEffectOnce } from 'react-use'
 import { VscChevronRight, VscChevronDown, VscReplaceAll } from 'react-icons/vsc'
 import * as stylex from '@stylexjs/stylex'
 
@@ -74,6 +75,12 @@ function ReplaceBar() {
 function SearchWidgetContainer() {
   const [inputValue, setInputValue] = useSearchField('inputValue')
   const [isExpanded, toggleIsExpanded] = useBoolean(hasInitialRewrite())
+  // sadly unport does not support unsub
+  useEffectOnce(() => {
+    childPort.onMessage('clearSearchResults', () => {
+      setInputValue('')
+    })
+  })
   return (
     <div {...stylex.props(styles.container)}>
       <div {...stylex.props(styles.replaceToggle)} onClick={toggleIsExpanded}>
