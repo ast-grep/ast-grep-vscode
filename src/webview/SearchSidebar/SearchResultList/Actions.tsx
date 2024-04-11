@@ -16,6 +16,7 @@ const styles = stylex.create({
     display: 'flex',
     flexDirection: 'row',
     overflow: 'hidden',
+    flex: '0 0 auto',
   },
   action: {
     display: 'flex',
