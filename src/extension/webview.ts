@@ -123,5 +123,5 @@ function clearSearchResults() {
 }
 
 function collapseAllSearch() {
-  // TODO: implement
+  parentPort.postMessage('collapseAllSearch', {})
 }

@@ -6,6 +6,7 @@ import { useBoolean } from 'react-use'
 import { onResultChange, findIndex } from '../../hooks/useSearch'
 import type { DisplayResult } from '../../../types'
 import type { VirtuosoHandle } from 'react-virtuoso'
+import { childPort } from '../../postMessage'
 
 let ref: VirtuosoHandle
 
@@ -14,15 +15,18 @@ export function refScroller(handle: VirtuosoHandle) {
 }
 
 const collapseMap = new Map<string, boolean>()
+let defaultCollapse = false
+const toggleSet = new Set<(b?: boolean) => void>()
 
 onResultChange(() => {
   collapseMap.clear()
   lastActiveFile = ''
   activeItem = null
+  defaultCollapse = false
 })
 
 export function useToggleResult(filePath: string) {
-  const collapsedBefore = collapseMap.get(filePath)
+  const collapsedBefore = collapseMap.get(filePath) || defaultCollapse
   const [isExpanded, toggle] = useBoolean(!collapsedBefore)
   const toggleIsExpanded = useCallback(() => {
     toggleResult(filePath)
@@ -35,8 +39,21 @@ export function useToggleResult(filePath: string) {
       }
     }
   }, [filePath, toggle, isExpanded])
+  useEffect(() => {
+    toggleSet.add(toggle)
+    return () => {
+      toggleSet.delete(toggle)
+    }
+  }, [toggle])
   return [isExpanded, toggleIsExpanded] as const
 }
+
+childPort.onMessage('collapseAllSearch', () => {
+  defaultCollapse = true
+  for (const toggle of toggleSet) {
+    toggle(false)
+  }
+})
 
 let lastActiveFile = ''
 
