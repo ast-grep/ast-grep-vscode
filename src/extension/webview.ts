@@ -17,7 +17,7 @@ export function activateWebview(context: vscode.ExtensionContext) {
     ),
     commands.registerCommand('ast-grep.refreshSearch', refreshSearch),
     commands.registerCommand('ast-grep.clearSearchResults', clearSearchResults),
-    commands.registerCommand('ast-grep.collapseAll', collapseAllSearch),
+    commands.registerCommand('ast-grep.toggleAllSearch', toggleAllSearch),
   )
 }
 
@@ -122,6 +122,6 @@ function clearSearchResults() {
   parentPort.postMessage('clearSearchResults', {})
 }
 
-function collapseAllSearch() {
-  parentPort.postMessage('collapseAllSearch', {})
+function toggleAllSearch() {
+  parentPort.postMessage('toggleAllSearch', {})
 }

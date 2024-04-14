@@ -62,7 +62,7 @@ export interface ParentToChild {
   }
   refreshAllSearch: unknown
   clearSearchResults: unknown
-  collapseAllSearch: unknown
+  toggleAllSearch: unknown
 }
 
 export interface Diff {

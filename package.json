@@ -66,7 +66,7 @@
         }
       },
       {
-        "command": "ast-grep.collapseAll",
+        "command": "ast-grep.toggleAllSearch",
         "title": "Collapse All",
         "icon": {
           "light": "media/collapse-light.svg",
@@ -84,7 +84,7 @@
       ],
       "view/title": [
         {
-          "command": "ast-grep.collapseAll",
+          "command": "ast-grep.toggleAllSearch",
           "when": "view == ast-grep.search.input",
           "group": "navigation"
         },

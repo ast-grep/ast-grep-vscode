@@ -14,22 +14,22 @@ export function refScroller(handle: VirtuosoHandle) {
   ref = handle
 }
 
-const collapseMap = new Map<string, boolean>()
-let defaultCollapse = false
+const expandStateMap = new Map<string, boolean>()
+let defaultOpen = true
 const toggleSet = new Set<(b?: boolean) => void>()
 
 onResultChange(() => {
-  collapseMap.clear()
+  expandStateMap.clear()
   lastActiveFile = ''
   activeItem = null
-  defaultCollapse = false
+  defaultOpen = true
 })
 
 export function useToggleResult(filePath: string) {
-  const collapsedBefore = collapseMap.get(filePath) || defaultCollapse
-  const [isExpanded, toggle] = useBoolean(!collapsedBefore)
+  const expandBefore = expandStateMap.get(filePath) ?? defaultOpen
+  const [isExpanded, toggle] = useBoolean(expandBefore)
   const toggleIsExpanded = useCallback(() => {
-    toggleResult(filePath)
+    toggleResult(filePath, isExpanded)
     toggle()
     // jump to toggled files, only if it is at the top
     if (isExpanded && lastActiveFile === filePath) {
@@ -39,31 +39,34 @@ export function useToggleResult(filePath: string) {
       }
     }
   }, [filePath, toggle, isExpanded])
+  // register toggle
   useEffect(() => {
     toggleSet.add(toggle)
     return () => {
       toggleSet.delete(toggle)
     }
-  }, [toggle])
+  }, [toggle, filePath])
   return [isExpanded, toggleIsExpanded] as const
 }
 
-childPort.onMessage('collapseAllSearch', () => {
-  defaultCollapse = true
+childPort.onMessage('toggleAllSearch', () => {
+  expandStateMap.clear()
+  defaultOpen = !defaultOpen
   for (const toggle of toggleSet) {
-    toggle(false)
+    toggle(defaultOpen)
   }
 })
 
-let lastActiveFile = ''
-
-function toggleResult(filePath: string) {
-  if (collapseMap.has(filePath)) {
-    collapseMap.delete(filePath)
+function toggleResult(filePath: string, isExpandedNow: boolean) {
+  const nextExpansion = !isExpandedNow
+  if (expandStateMap.get(filePath) === nextExpansion) {
+    expandStateMap.delete(filePath)
   } else {
-    collapseMap.set(filePath, true)
+    expandStateMap.set(filePath, nextExpansion)
   }
 }
+
+let lastActiveFile = ''
 
 export function useStickyShadow(filePath: string) {
   const [isScrolled, setScrolled] = useBoolean(false)
