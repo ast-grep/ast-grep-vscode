@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react'
+import { memo } from 'react'
 import type { DisplayResult } from '../../../types'
 import TreeItem from './TreeItem'
 import { refScroller } from './useListState'
@@ -22,26 +22,19 @@ interface SearchResultListProps {
   matches: Array<[string, DisplayResult[]]>
 }
 
+function itemContent(_: number, data: [string, DisplayResult[]]) {
+  return <TreeItem className={'sg-match-tree-item'} matches={data[1]} />
+}
+function computeItemKey(_: number, data: [string, DisplayResult[]]) {
+  return data[0]
+}
 const SearchResultList = ({ matches }: SearchResultListProps) => {
-  const render = useCallback(
-    (index: number) => {
-      const match = matches[index][1]
-      return <TreeItem className={'sg-match-tree-item'} matches={match} />
-    },
-    [matches],
-  )
-  const computeItemKey = useCallback(
-    (index: number) => {
-      return matches[index][0]
-    },
-    [matches],
-  )
   return (
     <Virtuoso
       ref={refScroller}
       {...stylex.props(styles.resultList)}
-      totalCount={matches.length}
-      itemContent={render}
+      data={matches}
+      itemContent={itemContent}
       computeItemKey={computeItemKey}
     />
   )
