@@ -51,6 +51,12 @@ function ReplaceBar() {
   const { searching, groupedByFileSearchResult } = useSearchResult()
   const disabled =
     !rewrite || searching || groupedByFileSearchResult.length === 0
+  // sadly unport does not support unsub
+  useEffectOnce(() => {
+    childPort.onMessage('clearSearchResults', () => {
+      setRewrite('')
+    })
+  })
   return (
     <div {...stylex.props(styles.replaceToolbar)}>
       <SearchInput
