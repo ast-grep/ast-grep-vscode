@@ -60,8 +60,8 @@ devDependencies:
     specifier: 18.2.0
     version: 18.2.0(react@18.2.0)
   react-icons:
-    specifier: 5.0.1
-    version: 5.0.1(react@18.2.0)
+    specifier: 5.1.0
+    version: 5.1.0(react@18.2.0)
   react-use:
     specifier: 17.5.0
     version: 17.5.0(react-dom@18.2.0)(react@18.2.0)
@@ -2015,8 +2015,8 @@ packages:
       scheduler: 0.23.0
     dev: true
 
-  /react-icons@5.0.1(react@18.2.0):
-    resolution: {integrity: sha512-WqLZJ4bLzlhmsvme6iFdgO8gfZP17rfjYEJ2m9RsZjZ+cc4k1hTzknEz63YS1MeT50kVzoa1Nz36f4BEx+Wigw==}
+  /react-icons@5.1.0(react@18.2.0):
+    resolution: {integrity: sha512-D3zug1270S4hbSlIRJ0CUS97QE1yNNKDjzQe3HqY0aefp2CBn9VgzgES27sRR2gOvFK+0CNx/BW0ggOESp6fqQ==}
     peerDependencies:
       react: '*'
     dependencies:
