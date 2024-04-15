@@ -25,14 +25,14 @@ interface SearchResultListProps {
 const SearchResultList = ({ matches }: SearchResultListProps) => {
   const render = useCallback(
     (index: number) => {
-      const [filePath, match] = matches[index]
-      return (
-        <TreeItem
-          className={'sg-match-tree-item'}
-          matches={match}
-          key={filePath}
-        />
-      )
+      const match = matches[index][1]
+      return <TreeItem className={'sg-match-tree-item'} matches={match} />
+    },
+    [matches],
+  )
+  const computeItemKey = useCallback(
+    (index: number) => {
+      return matches[index][0]
     },
     [matches],
   )
@@ -42,6 +42,7 @@ const SearchResultList = ({ matches }: SearchResultListProps) => {
       {...stylex.props(styles.resultList)}
       totalCount={matches.length}
       itemContent={render}
+      computeItemKey={computeItemKey}
     />
   )
 }
