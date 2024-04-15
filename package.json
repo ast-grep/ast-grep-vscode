@@ -66,11 +66,19 @@
         }
       },
       {
-        "command": "ast-grep.toggleAllSearch",
+        "command": "ast-grep.collapseAll",
         "title": "Collapse All",
         "icon": {
           "light": "media/collapse-light.svg",
           "dark": "media/collapse-dark.svg"
+        }
+      },
+      {
+        "command": "ast-grep.expandAll",
+        "title": "Expand All",
+        "icon": {
+          "light": "media/expand-light.svg",
+          "dark": "media/expand-dark.svg"
         }
       }
     ],
@@ -84,8 +92,13 @@
       ],
       "view/title": [
         {
-          "command": "ast-grep.toggleAllSearch",
-          "when": "view == ast-grep.search.input",
+          "command": "ast-grep.collapseAll",
+          "when": "view == ast-grep.search.input && !ast-grep.searchDefaultCollapse",
+          "group": "navigation"
+        },
+        {
+          "command": "ast-grep.expandAll",
+          "when": "view == ast-grep.search.input && ast-grep.searchDefaultCollapse",
           "group": "navigation"
         },
         {

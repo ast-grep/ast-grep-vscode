@@ -17,7 +17,8 @@ export function activateWebview(context: vscode.ExtensionContext) {
     ),
     commands.registerCommand('ast-grep.refreshSearch', refreshSearch),
     commands.registerCommand('ast-grep.clearSearchResults', clearSearchResults),
-    commands.registerCommand('ast-grep.toggleAllSearch', toggleAllSearch),
+    commands.registerCommand('ast-grep.expandAll', toggleAllSearch),
+    commands.registerCommand('ast-grep.collapseAll', toggleAllSearch),
   )
 }
 
@@ -122,6 +123,24 @@ function clearSearchResults() {
   parentPort.postMessage('clearSearchResults', {})
 }
 
+let defaultCollapse = false
+
+// reset default collapse when starting a new search
+parentPort.onMessage('search', async () => {
+  defaultCollapse = false
+  vscode.commands.executeCommand(
+    'setContext',
+    'ast-grep.searchDefaultCollapse',
+    false,
+  )
+})
+
 function toggleAllSearch() {
   parentPort.postMessage('toggleAllSearch', {})
+  defaultCollapse = !defaultCollapse
+  vscode.commands.executeCommand(
+    'setContext',
+    'ast-grep.searchDefaultCollapse',
+    defaultCollapse,
+  )
 }
