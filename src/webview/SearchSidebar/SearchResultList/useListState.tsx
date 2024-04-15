@@ -45,7 +45,7 @@ export function useToggleResult(filePath: string) {
     return () => {
       toggleSet.delete(toggle)
     }
-  }, [toggle, filePath])
+  }, [toggle])
   return [isExpanded, toggleIsExpanded] as const
 }
 
