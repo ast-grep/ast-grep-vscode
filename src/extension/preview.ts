@@ -154,7 +154,7 @@ function closeAllDiffs() {
   for (const tab of tabs) {
     const input = tab.input
     if (input instanceof TabInputTextDiff && isSgPreviewUri(input.modified)) {
-      window.tabGroups.close(tab)
+      window.tabGroups.close(tab, true)
     }
   }
 }
