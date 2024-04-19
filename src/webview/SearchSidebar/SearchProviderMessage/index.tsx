@@ -15,6 +15,10 @@ const ulStyle = {
   overflowWrap: 'break-word',
 } as const
 
+const codeStyle = {
+  fontSize: 'var(--vscode-font-size)',
+} as const
+
 function Empty({ query }: { query: SearchQuery }) {
   const { inputValue, includeFile } = query
   if (!inputValue) {
@@ -22,7 +26,7 @@ function Empty({ query }: { query: SearchQuery }) {
   }
   return (
     <div style={style}>
-      No results found for <code>{inputValue}</code>
+      No results found for <code style={codeStyle}>{inputValue}</code>
       {includeFile ? ` in '${includeFile}'` : null}.
       <br />
       If this is not expected, you can try:
@@ -61,12 +65,13 @@ const SearchProviderMessage = memo(
     if (error) {
       return (
         <div style={style}>
-          Error occurs when running <code>ast-grep</code>.<br />
+          Error occurs when running <code style={codeStyle}>ast-grep</code>.
+          <br />
           Make sure you{' '}
           <VSCodeLink href="https://ast-grep.github.io/guide/quick-start.html#installation">
             installed the binary
           </VSCodeLink>{' '}
-          and the command <code>ast-grep</code> is accessible{' '}
+          and the command <code style={codeStyle}>ast-grep</code> is accessible{' '}
           <VSCodeLink href="https://github.com/ast-grep/ast-grep-vscode/issues/133#issuecomment-1943153446">
             by your editor
           </VSCodeLink>
