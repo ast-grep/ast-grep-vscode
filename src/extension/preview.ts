@@ -116,7 +116,10 @@ async function doPreview(
   fileUri: Uri,
   { filePath, locationsToSelect }: ChildToParent['previewDiff'],
 ) {
-  const previewUri = fileUri.with({ scheme: SCHEME })
+  const previewUri = fileUri.with({
+    scheme: SCHEME,
+    query: Date.now().toString(),
+  })
   const filename = path.basename(filePath)
   // https://github.com/microsoft/vscode/blob/d63202a5382aa104f5515ea09053a2a21a2587c6/src/vs/workbench/api/common/extHostApiCommands.ts#L422
   await commands.executeCommand(
@@ -161,6 +164,10 @@ function closeAllDiffs() {
 
 function refreshDiff(query: SearchQuery) {
   try {
+    // Clear cache if pattern/rewrite changed
+    if (query.inputValue !== lastPattern || query.rewrite !== lastRewrite) {
+      previewContents.clear()
+    }
     if (query.inputValue !== lastPattern) {
       closeAllDiffs()
       return
@@ -253,7 +260,6 @@ async function refreshSearchResult(
   const final = conclude()
   const replaced = new TextDecoder('utf-8').decode(final)
   previewContents.set(fileUri.path, replaced)
-  // refresh diff
   previewProvider.notifyDiffChange(fileUri)
   parentPort.postMessage('refreshSearchResult', {
     id,
