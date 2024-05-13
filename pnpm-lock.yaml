@@ -36,8 +36,8 @@ importers:
         specifier: 1.89.0
         version: 1.89.0
       '@vscode/test-electron':
-        specifier: 2.3.9
-        version: 2.3.9
+        specifier: 2.3.10
+        version: 2.3.10
       '@vscode/webview-ui-toolkit':
         specifier: 1.4.0
         version: 1.4.0(react@18.3.1)
@@ -751,8 +751,8 @@ packages:
   '@types/vscode@1.89.0':
     resolution: {integrity: sha512-TMfGKLSVxfGfoO8JfIE/neZqv7QLwS4nwPwL/NwMvxtAY2230H2I4Z5xx6836pmJvMAzqooRQ4pmLm7RUicP3A==}
 
-  '@vscode/test-electron@2.3.9':
-    resolution: {integrity: sha512-z3eiChaCQXMqBnk2aHHSEkobmC2VRalFQN0ApOAtydL172zXGxTwGrRtviT5HnUB+Q+G3vtEYFtuQkYqBzYgMA==}
+  '@vscode/test-electron@2.3.10':
+    resolution: {integrity: sha512-FxMqrvUm6a8S5tP4CymNJ40e6kD+wUTWTc6K32U629yrCCa+kl/rmpkC2gKpN4F4zjg1r+0Hnk9sl0+N2atsYA==}
     engines: {node: '>=16'}
 
   '@vscode/webview-ui-toolkit@1.4.0':
@@ -2131,7 +2131,7 @@ snapshots:
 
   '@types/vscode@1.89.0': {}
 
-  '@vscode/test-electron@2.3.9':
+  '@vscode/test-electron@2.3.10':
     dependencies:
       http-proxy-agent: 4.0.1
       https-proxy-agent: 5.0.1
