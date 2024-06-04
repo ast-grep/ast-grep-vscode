@@ -193,7 +193,7 @@
     "tslib": "2.6.2",
     "tsx": "4.11.0",
     "typescript": "5.4.5",
-    "unport": "0.5.0",
+    "unport": "0.6.0",
     "vscode-languageclient": "9.0.1"
   }
 }
