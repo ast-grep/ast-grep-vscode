@@ -33,8 +33,8 @@ importers:
         specifier: 18.3.0
         version: 18.3.0
       '@types/vscode':
-        specifier: 1.89.0
-        version: 1.89.0
+        specifier: 1.90.0
+        version: 1.90.0
       '@vscode/test-electron':
         specifier: 2.4.0
         version: 2.4.0
@@ -744,8 +744,8 @@ packages:
   '@types/react@18.3.3':
     resolution: {integrity: sha512-hti/R0pS0q1/xx+TsI73XIqk26eBsISZ2R0wUijXIngRK9R/e7Xw/cXVxQK7R5JjW+SV4zGcn5hXjudkN/pLIw==}
 
-  '@types/vscode@1.89.0':
-    resolution: {integrity: sha512-TMfGKLSVxfGfoO8JfIE/neZqv7QLwS4nwPwL/NwMvxtAY2230H2I4Z5xx6836pmJvMAzqooRQ4pmLm7RUicP3A==}
+  '@types/vscode@1.90.0':
+    resolution: {integrity: sha512-oT+ZJL7qHS9Z8bs0+WKf/kQ27qWYR3trsXpq46YDjFqBsMLG4ygGGjPaJ2tyrH0wJzjOEmDyg9PDJBBhWg9pkQ==}
 
   '@vscode/test-electron@2.4.0':
     resolution: {integrity: sha512-yojuDFEjohx6Jb+x949JRNtSn6Wk2FAh4MldLE3ck9cfvCqzwxF32QsNy1T9Oe4oT+ZfFcg0uPUCajJzOmPlTA==}
@@ -2186,7 +2186,7 @@ snapshots:
       '@types/prop-types': 15.7.11
       csstype: 3.1.3
 
-  '@types/vscode@1.89.0': {}
+  '@types/vscode@1.90.0': {}
 
   '@vscode/test-electron@2.4.0':
     dependencies:
