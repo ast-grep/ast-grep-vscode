@@ -191,7 +191,7 @@
     "react-use": "17.5.0",
     "react-virtuoso": "4.7.11",
     "tslib": "2.6.3",
-    "tsx": "4.11.0",
+    "tsx": "4.15.1",
     "typescript": "5.4.5",
     "unport": "0.6.0",
     "vscode-languageclient": "9.0.1"
