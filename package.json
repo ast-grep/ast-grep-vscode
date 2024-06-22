@@ -192,7 +192,7 @@
     "react-virtuoso": "4.7.11",
     "tslib": "2.6.3",
     "tsx": "4.15.7",
-    "typescript": "5.4.5",
+    "typescript": "5.5.2",
     "unport": "0.6.0",
     "vscode-languageclient": "9.0.1"
   }
