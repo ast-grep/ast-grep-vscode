@@ -72,8 +72,8 @@ importers:
         specifier: 17.5.0
         version: 17.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-virtuoso:
-        specifier: 4.7.11
-        version: 4.7.11(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 4.7.12
+        version: 4.7.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       tslib:
         specifier: 2.6.3
         version: 2.6.3
@@ -1405,8 +1405,8 @@ packages:
       react: '*'
       react-dom: '*'
 
-  react-virtuoso@4.7.11:
-    resolution: {integrity: sha512-Kdn9qEtQI2ulEuBMzW2BTkDsfijB05QUd6lpZ1K36oyA3k65Cz4lG4EKrh2pCfUafX4C2uMSZOwzMOhbrMOTFA==}
+  react-virtuoso@4.7.12:
+    resolution: {integrity: sha512-q8yaykkVJGJbPNQH2Hgm82ik0LsbNGJpHMEjAGz5ibEsTVHKObs5WtEELAd1A99OKFHs091W1M+HN+1sasL08Q==}
     engines: {node: '>=10'}
     peerDependencies:
       react: '>=16 || >=17 || >= 18'
@@ -2915,7 +2915,7 @@ snapshots:
       ts-easing: 0.2.0
       tslib: 2.6.3
 
-  react-virtuoso@4.7.11(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  react-virtuoso@4.7.12(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
