@@ -1,5 +1,6 @@
 import { VscEllipsis } from 'react-icons/vsc'
 import IncludeFile from './IncludeFile'
+import PatternConfig from './PatternConfig'
 import * as stylex from '@stylexjs/stylex'
 import { useSearchOption, refreshResult } from '../../hooks/useQuery'
 
@@ -45,6 +46,7 @@ export default function SearchOptions() {
             refreshResult={refreshResult}
           />
           {/* TODO: add file exclude*/}
+          <PatternConfig />
         </div>
       )}
     </div>

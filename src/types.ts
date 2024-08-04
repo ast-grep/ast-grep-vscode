@@ -31,6 +31,8 @@ export interface SearchQuery {
   inputValue: string
   includeFile: string
   rewrite: string
+  strictness: string
+  selector: string
 }
 
 export type SgSearch = {

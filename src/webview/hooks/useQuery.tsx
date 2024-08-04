@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocalStorage, useDebounce, useBoolean } from 'react-use'
 import { SearchQuery } from '../../types'
 import { childPort } from '../postMessage'
@@ -9,11 +9,15 @@ import { postSearch } from './useSearch'
 
 const searchQuery: Record<keyof SearchQuery, string> = {
   inputValue: '',
+  strictness: 'smart',
+  selector: '',
   includeFile: '',
   rewrite: '',
 }
 
-const LS_KEYS: Record<keyof SearchQuery, string> = {
+type PatternKeys = 'strictness' | 'selector'
+
+const LS_KEYS: Record<Exclude<keyof SearchQuery, PatternKeys>, string> = {
   inputValue: 'ast-grep-search-panel-input-value',
   includeFile: 'ast-grep-search-panel-include-value',
   rewrite: 'ast-grep-search-panel-rewrite-value',
@@ -28,8 +32,18 @@ childPort.onMessage('clearSearchResults', () => {
   refreshResult()
 })
 
-export function useSearchField(key: keyof SearchQuery) {
+export function useSearchField(key: keyof typeof LS_KEYS) {
   const [field = '', setField] = useLocalStorage(LS_KEYS[key], '')
+  // this useEffect and useDebounce is silly
+  useEffect(() => {
+    searchQuery[key] = field
+  }, [field, key])
+  useDebounce(refreshResult, 150, [field])
+  return [field, setField] as const
+}
+
+export function usePatternConfig(key: PatternKeys, defaultValue: string) {
+  const [field, setField] = useState(defaultValue)
   // this useEffect and useDebounce is silly
   useEffect(() => {
     searchQuery[key] = field
