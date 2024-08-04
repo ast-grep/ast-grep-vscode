@@ -247,11 +247,7 @@ async function refreshSearchResult(
   fileUri: Uri,
   query: SearchQuery,
 ) {
-  const command = buildCommand({
-    pattern: query.pattern,
-    rewrite: query.rewrite,
-    includeFiles: [query.includeFile],
-  })
+  const command = buildCommand(query)
   const bytes = await workspace.fs.readFile(fileUri)
   const { receiveResult, conclude } = bufferMaker(bytes)
   const updatedResults: DisplayResult[] = []

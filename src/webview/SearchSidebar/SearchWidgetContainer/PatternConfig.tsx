@@ -17,8 +17,8 @@ const NOOP = () => {}
 export default function PatternConfig() {
   const [strictness, setStrictness] = usePatternConfig('strictness', 'smart')
   const [selector, setSelector] = usePatternConfig('selector', '')
-  // biome-ignore lint/suspicious/noExplicitAny: onChange event has wrong type signature.
   const onStrictnessChange = useCallback(
+    // biome-ignore lint/suspicious/noExplicitAny: onChange event has wrong type signature.
     (e: any) => {
       const select = e.target as HTMLSelectElement
       setStrictness(select.value)

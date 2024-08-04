@@ -106,15 +106,9 @@ async function uniqueCommand(
   }
 }
 
-interface CommandArgs {
-  pattern: string
-  rewrite?: string
-  includeFiles: string[]
-}
-
 // TODO: add unit test for commandBuilder
-export function buildCommand(query: CommandArgs) {
-  const { pattern, includeFiles, rewrite } = query
+export function buildCommand(query: SearchQuery) {
+  const { pattern, includeFile, rewrite } = query
   if (!pattern) {
     return
   }
@@ -124,7 +118,7 @@ export function buildCommand(query: CommandArgs) {
   if (rewrite) {
     args.push('--rewrite', rewrite)
   }
-  args.push(...includeFiles.filter(Boolean))
+  args.push(...includeFile.split(',').filter(Boolean))
   console.debug('running', query, command, args)
   // TODO: multi-workspaces support
   return spawn(command, args, {
@@ -139,11 +133,7 @@ interface Handlers {
 }
 
 function getPatternRes(query: SearchQuery, handlers: Handlers) {
-  const proc = buildCommand({
-    pattern: query.pattern,
-    includeFiles: [query.includeFile],
-    rewrite: query.rewrite,
-  })
+  const proc = buildCommand(query)
   if (proc) {
     proc.on('error', error => {
       console.debug('ast-grep CLI runs error')
