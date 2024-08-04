@@ -165,10 +165,10 @@ function closeAllDiffs() {
 function refreshDiff(query: SearchQuery) {
   try {
     // Clear cache if pattern/rewrite changed
-    if (query.inputValue !== lastPattern || query.rewrite !== lastRewrite) {
+    if (query.pattern !== lastPattern || query.rewrite !== lastRewrite) {
       previewContents.clear()
     }
-    if (query.inputValue !== lastPattern) {
+    if (query.pattern !== lastPattern) {
       closeAllDiffs()
       return
     }
@@ -179,7 +179,7 @@ function refreshDiff(query: SearchQuery) {
     closeAllDiffs()
   } finally {
     // use finally to ensure updated
-    lastPattern = query.inputValue
+    lastPattern = query.pattern
     lastRewrite = query.rewrite
   }
 }
@@ -199,28 +199,32 @@ async function onReplaceAll(payload: ChildToParent['replaceAll']) {
   if (confirmed !== 'Replace') {
     return
   }
-  const { id, inputValue, rewrite } = payload
+  const { id, pattern, rewrite, selector, strictness } = payload
   for (const change of payload.changes) {
     // TODO: chunk change
     await onCommitChange({
       id,
-      inputValue,
+      pattern,
       rewrite,
+      selector,
+      strictness,
       ...change,
     })
   }
 }
 
 async function onCommitChange(payload: ChildToParent['commitChange']) {
-  const { filePath, inputValue, rewrite } = payload
+  const { filePath, pattern, rewrite, strictness, selector } = payload
   const fileUri = workspaceUriFromFilePath(filePath)
   if (!fileUri) {
     return
   }
   await doChange(fileUri, payload)
   await refreshSearchResult(payload.id, fileUri, {
-    inputValue,
+    pattern,
     rewrite,
+    strictness,
+    selector,
     includeFile: filePath,
   })
 }
@@ -244,7 +248,7 @@ async function refreshSearchResult(
   query: SearchQuery,
 ) {
   const command = buildCommand({
-    pattern: query.inputValue,
+    pattern: query.pattern,
     rewrite: query.rewrite,
     includeFiles: [query.includeFile],
   })

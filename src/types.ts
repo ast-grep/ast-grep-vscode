@@ -27,12 +27,15 @@ export interface DisplayResult {
   language: string
 }
 
-export interface SearchQuery {
-  inputValue: string
-  includeFile: string
+interface SearchQueryBasic {
+  pattern: string
   rewrite: string
   strictness: string
   selector: string
+}
+
+export interface SearchQuery extends SearchQueryBasic {
+  includeFile: string
 }
 
 export type SgSearch = {
@@ -98,20 +101,20 @@ export interface ChildToParent {
     }
     diffs: Diff[]
   }
-  commitChange: WithId<{
-    filePath: string
-    diffs: Diff[]
-    inputValue: string
-    rewrite: string
-  }>
-  replaceAll: WithId<{
-    inputValue: string
-    rewrite: string
-    changes: {
+  commitChange: WithId<
+    {
       filePath: string
       diffs: Diff[]
-    }[]
-  }>
+    } & SearchQueryBasic
+  >
+  replaceAll: WithId<
+    {
+      changes: {
+        filePath: string
+        diffs: Diff[]
+      }[]
+    } & SearchQueryBasic
+  >
 }
 
 export type Definition = {

@@ -79,12 +79,12 @@ function ReplaceBar() {
 }
 
 function SearchWidgetContainer() {
-  const [inputValue, setInputValue] = useSearchField('inputValue')
+  const [pattern, setPattern] = useSearchField('pattern')
   const [isExpanded, toggleIsExpanded] = useBoolean(hasInitialRewrite())
   // sadly unport does not support unsub
   useEffectOnce(() => {
     childPort.onMessage('clearSearchResults', () => {
-      setInputValue('')
+      setPattern('')
     })
   })
   return (
@@ -95,8 +95,8 @@ function SearchWidgetContainer() {
       <div {...stylex.props(styles.inputs)}>
         <SearchInput
           placeholder="Search"
-          value={inputValue}
-          onChange={setInputValue}
+          value={pattern}
+          onChange={setPattern}
           onKeyEnterUp={refreshResult}
         />
         {isExpanded ? <ReplaceBar /> : null}

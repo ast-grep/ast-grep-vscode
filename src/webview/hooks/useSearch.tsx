@@ -20,9 +20,11 @@ const MOD = 1e9 + 7
 let id = 0
 let grouped: [string, DisplayResult[]][] = []
 let queryInFlight: SearchQuery = {
-  inputValue: '',
+  pattern: '',
   includeFile: '',
   rewrite: '',
+  strictness: 'smart',
+  selector: '',
 }
 let searching = true
 let searchError: Error | null = null

@@ -8,7 +8,7 @@ export { SearchQuery }
 import { postSearch } from './useSearch'
 
 const searchQuery: Record<keyof SearchQuery, string> = {
-  inputValue: '',
+  pattern: '',
   strictness: 'smart',
   selector: '',
   includeFile: '',
@@ -18,7 +18,7 @@ const searchQuery: Record<keyof SearchQuery, string> = {
 type PatternKeys = 'strictness' | 'selector'
 
 const LS_KEYS: Record<Exclude<keyof SearchQuery, PatternKeys>, string> = {
-  inputValue: 'ast-grep-search-panel-input-value',
+  pattern: 'ast-grep-search-panel-input-value',
   includeFile: 'ast-grep-search-panel-include-value',
   rewrite: 'ast-grep-search-panel-rewrite-value',
 }
@@ -28,7 +28,7 @@ export function refreshResult() {
 }
 childPort.onMessage('refreshAllSearch', refreshResult)
 childPort.onMessage('clearSearchResults', () => {
-  searchQuery.inputValue = ''
+  searchQuery.pattern = ''
   refreshResult()
 })
 

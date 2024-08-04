@@ -140,7 +140,7 @@ interface Handlers {
 
 function getPatternRes(query: SearchQuery, handlers: Handlers) {
   const proc = buildCommand({
-    pattern: query.inputValue,
+    pattern: query.pattern,
     includeFiles: [query.includeFile],
     rewrite: query.rewrite,
   })

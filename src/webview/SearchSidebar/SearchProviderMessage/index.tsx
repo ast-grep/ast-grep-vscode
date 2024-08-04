@@ -20,13 +20,13 @@ const codeStyle = {
 } as const
 
 function Empty({ query }: { query: SearchQuery }) {
-  const { inputValue, includeFile } = query
-  if (!inputValue) {
+  const { pattern, includeFile } = query
+  if (!pattern) {
     return null
   }
   return (
     <div style={style}>
-      No results found for <code style={codeStyle}>{inputValue}</code>
+      No results found for <code style={codeStyle}>{pattern}</code>
       {includeFile ? ` in '${includeFile}'` : null}.
       <br />
       If this is not expected, you can try:
