@@ -15,12 +15,13 @@ const searchQuery: Record<keyof SearchQuery, string> = {
   rewrite: '',
 }
 
-type PatternKeys = 'strictness' | 'selector'
+type PatternKeys = 'selector'
 
 const LS_KEYS: Record<Exclude<keyof SearchQuery, PatternKeys>, string> = {
   pattern: 'ast-grep-search-panel-input-value',
   includeFile: 'ast-grep-search-panel-include-value',
   rewrite: 'ast-grep-search-panel-rewrite-value',
+  strictness: 'ast-grep-search-panel-strictness-value',
 }
 
 export function refreshResult() {
@@ -42,8 +43,8 @@ export function useSearchField(key: keyof typeof LS_KEYS) {
   return [field, setField] as const
 }
 
-export function usePatternConfig(key: PatternKeys, defaultValue: string) {
-  const [field, setField] = useState(defaultValue)
+export function usePatternConfig(key: PatternKeys) {
+  const [field, setField] = useState(searchQuery[key])
   // this useEffect and useDebounce is silly
   useEffect(() => {
     searchQuery[key] = field

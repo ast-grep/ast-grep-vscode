@@ -1,6 +1,6 @@
 import { SearchInput } from './SearchInput'
 import { VSCodeDropdown, VSCodeOption } from '@vscode/webview-ui-toolkit/react'
-import { usePatternConfig } from '../../hooks/useQuery'
+import { usePatternConfig, useSearchField } from '../../hooks/useQuery'
 import { useCallback } from 'react'
 
 const titleStyle = {
@@ -15,8 +15,8 @@ const titleStyle = {
 const NOOP = () => {}
 
 export default function PatternConfig() {
-  const [strictness, setStrictness] = usePatternConfig('strictness', 'smart')
-  const [selector, setSelector] = usePatternConfig('selector', '')
+  const [strictness, setStrictness] = useSearchField('strictness')
+  const [selector, setSelector] = usePatternConfig('selector')
   const onStrictnessChange = useCallback(
     // biome-ignore lint/suspicious/noExplicitAny: onChange event has wrong type signature.
     (e: any) => {
@@ -27,14 +27,6 @@ export default function PatternConfig() {
   )
   return (
     <div>
-      <h4 style={titleStyle}>Selector</h4>
-      <SearchInput
-        isSingleLine={true}
-        placeholder="sub-node kind to match"
-        value={selector}
-        onChange={setSelector}
-        onKeyEnterUp={NOOP}
-      />
       <h4 style={titleStyle}>Strictness</h4>
       <VSCodeDropdown
         value={strictness}
@@ -47,6 +39,15 @@ export default function PatternConfig() {
         <VSCodeOption value="relaxed">Relaxed (ignore comments)</VSCodeOption>
         <VSCodeOption value="signature">Signature (ignore text)</VSCodeOption>
       </VSCodeDropdown>
+      <h4 style={titleStyle}>Selector</h4>
+      <SearchInput
+        isSingleLine={true}
+        placeholder="sub-node kind to match"
+        value={selector}
+        onChange={setSelector}
+        onKeyEnterUp={NOOP}
+      />
+      <h4 style={titleStyle}>Strictness/Selector requires latest ast-grep.</h4>
     </div>
   )
 }

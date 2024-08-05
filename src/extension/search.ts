@@ -108,15 +108,21 @@ async function uniqueCommand(
 
 // TODO: add unit test for commandBuilder
 export function buildCommand(query: SearchQuery) {
-  const { pattern, includeFile, rewrite } = query
+  const { pattern, includeFile, strictness } = query
   if (!pattern) {
     return
   }
   const command = resolveBinary()
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
   const args = ['run', '--pattern', pattern, '--json=stream']
-  if (rewrite) {
-    args.push('--rewrite', rewrite)
+  if (query.selector) {
+    args.push('--selector', query.selector)
+  }
+  if (query.rewrite) {
+    args.push('--rewrite', query.rewrite)
+  }
+  if (strictness && strictness !== 'smart') {
+    args.push('--strictness', strictness)
   }
   args.push(...includeFile.split(',').filter(Boolean))
   console.debug('running', query, command, args)
