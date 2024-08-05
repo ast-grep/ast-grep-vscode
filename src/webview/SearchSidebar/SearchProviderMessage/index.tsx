@@ -29,7 +29,7 @@ function Empty({ query }: { query: SearchQuery }) {
       No results found for <code style={codeStyle}>{pattern}</code>
       {includeFile ? ` in '${includeFile}'` : null}.
       <br />
-      If this is not expected, you can try:
+      If this is unexpected, you can try:
       <ul style={ulStyle}>
         <li>
           Ensure the query follows the{' '}
@@ -40,7 +40,7 @@ function Empty({ query }: { query: SearchQuery }) {
         <li>
           Check if the file types are{' '}
           <VSCodeLink href="https://ast-grep.github.io/reference/languages.html">
-            Supported
+            supported
           </VSCodeLink>
         </li>
         <li>
@@ -49,6 +49,28 @@ function Empty({ query }: { query: SearchQuery }) {
             See doc
           </VSCodeLink>
         </li>
+        {query.strictness !== 'smart' ? (
+          <li>
+            Adjust pattern{' '}
+            <VSCodeLink href="https://ast-grep.github.io/reference/cli/run.html#no-ignore-file-type">
+              strictness
+            </VSCodeLink>
+            .
+          </li>
+        ) : null}
+        {query.selector ? (
+          <li>
+            Ensure pattern{' '}
+            <VSCodeLink href="https://ast-grep.github.io/guide/rule-config/atomic-rule.html#pattern">
+              selector
+            </VSCodeLink>{' '}
+            is valid. Debug in
+            <VSCodeLink href="https://ast-grep.github.io/playground.html">
+              Playground
+            </VSCodeLink>
+            .
+          </li>
+        ) : null}
       </ul>
     </div>
   )
