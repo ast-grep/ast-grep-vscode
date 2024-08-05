@@ -1,5 +1,9 @@
 import { SearchInput } from './SearchInput'
-import { VSCodeDropdown, VSCodeOption } from '@vscode/webview-ui-toolkit/react'
+import {
+  VSCodeDropdown,
+  VSCodeOption,
+  VSCodeLink,
+} from '@vscode/webview-ui-toolkit/react'
 import { usePatternConfig, useSearchField } from '../../hooks/useQuery'
 import { useCallback } from 'react'
 
@@ -14,6 +18,14 @@ const titleStyle = {
 }
 const NOOP = () => {}
 
+function Link({ href }: { href: string }) {
+  return (
+    <VSCodeLink style={{ fontSize: '0.9em', marginLeft: '0.25em' }} href={href}>
+      ⓘ
+    </VSCodeLink>
+  )
+}
+
 export default function PatternConfig() {
   const [strictness, setStrictness] = useSearchField('strictness')
   const [selector, setSelector] = usePatternConfig('selector')
@@ -27,7 +39,10 @@ export default function PatternConfig() {
   )
   return (
     <div>
-      <h4 style={titleStyle}>Strictness</h4>
+      <h4 style={titleStyle}>
+        Strictness
+        <Link href="https://ast-grep.github.io/advanced/match-algorithm.html" />
+      </h4>
       <VSCodeDropdown
         value={strictness}
         onChange={onStrictnessChange}
@@ -39,7 +54,10 @@ export default function PatternConfig() {
         <VSCodeOption value="relaxed">Relaxed (ignore comments)</VSCodeOption>
         <VSCodeOption value="signature">Signature (ignore text)</VSCodeOption>
       </VSCodeDropdown>
-      <h4 style={titleStyle}>Selector</h4>
+      <h4 style={titleStyle}>
+        Selector
+        <Link href="https://ast-grep.github.io/advanced/faq.html#my-pattern-does-not-work-why" />
+      </h4>
       <SearchInput
         isSingleLine={true}
         placeholder="sub-node kind to match"
