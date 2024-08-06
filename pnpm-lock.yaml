@@ -42,8 +42,8 @@ importers:
         specifier: 1.4.0
         version: 1.4.0(react@18.3.1)
       babel-plugin-syntax-hermes-parser:
-        specifier: 0.22.0
-        version: 0.22.0
+        specifier: 0.23.1
+        version: 0.23.1
       esbuild:
         specifier: 0.23.0
         version: 0.23.0
@@ -815,8 +815,8 @@ packages:
   babel-plugin-syntax-hermes-parser@0.21.1:
     resolution: {integrity: sha512-tUCEa+EykZx3oJXc+PolKz2iwDscCJ2hCONMvEqjAb4jIQH5ZapDd5Brs2Nk4TQpSJ/1Ykz53ksQbevXbF0wxg==}
 
-  babel-plugin-syntax-hermes-parser@0.22.0:
-    resolution: {integrity: sha512-DSZphimfuycQgouuhqUq9gCV1dNKFaA1phquNFjj3nO2Rx+zAcCMc8qrUK9koxJyEN+y+CihP3Kya6ukCl13OQ==}
+  babel-plugin-syntax-hermes-parser@0.23.1:
+    resolution: {integrity: sha512-uNLD0tk2tLUjGFdmCk+u/3FEw2o+BAwW4g+z2QVlxJrzZYOOPADroEcNtTPt5lNiScctaUmnsTkVEnOwZUOLhA==}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -1116,14 +1116,14 @@ packages:
   hermes-estree@0.21.1:
     resolution: {integrity: sha512-ayfESdfG0wZM32uGw0CMfcW6pW6RM8htLXZI56A4rr7hIOjmKw+wd3+71wUc1uQfn90ZyY1NMCbQeMnunrIidg==}
 
-  hermes-estree@0.22.0:
-    resolution: {integrity: sha512-FLBt5X9OfA8BERUdc6aZS36Xz3rRuB0Y/mfocSADWEJfomc1xfene33GdyAmtTkKTBXTN/EgAy+rjTKkkZJHlw==}
+  hermes-estree@0.23.1:
+    resolution: {integrity: sha512-eT5MU3f5aVhTqsfIReZ6n41X5sYn4IdQL0nvz6yO+MMlPxw49aSARHLg/MSehQftyjnrE8X6bYregzSumqc6cg==}
 
   hermes-parser@0.21.1:
     resolution: {integrity: sha512-ANsRSBqQHzca7AXbsuwKApSQhAdljPip63MgqLebSVzNUI+A3NDzfiH9Ny4df4fA7Ndso3kPR1V/x1YEc7BYxA==}
 
-  hermes-parser@0.22.0:
-    resolution: {integrity: sha512-gn5RfZiEXCsIWsFGsKiykekktUoh0PdFWYocXsUdZIyWSckT6UIyPcyyUIPSR3kpnELWeK3n3ztAse7Mat6PSA==}
+  hermes-parser@0.23.1:
+    resolution: {integrity: sha512-oxl5h2DkFW83hT4DAUJorpah8ou4yvmweUzLJmmr6YV2cezduCdlil1AvU/a/xSsAFo4WUcNA4GoV5Bvq6JffA==}
 
   http-proxy-agent@7.0.2:
     resolution: {integrity: sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==}
@@ -2322,9 +2322,9 @@ snapshots:
     dependencies:
       hermes-parser: 0.21.1
 
-  babel-plugin-syntax-hermes-parser@0.22.0:
+  babel-plugin-syntax-hermes-parser@0.23.1:
     dependencies:
-      hermes-parser: 0.22.0
+      hermes-parser: 0.23.1
 
   balanced-match@1.0.2: {}
 
@@ -2658,15 +2658,15 @@ snapshots:
 
   hermes-estree@0.21.1: {}
 
-  hermes-estree@0.22.0: {}
+  hermes-estree@0.23.1: {}
 
   hermes-parser@0.21.1:
     dependencies:
       hermes-estree: 0.21.1
 
-  hermes-parser@0.22.0:
+  hermes-parser@0.23.1:
     dependencies:
-      hermes-estree: 0.22.0
+      hermes-estree: 0.23.1
 
   http-proxy-agent@7.0.2:
     dependencies:
