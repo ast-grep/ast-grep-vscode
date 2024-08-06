@@ -15,7 +15,7 @@ suite('Should get code action', () => {
       new vscode.Position(4, 1),
     )
     /* Generate expected code actions */
-    const expectedTitle = 'Fix with ast-grep'
+    const expectedTitle = 'Fix `test-sg-rule` with ast-grep'
     const expectedKind = vscode.CodeActionKind.QuickFix
     const expectedIsPreferred = true
     const expectedNewText = `const AstGrepTest = {
