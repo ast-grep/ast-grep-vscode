@@ -1,6 +1,6 @@
 import * as stylex from '@stylexjs/stylex'
 import { Icon, icons } from '../SearchResultList/Icon'
-import { ChangeEvent, useCallback } from 'react'
+import { type ChangeEvent, useCallback } from 'react'
 import { VscListFlat } from 'react-icons/vsc'
 import { useSearchField } from '../../hooks/useQuery'
 
@@ -72,7 +72,9 @@ export function LangSelect() {
       >
         <option value="">Auto Detect</option>
         {icons.map(icon => (
-          <option value={icon}>{capitalize(icon)}</option>
+          <option key={icon} value={icon}>
+            {capitalize(icon)}
+          </option>
         ))}
       </select>
       {lang ? <Icon name={lang} style={styles.langIcon} /> : <VscListFlat />}
