@@ -32,6 +32,7 @@ interface SearchQueryBasic {
   rewrite: string
   strictness: string
   selector: string
+  lang: string
 }
 
 export interface SearchQuery extends SearchQueryBasic {

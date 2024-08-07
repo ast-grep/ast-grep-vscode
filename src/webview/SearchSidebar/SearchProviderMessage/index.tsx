@@ -43,12 +43,12 @@ function Empty({ query }: { query: SearchQuery }) {
             supported
           </VSCodeLink>
         </li>
-        <li>
-          Adjust your gitignore files.{' '}
-          <VSCodeLink href="https://ast-grep.github.io/reference/cli/run.html#no-ignore-file-type">
-            See doc
-          </VSCodeLink>
-        </li>
+        {query.lang ? (
+          <li>
+            Remove language filter <code style={codeStyle}>{query.lang}</code>{' '}
+            and search in all files.
+          </li>
+        ) : null}
         {query.strictness !== 'smart' ? (
           <li>
             Adjust pattern{' '}
@@ -71,6 +71,12 @@ function Empty({ query }: { query: SearchQuery }) {
             .
           </li>
         ) : null}
+        <li>
+          Adjust your gitignore files.{' '}
+          <VSCodeLink href="https://ast-grep.github.io/reference/cli/run.html#no-ignore-file-type">
+            See doc
+          </VSCodeLink>
+        </li>
       </ul>
     </div>
   )

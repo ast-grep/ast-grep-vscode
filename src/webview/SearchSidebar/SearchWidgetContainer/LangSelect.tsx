@@ -1,7 +1,8 @@
 import * as stylex from '@stylexjs/stylex'
 import { Icon, icons } from '../SearchResultList/Icon'
-import { ChangeEvent, useCallback, useState } from 'react'
+import { ChangeEvent, useCallback } from 'react'
 import { VscListFlat } from 'react-icons/vsc'
+import { useSearchField } from '../../hooks/useQuery'
 
 const styles = stylex.create({
   langButton: {
@@ -43,12 +44,12 @@ const styles = stylex.create({
   },
 })
 
-function capitalize(word) {
+function capitalize(word: string) {
   return word.charAt(0).toUpperCase() + word.slice(1)
 }
 
 export function LangSelect() {
-  const [lang, setLang] = useState('')
+  const [lang, setLang] = useSearchField('lang')
   const title = lang
     ? `Search pattern in ${lang}`
     : 'Search pattern in specific language'
@@ -66,6 +67,7 @@ export function LangSelect() {
       <select
         {...stylex.props(styles.langDropdown)}
         style={{ outline: 'none' }}
+        value={lang}
         onChange={onChange}
       >
         <option value="">Auto Detect</option>

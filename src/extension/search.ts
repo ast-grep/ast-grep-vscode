@@ -124,6 +124,9 @@ export function buildCommand(query: SearchQuery) {
   if (strictness && strictness !== 'smart') {
     args.push('--strictness', strictness)
   }
+  if (query.lang) {
+    args.push('--lang', query.lang)
+  }
   args.push(...includeFile.split(',').filter(Boolean))
   console.debug('running', query, command, args)
   // TODO: multi-workspaces support

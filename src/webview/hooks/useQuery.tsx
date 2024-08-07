@@ -13,6 +13,7 @@ const searchQuery: Record<keyof SearchQuery, string> = {
   selector: '',
   includeFile: '',
   rewrite: '',
+  lang: '',
 }
 
 type PatternKeys = 'selector'
@@ -22,6 +23,7 @@ const LS_KEYS: Record<Exclude<keyof SearchQuery, PatternKeys>, string> = {
   includeFile: 'ast-grep-search-panel-include-value',
   rewrite: 'ast-grep-search-panel-rewrite-value',
   strictness: 'ast-grep-search-panel-strictness-value',
+  lang: 'ast-grep-search-panel-lang-value',
 }
 
 export function refreshResult() {
