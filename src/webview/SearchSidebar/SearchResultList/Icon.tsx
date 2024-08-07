@@ -9,7 +9,7 @@ const styles = stylex.create({
   },
 })
 
-const icons = `
+export const icons = `
   bash,
   c,
   cpp,
@@ -37,9 +37,14 @@ const icons = `
   .map(icon => icon.trim())
   .filter(Boolean)
 
-export function Icon({ name }: { name: string }) {
+interface IconProps {
+  name: string
+  style?: stylex.StyleXStyles
+}
+
+export function Icon({ name, style }: IconProps) {
   const iconName = icons.includes(name) ? name : 'file'
   // @ts-expect-error
   const src = window.ICON_SRC + `/${iconName}.svg`
-  return <img src={src} {...stylex.props(styles.icon)} alt={iconName} />
+  return <img src={src} {...stylex.props(styles.icon, style)} alt={iconName} />
 }
