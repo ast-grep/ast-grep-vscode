@@ -199,7 +199,7 @@ async function onReplaceAll(payload: ChildToParent['replaceAll']) {
   if (confirmed !== 'Replace') {
     return
   }
-  const { id, pattern, rewrite, selector, strictness } = payload
+  const { id, pattern, rewrite, selector, strictness, lang } = payload
   for (const change of payload.changes) {
     // TODO: chunk change
     await onCommitChange({
@@ -208,13 +208,14 @@ async function onReplaceAll(payload: ChildToParent['replaceAll']) {
       rewrite,
       selector,
       strictness,
+      lang,
       ...change,
     })
   }
 }
 
 async function onCommitChange(payload: ChildToParent['commitChange']) {
-  const { filePath, pattern, rewrite, strictness, selector } = payload
+  const { filePath, pattern, rewrite, strictness, selector, lang } = payload
   const fileUri = workspaceUriFromFilePath(filePath)
   if (!fileUri) {
     return
@@ -225,6 +226,7 @@ async function onCommitChange(payload: ChildToParent['commitChange']) {
     rewrite,
     strictness,
     selector,
+    lang,
     includeFile: filePath,
   })
 }

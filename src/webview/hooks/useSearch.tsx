@@ -25,6 +25,7 @@ let queryInFlight: SearchQuery = {
   rewrite: '',
   strictness: 'smart',
   selector: '',
+  lang: '',
 }
 let searching = true
 let searchError: Error | null = null
