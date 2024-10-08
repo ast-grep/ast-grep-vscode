@@ -30,3 +30,22 @@ jobs:
           files: ast-grep-vscode.vsix
       - name: Publish extension
         run: vsce publish -p ${{ secrets.VSCE_TOKEN }}
+
+  release-open-vsx:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install ovsx (Open VSX CLI)
+        run: npm install -g ovsx
+
+      - name: Publish to Open VSX
+        run: |
+          npx ovsx publish -p ${{ secrets.OVSX_TOKEN }}
