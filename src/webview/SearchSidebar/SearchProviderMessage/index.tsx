@@ -71,6 +71,13 @@ function Empty({ query }: { query: SearchQuery }) {
             .
           </li>
         ) : null}
+        {query.includeFile.length ? (
+          <li>
+            If you're using glob patterns in the include file, please ensure
+            that your version of ast-grep is above{' '}
+            <code style={codeStyle}>v0.28.0</code>.
+          </li>
+        ) : null}
         <li>
           Adjust your gitignore files.{' '}
           <VSCodeLink href="https://ast-grep.github.io/reference/cli/run.html#no-ignore-file-type">

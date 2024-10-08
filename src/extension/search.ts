@@ -127,7 +127,13 @@ export function buildCommand(query: SearchQuery) {
   if (query.lang) {
     args.push('--lang', query.lang)
   }
-  args.push(...includeFile.split(',').filter(Boolean))
+  const validIncludeFile = includeFile.split(',').filter(Boolean)
+  const hasGlobPattern = validIncludeFile.some(i => i.includes('*'))
+  if (hasGlobPattern) {
+    args.push(...validIncludeFile.map(i => `--globs=${i}`))
+  } else {
+    args.push(...validIncludeFile)
+  }
   console.debug('running', query, command, args)
   // TODO: multi-workspaces support
   return spawn(command, args, {
