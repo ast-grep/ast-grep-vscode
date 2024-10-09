@@ -29,6 +29,6 @@ export const EXPECTED_NON_EMPTY_DIAGNOSTICS = [
 suite('Should get diagnostics', () => {
   const docUri = getDocUri('test.ts')
   testAndRetry('Get ast-grep issues', async () => {
-    await testDiagnostics(docUri, [])
+    await testDiagnostics(docUri, EXPECTED_NON_EMPTY_DIAGNOSTICS)
   })
 })
