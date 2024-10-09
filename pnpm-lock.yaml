@@ -12,8 +12,8 @@ importers:
         specifier: 1.8.3
         version: 1.8.3
       '@stylexjs/esbuild-plugin':
-        specifier: 0.7.5
-        version: 0.7.5
+        specifier: 0.8.0
+        version: 0.8.0
       '@stylexjs/stylex':
         specifier: 0.8.0
         version: 0.8.0
@@ -584,17 +584,14 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@stylexjs/babel-plugin@0.7.5':
-    resolution: {integrity: sha512-KirLQIaOVHpuSZT37qV19Pw8x4te5x6hZ90+2VsrJ4NzwyYFpovlMNsTeT+eE9mcdp84VksIi7QnrNpMvqBJMQ==}
+  '@stylexjs/babel-plugin@0.8.0':
+    resolution: {integrity: sha512-3ghvrFP1cpX+UumMSq4FK97lw6317Rj51pathP13CwrMr0DtC3CUUfvDhrFqZb9HzZRCPbnCDIwIhE4O4cIAdQ==}
 
-  '@stylexjs/esbuild-plugin@0.7.5':
-    resolution: {integrity: sha512-+KxB3CShpjeEd7v9ys0mss9uuWiztL0RD6C5Kv9AI4of5sOSOxn34JIlzbpgE5YysSjC0m9OD+yEP2mwggxFSg==}
+  '@stylexjs/esbuild-plugin@0.8.0':
+    resolution: {integrity: sha512-W8Agk3WqvsIwXS3GErRYuBRkaZ14zfkhoQnNowXYM9N/Ane754/RdP1zSiDzk6KkE46sE9H7OU6Z9DLN/9TIVw==}
 
-  '@stylexjs/shared@0.7.5':
-    resolution: {integrity: sha512-B357xldr9Dh3tP646P0JKNnarxy5ei4mkZh1qQmuhgGewbaVcrD8jiEWH3WjEzRrBKfmJtcTxBC3xp507u7O4A==}
-
-  '@stylexjs/stylex@0.7.5':
-    resolution: {integrity: sha512-e4bryU2AoKBeAlloea7sJZrYrjiqJYViw8AWL6eanTVdk7qJ0CduNoiRQxtCP1dOhqGAPG74kaWT7slLzZnqKg==}
+  '@stylexjs/shared@0.8.0':
+    resolution: {integrity: sha512-ENaui/5wPdb0PepqvYGzZfsk9IBoroTbXYXBiM7eRE8vyj7N0Ed7T93rg/x0oO3cOXiLGS3Von1iNKL9a3GzoQ==}
 
   '@stylexjs/stylex@0.8.0':
     resolution: {integrity: sha512-b9W6tFkX7RRo08UeY25cE5zhRREbg/8tj7oQNJPTvZaYZOWIj1ij3VTwNwI7bYG1RdNJO6bi2mjar9wsEV/Szw==}
@@ -676,9 +673,6 @@ packages:
 
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
-
-  babel-plugin-syntax-hermes-parser@0.21.1:
-    resolution: {integrity: sha512-tUCEa+EykZx3oJXc+PolKz2iwDscCJ2hCONMvEqjAb4jIQH5ZapDd5Brs2Nk4TQpSJ/1Ykz53ksQbevXbF0wxg==}
 
   babel-plugin-syntax-hermes-parser@0.23.1:
     resolution: {integrity: sha512-uNLD0tk2tLUjGFdmCk+u/3FEw2o+BAwW4g+z2QVlxJrzZYOOPADroEcNtTPt5lNiScctaUmnsTkVEnOwZUOLhA==}
@@ -964,14 +958,8 @@ packages:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
 
-  hermes-estree@0.21.1:
-    resolution: {integrity: sha512-ayfESdfG0wZM32uGw0CMfcW6pW6RM8htLXZI56A4rr7hIOjmKw+wd3+71wUc1uQfn90ZyY1NMCbQeMnunrIidg==}
-
   hermes-estree@0.23.1:
     resolution: {integrity: sha512-eT5MU3f5aVhTqsfIReZ6n41X5sYn4IdQL0nvz6yO+MMlPxw49aSARHLg/MSehQftyjnrE8X6bYregzSumqc6cg==}
-
-  hermes-parser@0.21.1:
-    resolution: {integrity: sha512-ANsRSBqQHzca7AXbsuwKApSQhAdljPip63MgqLebSVzNUI+A3NDzfiH9Ny4df4fA7Ndso3kPR1V/x1YEc7BYxA==}
 
   hermes-parser@0.23.1:
     resolution: {integrity: sha512-oxl5h2DkFW83hT4DAUJorpah8ou4yvmweUzLJmmr6YV2cezduCdlil1AvU/a/xSsAFo4WUcNA4GoV5Bvq6JffA==}
@@ -1985,39 +1973,33 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@stylexjs/babel-plugin@0.7.5':
+  '@stylexjs/babel-plugin@0.8.0':
     dependencies:
       '@babel/core': 7.23.9
       '@babel/helper-module-imports': 7.22.15
       '@babel/traverse': 7.23.9
       '@babel/types': 7.23.9
-      '@stylexjs/shared': 0.7.5
-      '@stylexjs/stylex': 0.7.5
+      '@stylexjs/shared': 0.8.0
+      '@stylexjs/stylex': 0.8.0
     transitivePeerDependencies:
       - supports-color
 
-  '@stylexjs/esbuild-plugin@0.7.5':
+  '@stylexjs/esbuild-plugin@0.8.0':
     dependencies:
       '@babel/core': 7.23.9
       '@babel/plugin-syntax-flow': 7.23.3(@babel/core@7.23.9)
       '@babel/plugin-syntax-jsx': 7.23.3(@babel/core@7.23.9)
       '@babel/plugin-syntax-typescript': 7.23.3(@babel/core@7.23.9)
-      '@stylexjs/babel-plugin': 0.7.5
-      '@stylexjs/shared': 0.7.5
-      babel-plugin-syntax-hermes-parser: 0.21.1
+      '@stylexjs/babel-plugin': 0.8.0
+      '@stylexjs/shared': 0.8.0
+      babel-plugin-syntax-hermes-parser: 0.23.1
       esbuild: 0.19.12
     transitivePeerDependencies:
       - supports-color
 
-  '@stylexjs/shared@0.7.5':
+  '@stylexjs/shared@0.8.0':
     dependencies:
       postcss-value-parser: 4.2.0
-
-  '@stylexjs/stylex@0.7.5':
-    dependencies:
-      css-mediaquery: 0.1.2
-      invariant: 2.2.4
-      styleq: 0.1.3
 
   '@stylexjs/stylex@0.8.0':
     dependencies:
@@ -2105,10 +2087,6 @@ snapshots:
       picomatch: 2.3.1
 
   argparse@2.0.1: {}
-
-  babel-plugin-syntax-hermes-parser@0.21.1:
-    dependencies:
-      hermes-parser: 0.21.1
 
   babel-plugin-syntax-hermes-parser@0.23.1:
     dependencies:
@@ -2414,13 +2392,7 @@ snapshots:
 
   he@1.2.0: {}
 
-  hermes-estree@0.21.1: {}
-
   hermes-estree@0.23.1: {}
-
-  hermes-parser@0.21.1:
-    dependencies:
-      hermes-estree: 0.21.1
 
   hermes-parser@0.23.1:
     dependencies:

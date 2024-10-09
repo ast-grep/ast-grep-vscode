@@ -169,7 +169,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
-    "@stylexjs/esbuild-plugin": "0.7.5",
+    "@stylexjs/esbuild-plugin": "0.8.0",
     "@stylexjs/stylex": "0.8.0",
     "@types/glob": "8.1.0",
     "@types/mocha": "10.0.9",
