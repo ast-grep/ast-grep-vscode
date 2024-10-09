@@ -1,12 +1,6 @@
 import * as vscode from 'vscode'
 
-import {
-  getDocUri,
-  sleep,
-  testDiagnostics,
-  toRange,
-  testAndRetry,
-} from './utils'
+import { getDocUri, sleep, testDiagnostics, testAndRetry } from './utils'
 import { EXPECTED_NON_EMPTY_DIAGNOSTICS } from './diagnostics.test'
 
 suite('ast-grep.restartLanguageServer should work', () => {
