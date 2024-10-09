@@ -24,8 +24,8 @@ importers:
         specifier: 10.0.8
         version: 10.0.8
       '@types/node':
-        specifier: 20.16.3
-        version: 20.16.3
+        specifier: 20.16.11
+        version: 20.16.11
       '@types/react':
         specifier: 18.3.5
         version: 18.3.5
@@ -608,8 +608,8 @@ packages:
   '@types/mocha@10.0.8':
     resolution: {integrity: sha512-HfMcUmy9hTMJh66VNcmeC9iVErIZJli2bszuXc6julh5YGuRb/W5OnkHjwLNYdFlMis0sY3If5SEAp+PktdJjw==}
 
-  '@types/node@20.16.3':
-    resolution: {integrity: sha512-/wdGiWRkMOm53gAsSyFMXFZHbVg7C6CbkrzHNpaHoYfsUWPg7m6ZRKtvQjgvQ9i8WT540a3ydRlRQbxjY30XxQ==}
+  '@types/node@20.16.11':
+    resolution: {integrity: sha512-y+cTCACu92FyA5fgQSAI8A1H429g7aSK2HsO7K4XYUWc4dY5IUz55JSDIYT6/VsOLfGy8vmvQYC2hfb0iF16Uw==}
 
   '@types/prop-types@15.7.11':
     resolution: {integrity: sha512-ga8y9v9uyeiLdpKddhxYQkxNDrfvuPrlFb0N1qnZZByvcElJaXthF1UhvCh9TLWJBEHeNtdnbysW7Y6Uq8CVng==}
@@ -2019,7 +2019,7 @@ snapshots:
   '@types/glob@8.1.0':
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 20.16.3
+      '@types/node': 20.16.11
 
   '@types/js-cookie@2.2.7': {}
 
@@ -2027,7 +2027,7 @@ snapshots:
 
   '@types/mocha@10.0.8': {}
 
-  '@types/node@20.16.3':
+  '@types/node@20.16.11':
     dependencies:
       undici-types: 6.19.8
 
