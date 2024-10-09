@@ -73,9 +73,8 @@ function Empty({ query }: { query: SearchQuery }) {
         ) : null}
         {query.includeFile.length ? (
           <li>
-            If you're using glob patterns in the include file, please ensure
-            that your version of ast-grep is above
-            <code style={codeStyle}>v0.28.0</code>.
+            glob patterns requires ast-grep{' '}
+            <code style={codeStyle}>v0.28.0</code>+.
           </li>
         ) : null}
         <li>
