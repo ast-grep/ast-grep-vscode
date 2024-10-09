@@ -7,6 +7,7 @@ import {
   toRange,
   testAndRetry,
 } from './utils'
+import { EXPECTED_NON_EMPTY_DIAGNOSTICS } from './diagnostics.test'
 
 suite('ast-grep.restartLanguageServer should work', () => {
   const docUri = getDocUri('test.ts')
@@ -24,25 +25,6 @@ suite('ast-grep.restartLanguageServer should work', () => {
     await vscode.workspace.fs.rename(tempSgConfigYml, sgConfigYml)
     await vscode.commands.executeCommand('ast-grep.restartLanguageServer')
     await sleep(1000)
-    await testDiagnostics(docUri, [
-      {
-        message: 'No console.log',
-        range: toRange(2, 4, 2, 32),
-        severity: vscode.DiagnosticSeverity.Warning,
-        source: 'ex',
-      },
-      {
-        message: 'Test rule for vscode extension',
-        range: toRange(0, 0, 4, 1),
-        severity: vscode.DiagnosticSeverity.Error,
-        source: 'ex',
-      },
-      {
-        message: 'Test rule for vscode extension',
-        range: toRange(6, 0, 10, 1),
-        severity: vscode.DiagnosticSeverity.Error,
-        source: 'ex',
-      },
-    ])
+    await testDiagnostics(docUri, EXPECTED_NON_EMPTY_DIAGNOSTICS)
   })
 })

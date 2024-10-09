@@ -150,6 +150,8 @@ export function testAndRetry(name: string, fn: () => Promise<void>) {
         if (++retries < MAX_RETRIES) {
           await sleep(1000)
           console.log(`Retrying test at t = ${Date.now() - startTime}ms`)
+        } else {
+          break
         }
       }
     }
