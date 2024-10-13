@@ -81,6 +81,7 @@ export default function TreeHeader({
         {...stylex.props(styles.toggleButton)}
         aria-label="expand/collapse button"
         role="button"
+        tabIndex={-1}
       >
         {isExpanded ? <VscChevronDown /> : <VscChevronRight />}
       </div>

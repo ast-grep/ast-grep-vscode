@@ -11,6 +11,9 @@
         "noNonNullAssertion": "off",
         "noParameterAssign": "off",
         "useTemplate": "off"
+      },
+      "a11y": {
+        "useSemanticElements": "off"
       }
     }
   },

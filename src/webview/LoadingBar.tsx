@@ -27,6 +27,7 @@ export default function LoadingBar({ loading }: LoadingBarProps) {
       aria-valuenow={5}
       aria-valuemax={10}
       aria-hidden={!loading}
+      tabIndex={0}
     >
       <div className="progressBar" style={style} />
     </div>
