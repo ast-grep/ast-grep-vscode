@@ -31,7 +31,8 @@ export const icons = `
   scala,
   swift,
   tsx,
-  typescript
+  typescript,
+  yaml
 `
   .split(',')
   .map(icon => icon.trim())
