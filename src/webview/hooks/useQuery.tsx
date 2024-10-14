@@ -51,7 +51,7 @@ export function useSearchField(key: keyof typeof LS_KEYS) {
       setField(text)
       refreshResult()
     })
-  }, [key])
+  }, [key, field, setField])
   useDebounce(refreshResult, 150, [field])
   return [field, setField] as const
 }
