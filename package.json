@@ -47,7 +47,7 @@
       },
       {
         "command": "ast-grep.searchInFolder",
-        "title": "SG: Find ast-grep Pattern in Folder"
+        "title": "ast-grep: Find pattern in this folder"
       },
       {
         "command": "ast-grep.clearSearchResults",
