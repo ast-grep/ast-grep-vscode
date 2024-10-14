@@ -11,6 +11,7 @@ import type { SgSearch, DisplayResult, SearchQuery } from '../types'
 export function activateSearch(context: ExtensionContext) {
   context.subscriptions.push(
     commands.registerCommand('ast-grep.searchInFolder', findInFolder),
+    commands.registerCommand('ast-grep.searchByCode', searchByCode),
   )
 }
 
@@ -176,3 +177,14 @@ parentPort.onMessage('search', async payload => {
   })
   parentPort.postMessage('searchEnd', payload)
 })
+
+function searchByCode() {
+  const editor = window.activeTextEditor
+  if (!editor) {
+    return
+  }
+  const selection = editor.selection
+  const text = editor.document.getText(selection)
+  commands.executeCommand('ast-grep.search.input.focus')
+  parentPort.postMessage('searchByCode', { text })
+}

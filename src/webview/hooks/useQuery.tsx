@@ -41,6 +41,17 @@ export function useSearchField(key: keyof typeof LS_KEYS) {
   useEffect(() => {
     searchQuery[key] = field
   }, [field, key])
+  // this is really BAD code :(
+  useEffect(() => {
+    if (key !== 'pattern') {
+      return
+    }
+    childPort.onMessage('searchByCode', ({ text }) => {
+      searchQuery[key] = field
+      setField(text)
+      refreshResult()
+    })
+  }, [key])
   useDebounce(refreshResult, 150, [field])
   return [field, setField] as const
 }

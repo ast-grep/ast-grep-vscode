@@ -69,6 +69,7 @@ export interface ParentToChild {
   refreshAllSearch: unknown
   clearSearchResults: unknown
   toggleAllSearch: unknown
+  searchByCode: { text: string }
 }
 
 export interface Diff {

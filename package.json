@@ -80,6 +80,10 @@
           "light": "media/expand-light.svg",
           "dark": "media/expand-dark.svg"
         }
+      },
+      {
+        "command": "ast-grep.searchByCode",
+        "title": "ast-grep: Search by Code"
       }
     ],
     "menus": {
@@ -88,6 +92,14 @@
           "command": "ast-grep.searchInFolder",
           "group": "4_search",
           "when": "explorerResourceIsFolder"
+        }
+      ],
+
+      "editor/context": [
+        {
+          "command": "ast-grep.searchByCode",
+          "when": "editorHasSelection",
+          "group": "navigation"
         }
       ],
       "view/title": [
