@@ -139,7 +139,6 @@ export function buildCommand(query: SearchQuery) {
   // TODO: multi-workspaces support
   return spawn(command, args, {
     cwd: uris[0],
-    shell: process.platform === 'win32', // it is safe because it is end user input
   })
 }
 
