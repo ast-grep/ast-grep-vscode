@@ -194,7 +194,7 @@
     "babel-plugin-syntax-hermes-parser": "0.24.0",
     "esbuild": "0.24.0",
     "glob": "11.0.0",
-    "husky": "9.1.6",
+    "husky": "9.1.7",
     "lint-staged": "15.2.10",
     "mocha": "10.7.3",
     "react": "18.3.1",
