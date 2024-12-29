@@ -42,8 +42,8 @@ importers:
         specifier: 1.4.0
         version: 1.4.0(react@18.3.1)
       babel-plugin-syntax-hermes-parser:
-        specifier: 0.25.1
-        version: 0.25.1
+        specifier: 0.26.0
+        version: 0.26.0
       esbuild:
         specifier: 0.24.2
         version: 0.24.2
@@ -676,6 +676,9 @@ packages:
   babel-plugin-syntax-hermes-parser@0.25.1:
     resolution: {integrity: sha512-IVNpGzboFLfXZUAwkLFcI/bnqVbwky0jP3eBno4HKtqvQJAHBLdgxiG6lQ4to0+Q/YCN3PO0od5NZwIKyY4REQ==}
 
+  babel-plugin-syntax-hermes-parser@0.26.0:
+    resolution: {integrity: sha512-gU/U5ASnPmm1GY9vptiJF20BNsULFuetjJX6gvNdJCUsftbFQ1STGYMOfkFgVTtpZo+iGTz4tzDNA/IW0U8dvA==}
+
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
@@ -949,8 +952,14 @@ packages:
   hermes-estree@0.25.1:
     resolution: {integrity: sha512-0wUoCcLp+5Ev5pDW2OriHC2MJCbwLwuRx+gAqMTOkGKJJiBCLjtrvy4PWUGn6MIVefecRpzoOZ/UV6iGdOr+Cw==}
 
+  hermes-estree@0.26.0:
+    resolution: {integrity: sha512-If1T7lhfXnGlVLbnsmwerNB5cyJm2oIE8TN1UKEq6/OUX1nOGUhjXMpqAwZ1wkkn9Brda0VRyJEWOGT2GgVcAQ==}
+
   hermes-parser@0.25.1:
     resolution: {integrity: sha512-6pEjquH3rqaI6cYAXYPcz9MS4rY6R4ngRgrgfDshRptUZIc3lw0MCIJIGDj9++mfySOuPTHB4nrSW99BCvOPIA==}
+
+  hermes-parser@0.26.0:
+    resolution: {integrity: sha512-fWT40jJ/BtlzuyiiQS7lzNIlB5h6flVZoN8Jn8v5l987HL5dK9s+/4+py0FaBmeIEROC2zxt5qMLwXFTPLQ7BA==}
 
   http-proxy-agent@7.0.2:
     resolution: {integrity: sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==}
@@ -2068,6 +2077,10 @@ snapshots:
     dependencies:
       hermes-parser: 0.25.1
 
+  babel-plugin-syntax-hermes-parser@0.26.0:
+    dependencies:
+      hermes-parser: 0.26.0
+
   balanced-match@1.0.2: {}
 
   base64-js@1.5.1: {}
@@ -2360,9 +2373,15 @@ snapshots:
 
   hermes-estree@0.25.1: {}
 
+  hermes-estree@0.26.0: {}
+
   hermes-parser@0.25.1:
     dependencies:
       hermes-estree: 0.25.1
+
+  hermes-parser@0.26.0:
+    dependencies:
+      hermes-estree: 0.26.0
 
   http-proxy-agent@7.0.2:
     dependencies:
