@@ -15,8 +15,8 @@ importers:
         specifier: 0.9.3
         version: 0.9.3
       '@stylexjs/stylex':
-        specifier: 0.9.3
-        version: 0.9.3
+        specifier: 0.10.0
+        version: 0.10.0
       '@types/glob':
         specifier: 8.1.0
         version: 8.1.0
@@ -595,6 +595,9 @@ packages:
 
   '@stylexjs/shared@0.9.3':
     resolution: {integrity: sha512-0gtKFjZxAvDdUdoZTuvukovboD3K12BxkswKHHBRvzfcrM0rQXGMXoHS1gLRMQJ9kllJaa/I3sclbeWKyELm6Q==}
+
+  '@stylexjs/stylex@0.10.0':
+    resolution: {integrity: sha512-nO3STzHZDSb92RADfXsNDsjspd0De84TdpkBVbC914ppMLw5hz6B35puJZ8swjEbqUZC8xYncpd3yWot+gVLeA==}
 
   '@stylexjs/stylex@0.9.3':
     resolution: {integrity: sha512-q3kYZ5bMXlVyF6Wh8b8Uwl701aSu8aEhim0AlQTaAXKMt0J6nTCWOjSwq6GNR74Ez4pcm2Ha4NDqhkYhKYGBcQ==}
@@ -2001,6 +2004,12 @@ snapshots:
   '@stylexjs/shared@0.9.3':
     dependencies:
       postcss-value-parser: 4.2.0
+
+  '@stylexjs/stylex@0.10.0':
+    dependencies:
+      css-mediaquery: 0.1.2
+      invariant: 2.2.4
+      styleq: 0.1.3
 
   '@stylexjs/stylex@0.9.3':
     dependencies:
