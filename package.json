@@ -182,7 +182,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@stylexjs/esbuild-plugin": "0.10.1",
-    "@stylexjs/stylex": "0.9.3",
+    "@stylexjs/stylex": "0.10.1",
     "@types/glob": "8.1.0",
     "@types/mocha": "10.0.10",
     "@types/node": "22.13.4",
