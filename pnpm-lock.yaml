@@ -84,8 +84,8 @@ importers:
         specifier: 5.7.3
         version: 5.7.3
       unport:
-        specifier: 0.6.0
-        version: 0.6.0
+        specifier: 0.7.1
+        version: 0.7.1
       vscode-languageclient:
         specifier: 9.0.1
         version: 9.0.1
@@ -1508,9 +1508,9 @@ packages:
   undici-types@6.20.0:
     resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
-  unport@0.6.0:
-    resolution: {integrity: sha512-SCxDm1xbaYHHXmYN/j6N9TcA8zN34tVxy1qjOW6HOmKLlbhMkw9yz74xsi3yzDXJSUH01uVKVNo8l8tYp8lv/A==}
-    engines: {node: '>=16', pnpm: 8.7.0}
+  unport@0.7.1:
+    resolution: {integrity: sha512-vI+dEsVbxudVtS7sRTbPCQvxqk9cZXef0M6JXarhFR8DeeprKkor1wY0TnMcRvV4viHNRocBev4Ffs6kzWTxIw==}
+    engines: {node: '>=16', pnpm: 9.9.0}
 
   update-browserslist-db@1.1.1:
     resolution: {integrity: sha512-R8UzCaa9Az+38REPiJ1tXlImTJXlVfgHZsglwBD/k6nj76ctsH1E3q4doGrukiLQd3sGQYu56r5+lo5r94l29A==}
@@ -2910,7 +2910,7 @@ snapshots:
 
   undici-types@6.20.0: {}
 
-  unport@0.6.0: {}
+  unport@0.7.1: {}
 
   update-browserslist-db@1.1.1(browserslist@4.24.2):
     dependencies:
