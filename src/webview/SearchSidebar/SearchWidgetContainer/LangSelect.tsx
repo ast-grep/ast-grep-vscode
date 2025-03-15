@@ -42,6 +42,11 @@ const styles = stylex.create({
     marginTop: 1,
     marginLeft: 1,
   },
+  // <option> color is required for windows
+  langOptions: {
+    color: 'var(--vscode-dropdown-foreground)',
+    backgroundColor: 'var(--vscode-dropdown-background)',
+  },
 })
 
 function capitalize(word: string) {
@@ -70,7 +75,9 @@ export function LangSelect() {
         value={lang}
         onChange={onChange}
       >
-        <option value="">Auto Detect</option>
+        <option value="" {...stylex.props(styles.langOptions)}>
+          Auto Detect
+        </option>
         {icons.map(icon => (
           <option key={icon} value={icon}>
             {capitalize(icon)}
