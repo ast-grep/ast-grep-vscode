@@ -112,6 +112,10 @@ async function previewDiff(param: ChildToParent['previewDiff']) {
   doPreview(fileUri, param)
 }
 
+function isMatchingPreviewUri(uri: Uri | undefined, previewUri: Uri) {
+  return uri?.scheme === SCHEME && uri.path === previewUri.path
+}
+
 async function doPreview(
   fileUri: Uri,
   { filePath, locationsToSelect }: ChildToParent['previewDiff'],
@@ -121,6 +125,15 @@ async function doPreview(
     query: Date.now().toString(),
   })
   const filename = path.basename(filePath)
+  const range = locationToRange(locationsToSelect)
+  const activeEditor = window.activeTextEditor
+  // if the preview is already open, reveal it directly
+  // calling diff again will close the previous window
+  // and delete entry previewContents
+  if (isMatchingPreviewUri(activeEditor?.document.uri, previewUri)) {
+    activeEditor?.revealRange(range, TextEditorRevealType.InCenter)
+    return
+  }
   // https://github.com/microsoft/vscode/blob/d63202a5382aa104f5515ea09053a2a21a2587c6/src/vs/workbench/api/common/extHostApiCommands.ts#L422
   await commands.executeCommand(
     'vscode.diff',
@@ -129,10 +142,10 @@ async function doPreview(
     `${filename} ↔ ${filename} (Replace Preview)`,
     {
       preserveFocus: true,
+      revealIfVisible: true,
     },
   )
-  const range = locationToRange(locationsToSelect)
-  window.activeTextEditor?.revealRange(range, TextEditorRevealType.InCenter)
+  activeEditor?.revealRange(range, TextEditorRevealType.InCenter)
 }
 
 async function dismissDiff(param: ChildToParent['dismissDiff']) {
