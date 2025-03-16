@@ -79,7 +79,7 @@ export function LangSelect() {
           Auto Detect
         </option>
         {icons.map(icon => (
-          <option key={icon} value={icon}>
+          <option key={icon} value={icon} {...stylex.props(styles.langOptions)}>
             {capitalize(icon)}
           </option>
         ))}
