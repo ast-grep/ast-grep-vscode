@@ -40,11 +40,12 @@ export function resolveBinary() {
 }
 
 export async function testBinaryExist(command: string) {
-  const _command = /\s/.test(command.trim()) ? `"${command}"` : command
+  // windows user may input space in command
+  const normalizedCommand = /\s/.test(command.trim()) ? `"${command}"` : command
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
   return new Promise(r => {
     execFile(
-      _command,
+      normalizedCommand,
       ['-h'],
       {
         // for windows
