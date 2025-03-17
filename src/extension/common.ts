@@ -53,7 +53,9 @@ export async function testBinaryExist(command: string) {
       ['-h'],
       {
         // for windows
-        shell: process.platform === 'win32' && !command.endsWith('.exe'),
+        shell:
+          process.platform === 'win32' &&
+          !command.toLowerCase().endsWith('.exe'),
         cwd: uris[0],
       },
       err => {
