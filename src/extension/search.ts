@@ -114,6 +114,9 @@ export function buildCommand(query: SearchQuery) {
     return
   }
   const command = resolveBinary()
+  // windows user may input space in command
+  const normalizedCommand =
+    /\s/.test(command) && !command.endsWith('.exe') ? `"${command}"` : command
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
   const args = ['run', '--pattern', pattern, '--json=stream']
   if (query.selector) {
@@ -135,9 +138,11 @@ export function buildCommand(query: SearchQuery) {
   } else {
     args.push(...validIncludeFile)
   }
-  console.debug('running', query, command, args)
+  console.debug('running', query, normalizedCommand, args)
   // TODO: multi-workspaces support
-  return spawn(command, args, {
+  return spawn(normalizedCommand, args, {
+    // for windows
+    shell: process.platform === 'win32' && !command.endsWith('.exe'),
     cwd: uris[0],
   })
 }

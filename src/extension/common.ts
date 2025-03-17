@@ -32,7 +32,10 @@ export async function detectDefaultBinaryAtStart() {
 }
 
 export function resolveBinary() {
-  const config = workspace.getConfiguration('astGrep').get('serverPath', '')
+  const config = workspace
+    .getConfiguration('astGrep')
+    .get('serverPath', '')
+    .trim()
   if (!config) {
     return defaultBinary
   }
@@ -41,7 +44,8 @@ export function resolveBinary() {
 
 export async function testBinaryExist(command: string) {
   // windows user may input space in command
-  const normalizedCommand = /\s/.test(command.trim()) ? `"${command}"` : command
+  const normalizedCommand =
+    /\s/.test(command) && !command.endsWith('.exe') ? `"${command}"` : command
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
   return new Promise(r => {
     execFile(
@@ -49,7 +53,7 @@ export async function testBinaryExist(command: string) {
       ['-h'],
       {
         // for windows
-        shell: process.platform === 'win32',
+        shell: process.platform === 'win32' && !command.endsWith('.exe'),
         cwd: uris[0],
       },
       err => {
