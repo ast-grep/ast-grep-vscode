@@ -142,7 +142,8 @@ export function buildCommand(query: SearchQuery) {
   // TODO: multi-workspaces support
   return spawn(normalizedCommand, args, {
     // for windows
-    shell: process.platform === 'win32' && !command.endsWith('.exe'),
+    shell:
+      process.platform === 'win32' && !command.toLowerCase().endsWith('.exe'),
     cwd: uris[0],
   })
 }
