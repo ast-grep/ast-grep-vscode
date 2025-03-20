@@ -2,7 +2,12 @@ import path from 'node:path'
 import { type ExtensionContext, commands, workspace, window } from 'vscode'
 import { type ChildProcessWithoutNullStreams, spawn } from 'node:child_process'
 
-import { parentPort, resolveBinary, streamedPromise } from './common'
+import {
+  parentPort,
+  resolveBinary,
+  streamedPromise,
+  normalizeCommandForWindows,
+} from './common'
 import type { SgSearch, DisplayResult, SearchQuery } from '../types'
 
 /**
@@ -114,9 +119,7 @@ export function buildCommand(query: SearchQuery) {
     return
   }
   const command = resolveBinary()
-  // windows user may input space in command
-  const normalizedCommand =
-    /\s/.test(command) && !command.endsWith('.exe') ? `"${command}"` : command
+  const { normalizedCommand, shell } = normalizeCommandForWindows(command)
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
   const args = ['run', '--pattern', pattern, '--json=stream']
   if (query.selector) {
@@ -141,9 +144,7 @@ export function buildCommand(query: SearchQuery) {
   console.debug('running', query, normalizedCommand, args)
   // TODO: multi-workspaces support
   return spawn(normalizedCommand, args, {
-    // for windows
-    shell:
-      process.platform === 'win32' && !command.toLowerCase().endsWith('.exe'),
+    shell,
     cwd: uris[0],
   })
 }
