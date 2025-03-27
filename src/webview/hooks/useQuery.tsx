@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useLocalStorage, useDebounce, useBoolean } from 'react-use'
+import {
+  useLocalStorage,
+  useDebounce,
+  useBoolean as useBooleanHook,
+} from 'react-use'
 import { SearchQuery } from '../../types'
 import { childPort } from '../postMessage'
 export { SearchQuery }
@@ -7,16 +11,21 @@ export { SearchQuery }
 // between search query and search result
 import { postSearch } from './useSearch'
 
-const searchQuery: Record<keyof SearchQuery, string> = {
+const searchQuery: SearchQuery = {
   pattern: '',
   strictness: 'smart',
   selector: '',
   includeFile: '',
   rewrite: '',
   lang: '',
+  allowEmptyReplace: false,
 }
 
 type PatternKeys = 'selector'
+
+type BooleanKeys = 'allowEmptyReplace'
+
+type StringKeys = Exclude<keyof SearchQuery, PatternKeys | BooleanKeys>
 
 const LS_KEYS: Record<Exclude<keyof SearchQuery, PatternKeys>, string> = {
   pattern: 'ast-grep-search-panel-input-value',
@@ -24,6 +33,7 @@ const LS_KEYS: Record<Exclude<keyof SearchQuery, PatternKeys>, string> = {
   rewrite: 'ast-grep-search-panel-rewrite-value',
   strictness: 'ast-grep-search-panel-strictness-value',
   lang: 'ast-grep-search-panel-lang-value',
+  allowEmptyReplace: 'ast-grep-search-panel-allow-empty-replace-value',
 }
 
 export function refreshResult() {
@@ -35,7 +45,19 @@ childPort.onMessage('clearSearchResults', () => {
   refreshResult()
 })
 
-export function useSearchField(key: keyof typeof LS_KEYS) {
+export function useBoolean(key: BooleanKeys) {
+  const [field, setField] = useLocalStorage(LS_KEYS[key], '')
+
+  useEffect(() => {
+    searchQuery[key] = field === 'true'
+  }, [field, setField])
+
+  useDebounce(refreshResult, 150, [field])
+
+  return [field, setField] as const
+}
+
+export function useSearchField(key: StringKeys) {
   const [field = '', setField] = useLocalStorage(LS_KEYS[key], '')
   // this useEffect and useDebounce is silly
   useEffect(() => {
@@ -68,7 +90,7 @@ export function usePatternConfig(key: PatternKeys) {
 
 export function useSearchOption() {
   const [includeFile = '', setIncludeFile] = useSearchField('includeFile')
-  const [showOptions, toggleOptions] = useBoolean(Boolean(includeFile))
+  const [showOptions, toggleOptions] = useBooleanHook(Boolean(includeFile))
 
   useEffect(() => {
     childPort.onMessage('setIncludeFile', val => {

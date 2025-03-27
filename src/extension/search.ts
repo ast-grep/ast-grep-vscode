@@ -127,7 +127,8 @@ export function buildCommand(query: SearchQuery) {
   }
   if (query.rewrite) {
     args.push('--rewrite', query.rewrite)
-  } else {
+  } else if (query.allowEmptyReplace) {
+    // the empty string must be passed in this format, otherwise the cli will not accept the empty string
     args.push('--rewrite=""')
   }
   if (strictness && strictness !== 'smart') {

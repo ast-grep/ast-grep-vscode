@@ -3,8 +3,13 @@ import {
   VSCodeDropdown,
   VSCodeOption,
   VSCodeLink,
+  VSCodeCheckbox,
 } from '@vscode/webview-ui-toolkit/react'
-import { usePatternConfig, useSearchField } from '../../hooks/useQuery'
+import {
+  useBoolean,
+  usePatternConfig,
+  useSearchField,
+} from '../../hooks/useQuery'
 import { useCallback } from 'react'
 
 const titleStyle = {
@@ -29,6 +34,9 @@ function Link({ href }: { href: string }) {
 export default function PatternConfig() {
   const [strictness, setStrictness] = useSearchField('strictness')
   const [selector, setSelector] = usePatternConfig('selector')
+  const [allowEmptyReplace, setAllowEmptyReplace] =
+    useBoolean('allowEmptyReplace')
+
   const onStrictnessChange = useCallback(
     // biome-ignore lint/suspicious/noExplicitAny: onChange event has wrong type signature.
     (e: any) => {
@@ -37,6 +45,21 @@ export default function PatternConfig() {
     },
     [setStrictness],
   )
+
+  const onAllowEmptyReplaceChange = useCallback(
+    (e: any) => {
+      const select = e.target as HTMLElement
+
+      setAllowEmptyReplace(
+        // this condition is inverted on purpose
+        // we only see the class right before it changes,
+        // so take what the value will be, not what it is now.
+        !select.classList.contains('checked') ? 'true' : 'false',
+      )
+    },
+    [setAllowEmptyReplace],
+  )
+
   return (
     <div>
       <h4 style={titleStyle}>
@@ -66,6 +89,12 @@ export default function PatternConfig() {
         onKeyEnterUp={NOOP}
       />
       <h4 style={titleStyle}>Strictness/Selector requires latest ast-grep.</h4>
+      <VSCodeCheckbox
+        value={allowEmptyReplace}
+        onChange={onAllowEmptyReplaceChange}
+      >
+        Make empty replace delete matches
+      </VSCodeCheckbox>
     </div>
   )
 }

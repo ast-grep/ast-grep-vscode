@@ -33,6 +33,7 @@ interface SearchQueryBasic {
   strictness: string
   selector: string
   lang: string
+  allowEmptyReplace: boolean
 }
 
 export interface SearchQuery extends SearchQueryBasic {

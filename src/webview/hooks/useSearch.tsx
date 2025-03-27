@@ -26,6 +26,7 @@ let queryInFlight: SearchQuery = {
   strictness: 'smart',
   selector: '',
   lang: '',
+  allowEmptyReplace: false,
 }
 let searching = true
 let searchError: Error | null = null
@@ -163,7 +164,7 @@ function getSnapshot() {
  * Either open a file or preview the diff
  */
 export function openAction(payload: OpenPayload) {
-  if (!(typeof queryInFlight.rewrite === 'string')) {
+  if (queryInFlight.rewrite.length > 0 || !queryInFlight.allowEmptyReplace) {
     openFile(payload)
     return
   }
