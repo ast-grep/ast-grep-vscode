@@ -163,7 +163,7 @@ function getSnapshot() {
  * Either open a file or preview the diff
  */
 export function openAction(payload: OpenPayload) {
-  if (!queryInFlight.rewrite) {
+  if (!(typeof queryInFlight.rewrite === 'string')) {
     openFile(payload)
     return
   }

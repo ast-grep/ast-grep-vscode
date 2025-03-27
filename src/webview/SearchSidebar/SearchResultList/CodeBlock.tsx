@@ -54,7 +54,7 @@ function Highlight({
   replacement,
 }: DisplayResult) {
   const matched = displayLine.slice(startIdx, endIdx)
-  if (replacement) {
+  if (typeof replacement === 'string') {
     const displayDiff = replacement.split(/\r?\n/, 1)[0]
     return (
       <>

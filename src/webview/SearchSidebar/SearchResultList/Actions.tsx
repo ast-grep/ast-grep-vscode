@@ -62,7 +62,7 @@ export function MatchActions({ match }: ActionsProps) {
   return (
     <ul {...stylex.props(styles.list)} role="toolbar">
       {/* VSCode supports shortcut Replace (⇧⌘1)*/}
-      {match.replacement ? (
+      {typeof match.replacement === 'string' ? (
         <li {...stylex.props(styles.action)} onClick={onClick}>
           <VscReplace role="button" title="Replace" tabIndex={0} />
         </li>

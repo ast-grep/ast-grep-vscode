@@ -63,7 +63,7 @@ export default function TreeHeader({
   isScrolled,
 }: TreeHeaderProps) {
   const { file: filePath, language } = matches[0]
-  const hasReplace = Boolean(matches[0].replacement)
+  const hasReplace = typeof matches[0].replacement === 'string'
   const [active, setActive] = useActiveItem(matches)
   const styleProps = stylex.props(
     styles.fileName,

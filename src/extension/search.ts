@@ -80,7 +80,7 @@ export function splitByHighLightToken(search: SgSearch): DisplayResult {
 }
 
 function handleReplacement(replacement?: string) {
-  if (replacement) {
+  if (typeof replacement === 'string') {
     return { replacement }
   }
   return {}
@@ -127,6 +127,8 @@ export function buildCommand(query: SearchQuery) {
   }
   if (query.rewrite) {
     args.push('--rewrite', query.rewrite)
+  } else {
+    args.push('--rewrite=""')
   }
   if (strictness && strictness !== 'smart') {
     args.push('--strictness', strictness)

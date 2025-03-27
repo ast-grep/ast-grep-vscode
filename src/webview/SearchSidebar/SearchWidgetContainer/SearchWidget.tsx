@@ -51,7 +51,9 @@ function ReplaceBar() {
   const [rewrite, setRewrite] = useSearchField('rewrite')
   const { searching, groupedByFileSearchResult } = useSearchResult()
   const disabled =
-    !rewrite || searching || groupedByFileSearchResult.length === 0
+    !(typeof rewrite === 'string') ||
+    searching ||
+    groupedByFileSearchResult.length === 0
   // sadly unport does not support unsub
   useEffectOnce(() => {
     childPort.onMessage('clearSearchResults', () => {
