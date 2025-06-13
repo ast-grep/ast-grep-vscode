@@ -203,7 +203,7 @@
     "react-use": "17.6.0",
     "react-virtuoso": "4.12.7",
     "tslib": "2.8.1",
-    "tsx": "4.19.3",
+    "tsx": "4.20.3",
     "typescript": "5.8.3",
     "unport": "0.7.1",
     "vscode-languageclient": "9.0.1"
