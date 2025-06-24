@@ -196,7 +196,7 @@
     "glob": "11.0.3",
     "husky": "9.1.7",
     "lint-staged": "15.5.2",
-    "mocha": "11.7.0",
+    "mocha": "11.7.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-icons": "5.5.0",
