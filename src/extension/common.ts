@@ -21,7 +21,9 @@ export async function detectDefaultBinaryAtStart() {
   // https://zenn.dev/hd_nvim/articles/e49ef2c812ae8d#comment-0b861171ac40cb
   // https://github.com/ast-grep/ast-grep-vscode/issues/235
   // https://github.com/nodejs/node/issues/29532#issue-492569087
-  for (const cmd of ['ast-grep', 'ast-grep.exe', 'ast-grep.cmd']) {
+  // `ast-grep.exe` should check first,
+  // otherwise, it will be resolved to `ast-grep` in shell mode
+  for (const cmd of ['ast-grep.exe', 'ast-grep.cmd', 'ast-grep']) {
     if (await testBinaryExist(cmd)) {
       defaultBinary = cmd
       return
@@ -45,13 +47,13 @@ export function resolveBinary() {
 // see https://github.com/ast-grep/ast-grep-vscode/pull/448 for more information
 // TL;DR: windows needs shell: true for non-exe command and quotation for command with space
 export function normalizeCommandForWindows(command: string) {
+  const isExe = command.toLowerCase().endsWith('.exe')
   // windows user may input space in command
   const normalizedCommand =
-    /\s/.test(command) && !command.endsWith('.exe') ? `"${command}"` : command
+    /\s/.test(command) && !isExe ? `"${command}"` : command
   return {
     normalizedCommand,
-    shell:
-      process.platform === 'win32' && !command.toLowerCase().endsWith('.exe'),
+    shell: process.platform === 'win32' && !isExe,
   }
 }
 
