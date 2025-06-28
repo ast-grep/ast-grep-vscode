@@ -185,7 +185,7 @@
     "@stylexjs/stylex": "0.13.1",
     "@types/glob": "8.1.0",
     "@types/mocha": "10.0.10",
-    "@types/node": "22.15.32",
+    "@types/node": "22.15.34",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
     "@types/vscode": "1.94.0",
