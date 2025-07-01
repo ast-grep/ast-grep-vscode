@@ -183,7 +183,7 @@
     "@biomejs/biome": "1.9.4",
     "@stylexjs/esbuild-plugin": "0.11.1",
     "@stylexjs/stylex": "0.13.1",
-    "@types/glob": "8.1.0",
+    "@types/glob": "9.0.0",
     "@types/mocha": "10.0.10",
     "@types/node": "22.15.34",
     "@types/react": "19.1.8",
