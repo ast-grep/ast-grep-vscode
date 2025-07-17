@@ -180,7 +180,7 @@
     "*.{ts, js}": "biome lint"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.1.2",
     "@stylexjs/esbuild-plugin": "0.11.1",
     "@stylexjs/stylex": "0.13.1",
     "@types/glob": "8.1.0",
