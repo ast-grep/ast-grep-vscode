@@ -1,5 +1,5 @@
-import type { ChildPort, ChildToParent } from '../types'
 import { Unport } from 'unport'
+import type { ChildPort, ChildToParent } from '../types'
 export type { DisplayResult, RangeInfo } from '../types'
 export type OpenPayload = ChildToParent['openFile']
 

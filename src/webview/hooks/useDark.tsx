@@ -1,10 +1,4 @@
-import {
-  type PropsWithChildren,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
+import { createContext, type PropsWithChildren, useContext, useEffect, useState } from 'react'
 
 const BODY_DARK_ATTRIBUTE = 'data-vscode-theme-kind'
 
@@ -32,9 +26,7 @@ function useObserveDark() {
 
 export const UseDarkContextProvider = ({ children }: PropsWithChildren) => {
   const isDark = useObserveDark()
-  return (
-    <UseDarkContext.Provider value={isDark}>{children}</UseDarkContext.Provider>
-  )
+  return <UseDarkContext.Provider value={isDark}>{children}</UseDarkContext.Provider>
 }
 
 export function useDark() {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useLocalStorage, useDebounce, useBoolean } from 'react-use'
+import { useBoolean, useDebounce, useLocalStorage } from 'react-use'
 import { SearchQuery } from '../../types'
 import { childPort } from '../postMessage'
 export { SearchQuery }

@@ -1,7 +1,7 @@
+import * as stylex from '@stylexjs/stylex'
 import { memo, useCallback } from 'react'
 import type { DisplayResult } from '../../../types'
 import { openAction } from '../../hooks/useSearch'
-import * as stylex from '@stylexjs/stylex'
 
 const styles = stylex.create({
   box: {

@@ -1,11 +1,7 @@
-import { SearchInput } from './SearchInput'
-import {
-  VSCodeDropdown,
-  VSCodeOption,
-  VSCodeLink,
-} from '@vscode/webview-ui-toolkit/react'
-import { usePatternConfig, useSearchField } from '../../hooks/useQuery'
+import { VSCodeDropdown, VSCodeLink, VSCodeOption } from '@vscode/webview-ui-toolkit/react'
 import { useCallback } from 'react'
+import { usePatternConfig, useSearchField } from '../../hooks/useQuery'
+import { SearchInput } from './SearchInput'
 
 const titleStyle = {
   textOverflow: 'ellipsis',

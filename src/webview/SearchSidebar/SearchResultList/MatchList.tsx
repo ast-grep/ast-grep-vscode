@@ -1,11 +1,11 @@
-import { CodeBlock } from './CodeBlock'
-import { MatchActions } from './Actions'
-import type { DisplayResult } from '../../../types'
 import { useHover } from 'react-use'
+import type { DisplayResult } from '../../../types'
+import { MatchActions } from './Actions'
+import { CodeBlock } from './CodeBlock'
 import { useActiveItem } from './useListState'
 
-import { memo } from 'react'
 import * as stylex from '@stylexjs/stylex'
+import { memo } from 'react'
 
 const styles = stylex.create({
   codeItem: {

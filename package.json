@@ -170,17 +170,18 @@
     "test": "node ./scripts/test/runTest.mjs",
     "compile": "node ./scripts/build.mjs",
     "typecheck": "tsc --noEmit",
-    "lint": "biome lint .",
-    "format:check": "biome format .",
+    "lint": "oxlint",
+    "format:check": "dprint check",
     "watch": "node ./scripts/build.mjs --watch",
     "prepare": "husky install"
   },
   "lint-staged": {
-    "**/*": "biome format --write --no-errors-on-unmatched",
-    "*.{ts, js}": "biome lint"
+    "**/*": "dprint fmt",
+    "*.{ts, js}": "oxlint"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "oxlint": "1.7.0",
+    "dprint": "0.50.1",
     "@stylexjs/esbuild-plugin": "0.11.1",
     "@stylexjs/stylex": "0.14.2",
     "@types/glob": "9.0.0",

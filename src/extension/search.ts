@@ -1,14 +1,9 @@
-import path from 'node:path'
-import { type ExtensionContext, commands, workspace, window } from 'vscode'
 import { type ChildProcessWithoutNullStreams, spawn } from 'node:child_process'
+import path from 'node:path'
+import { commands, type ExtensionContext, window, workspace } from 'vscode'
 
-import {
-  parentPort,
-  resolveBinary,
-  streamedPromise,
-  normalizeCommandForWindows,
-} from './common'
-import type { SgSearch, DisplayResult, SearchQuery } from '../types'
+import type { DisplayResult, SearchQuery, SgSearch } from '../types'
+import { normalizeCommandForWindows, parentPort, resolveBinary, streamedPromise } from './common'
 
 /**
  * Set up search query handling and search commands

@@ -1,5 +1,5 @@
-import { SearchSidebar } from './SearchSidebar'
 import ReactDOM from 'react-dom/client'
+import { SearchSidebar } from './SearchSidebar'
 
 const App = () => {
   return <SearchSidebar />

@@ -1,9 +1,9 @@
+import * as stylex from '@stylexjs/stylex'
 import { memo } from 'react'
+import { Virtuoso } from 'react-virtuoso'
 import type { DisplayResult } from '../../../types'
 import TreeItem from './TreeItem'
 import { refScroller } from './useListState'
-import * as stylex from '@stylexjs/stylex'
-import { Virtuoso } from 'react-virtuoso'
 
 const styles = stylex.create({
   resultList: {

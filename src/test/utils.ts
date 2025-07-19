@@ -1,6 +1,6 @@
-import * as vscode from 'vscode'
-import * as path from 'node:path'
 import * as assert from 'node:assert'
+import * as path from 'node:path'
+import * as vscode from 'vscode'
 
 export let doc: vscode.TextDocument
 export let editor: vscode.TextEditor
@@ -14,12 +14,8 @@ export const assertDiagnosticsEqual = (
   expected: vscode.Diagnostic[],
 ) => {
   assert.equal(actual.length, expected.length)
-  actual.sort((a, b) =>
-    a.message === b.message ? 0 : a.message > b.message ? 1 : -1,
-  )
-  expected.sort((a, b) =>
-    a.message === b.message ? 0 : a.message > b.message ? 1 : -1,
-  )
+  actual.sort((a, b) => a.message === b.message ? 0 : a.message > b.message ? 1 : -1)
+  expected.sort((a, b) => a.message === b.message ? 0 : a.message > b.message ? 1 : -1)
   actual.forEach((actualElement, i) => {
     assert.equal(actualElement.message, expected[i].message)
     assert.deepEqual(actualElement.range, expected[i].range)
@@ -54,9 +50,7 @@ export async function testDiagnostics(
   expectedDiagnostics: vscode.Diagnostic[],
 ) {
   const actualDiagnostics = vscode.languages.getDiagnostics(docUri)
-  actualDiagnostics.sort((a, b) =>
-    a.message === b.message ? 0 : a.message > b.message ? 1 : -1,
-  )
+  actualDiagnostics.sort((a, b) => a.message === b.message ? 0 : a.message > b.message ? 1 : -1)
 
   assert.equal(actualDiagnostics.length, expectedDiagnostics.length)
 
@@ -98,12 +92,8 @@ export function assertCodeActionArraysEqual(
     assert.equal(actual.isPreferred, expected.isPreferred, 'isPreferred')
     // needed for windows
     assert.equal(
-      JSON.stringify(actual.edit?.get(docUri), str =>
-        str.replace(/\r\n/g, '\n'),
-      ),
-      JSON.stringify(expected.edit?.get(docUri), str =>
-        str.replace(/\r\n/g, '\n'),
-      ),
+      JSON.stringify(actual.edit?.get(docUri), str => str.replace(/\r\n/g, '\n')),
+      JSON.stringify(expected.edit?.get(docUri), str => str.replace(/\r\n/g, '\n')),
       "CodeActions' edit texts differ",
     )
   })

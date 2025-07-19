@@ -1,5 +1,5 @@
-import { memo } from 'react'
 import { VSCodeLink } from '@vscode/webview-ui-toolkit/react'
+import { memo } from 'react'
 import type { DisplayResult, SearchQuery } from '../../../types'
 
 const style = {
@@ -43,40 +43,47 @@ function Empty({ query }: { query: SearchQuery }) {
             supported
           </VSCodeLink>
         </li>
-        {query.lang ? (
-          <li>
-            Remove language filter <code style={codeStyle}>{query.lang}</code>{' '}
-            and search in all files.
-          </li>
-        ) : null}
-        {query.strictness !== 'smart' ? (
-          <li>
-            Adjust pattern{' '}
-            <VSCodeLink href="https://ast-grep.github.io/reference/cli/run.html#no-ignore-file-type">
-              strictness
-            </VSCodeLink>
-            .
-          </li>
-        ) : null}
-        {query.selector ? (
-          <li>
-            Ensure pattern{' '}
-            <VSCodeLink href="https://ast-grep.github.io/guide/rule-config/atomic-rule.html#pattern">
-              selector
-            </VSCodeLink>{' '}
-            is valid. Debug in
-            <VSCodeLink href="https://ast-grep.github.io/playground.html">
-              Playground
-            </VSCodeLink>
-            .
-          </li>
-        ) : null}
-        {query.includeFile.length ? (
-          <li>
-            glob patterns requires ast-grep{' '}
-            <code style={codeStyle}>v0.28.0</code>+.
-          </li>
-        ) : null}
+        {query.lang ?
+          (
+            <li>
+              Remove language filter <code style={codeStyle}>{query.lang}</code>{' '}
+              and search in all files.
+            </li>
+          ) :
+          null}
+        {query.strictness !== 'smart' ?
+          (
+            <li>
+              Adjust pattern{' '}
+              <VSCodeLink href="https://ast-grep.github.io/reference/cli/run.html#no-ignore-file-type">
+                strictness
+              </VSCodeLink>
+              .
+            </li>
+          ) :
+          null}
+        {query.selector ?
+          (
+            <li>
+              Ensure pattern{' '}
+              <VSCodeLink href="https://ast-grep.github.io/guide/rule-config/atomic-rule.html#pattern">
+                selector
+              </VSCodeLink>{' '}
+              is valid. Debug in
+              <VSCodeLink href="https://ast-grep.github.io/playground.html">
+                Playground
+              </VSCodeLink>
+              .
+            </li>
+          ) :
+          null}
+        {query.includeFile.length ?
+          (
+            <li>
+              glob patterns requires ast-grep <code style={codeStyle}>v0.28.0</code>+.
+            </li>
+          ) :
+          null}
         <li>
           Adjust your gitignore files.{' '}
           <VSCodeLink href="https://ast-grep.github.io/reference/cli/run.html#no-ignore-file-type">
@@ -117,12 +124,12 @@ const SearchProviderMessage = memo(
     const fileCount = results.length
     return (
       <>
-        {resultCount === 0 ? (
-          <Empty query={query} />
-        ) : (
+        {resultCount === 0 ? <Empty query={query} /> : (
           <div
             style={style}
-          >{`${resultCount} results in ${fileCount} files`}</div>
+          >
+            {`${resultCount} results in ${fileCount} files`}
+          </div>
         )}
       </>
     )

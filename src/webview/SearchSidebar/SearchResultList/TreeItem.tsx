@@ -1,9 +1,9 @@
-import TreeHeader from './TreeHeader'
+import * as stylex from '@stylexjs/stylex'
+import { memo } from 'react'
 import type { DisplayResult } from '../../../types'
 import { MatchList } from './MatchList'
-import { memo } from 'react'
-import { useToggleResult, useStickyShadow, useActiveFile } from './useListState'
-import * as stylex from '@stylexjs/stylex'
+import TreeHeader from './TreeHeader'
+import { useActiveFile, useStickyShadow, useToggleResult } from './useListState'
 
 const styles = stylex.create({
   treeItem: {

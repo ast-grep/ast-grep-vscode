@@ -1,17 +1,10 @@
+import { commands, env, type ExtensionContext, Uri, window, workspace } from 'vscode'
 import {
-  env,
-  workspace,
-  type ExtensionContext,
-  window,
-  commands,
-  Uri,
-} from 'vscode'
-import {
+  type Executable,
+  ExecuteCommandRequest,
   LanguageClient,
   type LanguageClientOptions,
   type ServerOptions,
-  type Executable,
-  ExecuteCommandRequest,
 } from 'vscode-languageclient/node'
 import { resolveBinary, testBinaryExist } from './common'
 
@@ -107,8 +100,7 @@ async function findConfigFile(): Promise<Found> {
   if (userConfig) {
     found = await fileExists(userConfig)
   } else {
-    found =
-      (await fileExists('sgconfig.yml')) || (await fileExists('sgconfig.yaml'))
+    found = (await fileExists('sgconfig.yml')) || (await fileExists('sgconfig.yaml'))
   }
   return {
     found,

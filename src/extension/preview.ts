@@ -4,31 +4,25 @@
 // and call the vscode.diff command to display the replacement.
 // See relevant comments for TextDocumentContentProvider
 // custom scheme comes from https://stackoverflow.com/a/69384899/2198656
+import path from 'node:path'
 import {
   type CancellationToken,
+  commands,
+  EventEmitter,
   type ExtensionContext,
   Position,
   Range,
+  TabInputTextDiff,
   type TextDocument,
   type TextDocumentContentProvider,
+  TextEditorRevealType,
   Uri,
-  commands,
   window,
   workspace,
-  TextEditorRevealType,
-  TabInputTextDiff,
-  EventEmitter,
 } from 'vscode'
-import type {
-  ChildToParent,
-  DisplayResult,
-  SearchQuery,
-  SgSearch,
-  Diff,
-} from '../types'
+import type { ChildToParent, Diff, DisplayResult, SearchQuery, SgSearch } from '../types'
 import { parentPort, streamedPromise } from './common'
 import { buildCommand, splitByHighLightToken } from './search'
-import path from 'node:path'
 
 const SCHEME = 'sgpreview'
 let lastPattern = ''
@@ -38,7 +32,7 @@ let lastRewrite = ''
  * NB A file will only have one preview at a time
  * last rewrite will replace older rewrites
  * key: path, value: string content
- **/
+ */
 const previewContents: Map<string, string> = new Map()
 
 class AstGrepPreviewProvider implements TextDocumentContentProvider {
@@ -285,7 +279,7 @@ async function refreshSearchResult(
 
 /**
  *  set up replace preview and open file
- **/
+ */
 export function activatePreview({ subscriptions }: ExtensionContext) {
   subscriptions.push(
     workspace.registerTextDocumentContentProvider(SCHEME, previewProvider),
@@ -313,8 +307,7 @@ function bufferMaker(bytes: Uint8Array) {
     }
     const slice = bytes.slice(srcOffset, byteOffset.start)
     const replacement = encoder.encode(replace)
-    const expectedLength =
-      destOffset + slice.byteLength + replacement.byteLength
+    const expectedLength = destOffset + slice.byteLength + replacement.byteLength
     while (expectedLength > newBuffer.byteLength) {
       resizeBuffer()
     }

@@ -3,12 +3,12 @@ import type { DisplayResult } from '../../../types'
 import {
   acceptChangeAndRefresh,
   acceptFileChanges,
-  dismissOneMatch,
   dismissOneFile,
+  dismissOneMatch,
 } from '../../hooks/useSearch'
 
 import * as stylex from '@stylexjs/stylex'
-import { VscReplace, VscReplaceAll, VscClose } from 'react-icons/vsc'
+import { VscClose, VscReplace, VscReplaceAll } from 'react-icons/vsc'
 
 const styles = stylex.create({
   list: {
@@ -62,11 +62,13 @@ export function MatchActions({ match }: ActionsProps) {
   return (
     <ul {...stylex.props(styles.list)} role="toolbar">
       {/* VSCode supports shortcut Replace (⇧⌘1)*/}
-      {match.replacement ? (
-        <li {...stylex.props(styles.action)} onClick={onClick}>
-          <VscReplace role="button" title="Replace" tabIndex={0} />
-        </li>
-      ) : null}
+      {match.replacement ?
+        (
+          <li {...stylex.props(styles.action)} onClick={onClick}>
+            <VscReplace role="button" title="Replace" tabIndex={0} />
+          </li>
+        ) :
+        null}
       {/* VSCode supports shortcut Dismiss (⌘Backspace)*/}
       <li {...stylex.props(styles.action)} onClick={onDismiss}>
         <VscClose role="button" title="Dismiss" tabIndex={0} />

@@ -1,9 +1,9 @@
 import type { ExtensionContext } from 'vscode'
 import { detectDefaultBinaryAtStart } from './common'
-import { activatePreview } from './preview'
-import { activateWebview } from './webview'
 import { activateLsp } from './lsp'
+import { activatePreview } from './preview'
 import { activateSearch } from './search'
+import { activateWebview } from './webview'
 
 export async function activate(context: ExtensionContext) {
   await detectDefaultBinaryAtStart()

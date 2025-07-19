@@ -1,6 +1,6 @@
-import { Icon } from './Icon'
 import * as stylex from '@stylexjs/stylex'
 import { memo } from 'react'
+import { Icon } from './Icon'
 
 interface FileLinkProps {
   filePath: string

@@ -1,7 +1,7 @@
 import type { ChannelMessage } from 'unport'
-import { parentPort } from './common'
 import * as vscode from 'vscode'
-import { window, commands } from 'vscode'
+import { commands, window } from 'vscode'
+import { parentPort } from './common'
 
 /**
  * Set up webviews for UI display, e.g. sidebar.
@@ -107,8 +107,7 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
 
 function getNonce() {
   let text = ''
-  const possible =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
   for (let i = 0; i < 32; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length))
   }

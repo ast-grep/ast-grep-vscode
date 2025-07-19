@@ -1,16 +1,12 @@
-import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
-import {
-  useSearchField,
-  refreshResult,
-  hasInitialRewrite,
-} from '../../hooks/useQuery'
-import { childPort } from '../../postMessage'
-import { useSearchResult, acceptAllChanges } from '../../hooks/useSearch'
-import { SearchInput } from './SearchInput'
-import { LangSelect } from './LangSelect'
-import { useBoolean, useEffectOnce } from 'react-use'
-import { VscChevronRight, VscChevronDown, VscReplaceAll } from 'react-icons/vsc'
 import * as stylex from '@stylexjs/stylex'
+import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
+import { VscChevronDown, VscChevronRight, VscReplaceAll } from 'react-icons/vsc'
+import { useBoolean, useEffectOnce } from 'react-use'
+import { hasInitialRewrite, refreshResult, useSearchField } from '../../hooks/useQuery'
+import { acceptAllChanges, useSearchResult } from '../../hooks/useSearch'
+import { childPort } from '../../postMessage'
+import { LangSelect } from './LangSelect'
+import { SearchInput } from './SearchInput'
 
 const styles = stylex.create({
   container: {
@@ -50,8 +46,7 @@ const styles = stylex.create({
 function ReplaceBar() {
   const [rewrite, setRewrite] = useSearchField('rewrite')
   const { searching, groupedByFileSearchResult } = useSearchResult()
-  const disabled =
-    !rewrite || searching || groupedByFileSearchResult.length === 0
+  const disabled = !rewrite || searching || groupedByFileSearchResult.length === 0
   // sadly unport does not support unsub
   useEffectOnce(() => {
     childPort.onMessage('clearSearchResults', () => {

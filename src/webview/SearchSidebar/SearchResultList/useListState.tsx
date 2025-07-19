@@ -3,9 +3,9 @@
 
 import { useCallback, useEffect, useRef } from 'react'
 import { useBoolean } from 'react-use'
-import { onResultChange, findIndex } from '../../hooks/useSearch'
-import type { DisplayResult } from '../../../types'
 import type { VirtuosoHandle } from 'react-virtuoso'
+import type { DisplayResult } from '../../../types'
+import { findIndex, onResultChange } from '../../hooks/useSearch'
 import { childPort } from '../../postMessage'
 
 let ref: VirtuosoHandle

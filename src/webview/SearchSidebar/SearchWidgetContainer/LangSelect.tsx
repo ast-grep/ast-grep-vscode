@@ -1,8 +1,8 @@
 import * as stylex from '@stylexjs/stylex'
-import { Icon, icons } from '../SearchResultList/Icon'
 import { type ChangeEvent, useCallback } from 'react'
 import { VscListFlat } from 'react-icons/vsc'
 import { useSearchField } from '../../hooks/useQuery'
+import { Icon, icons } from '../SearchResultList/Icon'
 
 const styles = stylex.create({
   langButton: {

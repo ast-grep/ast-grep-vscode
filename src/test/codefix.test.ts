@@ -1,10 +1,5 @@
 import * as vscode from 'vscode'
-import {
-  assertCodeActionArraysEqual,
-  getActualCodeActions,
-  getDocUri,
-  testAndRetry,
-} from './utils'
+import { assertCodeActionArraysEqual, getActualCodeActions, getDocUri, testAndRetry } from './utils'
 
 /** Actual tests */
 suite('Should get code action', () => {

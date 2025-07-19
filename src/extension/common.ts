@@ -1,8 +1,8 @@
-import type { ParentPort } from '../types'
-import { Unport } from 'unport'
-import { workspace } from 'vscode'
 import type { ChildProcessWithoutNullStreams } from 'node:child_process'
 import { execFile } from 'node:child_process'
+import { Unport } from 'unport'
+import { workspace } from 'vscode'
+import type { ParentPort } from '../types'
 
 let defaultBinary: string
 
@@ -49,8 +49,7 @@ export function resolveBinary() {
 export function normalizeCommandForWindows(command: string) {
   const isExe = command.toLowerCase().endsWith('.exe')
   // windows user may input space in command
-  const normalizedCommand =
-    /\s/.test(command) && !isExe ? `"${command}"` : command
+  const normalizedCommand = /\s/.test(command) && !isExe ? `"${command}"` : command
   return {
     normalizedCommand,
     shell: process.platform === 'win32' && !isExe,
@@ -94,7 +93,7 @@ export function streamedPromise<T>(
     for (let i = 0; i < lines.length; i++) {
       try {
         result.push(JSON.parse(lines[i]))
-      } catch (e) {
+      } catch (_e) {
         // only store the last non-json line
         if (i === lines.length - 1) {
           trailingLine = lines[i]
@@ -112,6 +111,6 @@ export function streamedPromise<T>(
       } else {
         reject([code, signal])
       }
-    }),
+    })
   )
 }

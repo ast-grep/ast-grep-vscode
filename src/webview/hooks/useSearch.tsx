@@ -1,15 +1,15 @@
+import { useSyncExternalStore } from 'react'
 import {
-  type DisplayResult,
-  type OpenPayload,
-  openFile,
-  previewDiff,
-  dismissDiff,
-  commitChange,
   childPort,
+  commitChange,
+  dismissDiff,
+  type DisplayResult,
+  openFile,
+  type OpenPayload,
+  previewDiff,
   type RangeInfo,
   replaceAll,
 } from '../postMessage'
-import { useSyncExternalStore } from 'react'
 import type { SearchQuery } from './useQuery'
 
 // id should not overflow, the MOD is large enough

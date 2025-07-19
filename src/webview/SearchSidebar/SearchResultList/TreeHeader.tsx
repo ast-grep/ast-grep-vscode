@@ -1,12 +1,12 @@
-import { FileLink } from './FileLink'
-import { FileActions } from './Actions'
-import type { DisplayResult } from '../../../types'
-import { useActiveItem } from './useListState'
-import { VscChevronDown, VscChevronRight } from 'react-icons/vsc'
-import { VSCodeBadge } from '@vscode/webview-ui-toolkit/react'
 import * as stylex from '@stylexjs/stylex'
-import { useHover } from 'react-use'
+import { VSCodeBadge } from '@vscode/webview-ui-toolkit/react'
 import { useCallback } from 'react'
+import { VscChevronDown, VscChevronRight } from 'react-icons/vsc'
+import { useHover } from 'react-use'
+import type { DisplayResult } from '../../../types'
+import { FileActions } from './Actions'
+import { FileLink } from './FileLink'
+import { useActiveItem } from './useListState'
 
 const styles = stylex.create({
   fileName: {
@@ -86,13 +86,13 @@ export default function TreeHeader({
         {isExpanded ? <VscChevronDown /> : <VscChevronRight />}
       </div>
       <FileLink filePath={filePath} language={language} />
-      {hovered ? (
-        <FileActions filePath={filePath} hasReplace={hasReplace} />
-      ) : (
-        <VSCodeBadge {...stylex.props(styles.badge)}>
-          {matches.length}
-        </VSCodeBadge>
-      )}
+      {hovered ?
+        <FileActions filePath={filePath} hasReplace={hasReplace} /> :
+        (
+          <VSCodeBadge {...stylex.props(styles.badge)}>
+            {matches.length}
+          </VSCodeBadge>
+        )}
     </div>
   )
   const [hoverable] = useHover(element)

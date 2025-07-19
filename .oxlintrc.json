@@ -1,0 +1,10 @@
+{
+  "plugins": ["import", "react", "react-perf"],
+  "ignorePatterns": ["fixture"],
+  "rules": {
+    "eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_", "caughtErrors": "all", "caughtErrorsIgnorePattern": "^_" }
+    ]
+  }
+}

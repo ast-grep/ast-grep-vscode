@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 
-import { getDocUri, testDiagnostics, toRange, testAndRetry } from './utils'
+import { getDocUri, testAndRetry, testDiagnostics, toRange } from './utils'
 
 export const EXPECTED_NON_EMPTY_DIAGNOSTICS = [
   {
