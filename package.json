@@ -180,7 +180,7 @@
     "*.{ts, js}": "oxlint"
   },
   "devDependencies": {
-    "oxlint": "1.7.0",
+    "oxlint": "1.8.0",
     "dprint": "0.50.1",
     "@stylexjs/esbuild-plugin": "0.11.1",
     "@stylexjs/stylex": "0.14.2",
