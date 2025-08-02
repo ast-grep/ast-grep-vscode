@@ -183,7 +183,7 @@
     "oxlint": "1.8.0",
     "dprint": "0.50.1",
     "@stylexjs/esbuild-plugin": "0.11.1",
-    "@stylexjs/stylex": "0.14.2",
+    "@stylexjs/stylex": "0.15.2",
     "@types/glob": "9.0.0",
     "@types/mocha": "10.0.10",
     "@types/node": "22.16.4",
