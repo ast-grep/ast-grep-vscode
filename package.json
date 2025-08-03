@@ -165,8 +165,8 @@
     "url": "https://github.com/sponsors/HerringtonDarkholme"
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "pretest": "npm run compile",
+    "vscode:prepublish": "pnpm run compile",
+    "pretest": "pnpm run compile",
     "test": "node ./scripts/test/runTest.mjs",
     "compile": "node ./scripts/build.mjs",
     "typecheck": "tsc --noEmit",

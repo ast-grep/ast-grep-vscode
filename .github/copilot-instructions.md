@@ -55,10 +55,28 @@ src/
 ## Development Environment Setup
 
 ### Prerequisites
-- **Node.js** and **pnpm**: Package manager for dependencies
+
+> **⚠️ IMPORTANT: This repository MUST use pnpm**
+> 
+> This project uses pnpm as its package manager and has a `pnpm-lock.yaml` file. 
+> **DO NOT use npm or yarn** - this will cause dependency conflicts and build issues.
+> Always use `pnpm` commands for installing dependencies and running scripts.
+
+- **Node.js** and **pnpm**: Package manager for dependencies (pnpm is REQUIRED)
 - **ast-grep CLI**: Required for the extension to function
 
 ### Installation Steps
+
+0. **Install pnpm if not already available**:
+   ```bash
+   # Install pnpm globally via npm
+   npm install -g pnpm
+   
+   # Or via corepack (Node.js 16.10+)
+   corepack enable
+   corepack prepare pnpm@latest --activate
+   ```
+
 1. **Install ast-grep globally**:
    ```bash
    # Install via npm (recommended)
@@ -69,7 +87,7 @@ src/
    # Via homebrew: brew install ast-grep
    ```
 
-2. **Install project dependencies**:
+2. **Install project dependencies** (use pnpm only):
    ```bash
    pnpm install
    ```

@@ -58,6 +58,13 @@ brew install ast-grep
 
 Also see the [quickstart guide](https://ast-grep.github.io/guide/quick-start.html) for installation.
 
+### For Contributors
+
+> **⚠️ Important for development**: This repository uses **pnpm** as the package manager. 
+> If you're contributing to this project, you must use `pnpm` instead of `npm` or `yarn`.
+> 
+> Install pnpm: `npm install -g pnpm` or use `corepack enable && corepack prepare pnpm@latest --activate`
+
 - (optional) setting up ast-grep [project](https://ast-grep.github.io/guide/scan-project.html).
 
   This is an optional step to enable code linting and code actions. It requires at least one file and one folder to work:
