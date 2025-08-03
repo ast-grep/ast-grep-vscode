@@ -1,4 +1,4 @@
-import { commands, env, type ExtensionContext, Uri, window, workspace } from 'vscode'
+import { commands, env, type ExtensionContext, type FileSystemWatcher, type RelativePattern, Uri, window, workspace } from 'vscode'
 import {
   type Executable,
   ExecuteCommandRequest,
@@ -13,6 +13,10 @@ const diagnosticCollectionName = 'ast-grep-diagnostics'
 const outputChannelName = 'ast-grep'
 const languageClientId = 'ast-grep-client'
 const languageClientName = 'ast-grep language client'
+
+// File watchers for auto-refresh functionality
+let configFileWatcher: FileSystemWatcher | undefined
+let ruleDirectoryWatchers: FileSystemWatcher[] = []
 
 function getExecutable(
   config: string | undefined,
@@ -93,6 +97,146 @@ interface Found {
   path: string
 }
 
+/**
+ * Parse the sgconfig.yml file to extract rule directories
+ */
+async function parseConfigForRuleDirs(configPath: string): Promise<string[]> {
+  try {
+    const workspaceFolders = workspace.workspaceFolders
+    if (!workspaceFolders) {
+      return []
+    }
+    
+    const configUri = Uri.joinPath(workspaceFolders[0].uri, configPath)
+    const configData = await workspace.fs.readFile(configUri)
+    const configText = Buffer.from(configData).toString('utf8')
+    
+    // Simple YAML parsing for ruleDirs
+    // Look for ruleDirs: followed by list items
+    const ruleDirs: string[] = []
+    const lines = configText.split('\n')
+    let inRuleDirs = false
+    
+    for (const line of lines) {
+      const trimmed = line.trim()
+      if (trimmed === 'ruleDirs:') {
+        inRuleDirs = true
+        continue
+      }
+      
+      if (inRuleDirs) {
+        if (trimmed.startsWith('- ')) {
+          // Extract directory name after "- "
+          const dir = trimmed.substring(2).trim()
+          if (dir) {
+            ruleDirs.push(dir)
+          }
+        } else if (trimmed && !trimmed.startsWith(' ') && !trimmed.startsWith('-')) {
+          // End of ruleDirs section
+          break
+        }
+      }
+    }
+    
+    return ruleDirs
+  } catch (error) {
+    console.error('Failed to parse config file:', error)
+    return []
+  }
+}
+
+/**
+ * Set up file watchers for config file and rule directories
+ */
+async function setupFileWatchers(configPath: string): Promise<void> {
+  // Clean up existing watchers
+  cleanupFileWatchers()
+  
+  const workspaceFolders = workspace.workspaceFolders
+  if (!workspaceFolders) {
+    return
+  }
+  
+  const workspaceRoot = workspaceFolders[0].uri
+  
+  // Watch the config file
+  const configPattern = configPath || '{sgconfig.yml,sgconfig.yaml}'
+  const configRelativePattern: RelativePattern = {
+    base: workspaceRoot.fsPath,
+    baseUri: workspaceRoot,
+    pattern: configPattern
+  }
+  configFileWatcher = workspace.createFileSystemWatcher(configRelativePattern)
+  
+  configFileWatcher.onDidChange(async () => {
+    console.log('Config file changed, restarting ast-grep language server...')
+    await restart()
+    // Re-setup watchers in case rule directories changed
+    // The restart() function will handle re-setup of watchers automatically
+  })
+  
+  configFileWatcher.onDidCreate(async () => {
+    console.log('Config file created, restarting ast-grep language server...')
+    await restart()
+    // The restart() function will handle re-setup of watchers automatically
+  })
+  
+  configFileWatcher.onDidDelete(async () => {
+    console.log('Config file deleted, stopping ast-grep language server...')
+    await deactivate()
+  })
+  
+  // Parse config to get rule directories and watch them
+  const actualConfigPath = configPath || 
+    (await fileExists('sgconfig.yml') ? 'sgconfig.yml' : 
+     await fileExists('sgconfig.yaml') ? 'sgconfig.yaml' : '')
+     
+  if (actualConfigPath && await fileExists(actualConfigPath)) {
+    const ruleDirs = await parseConfigForRuleDirs(actualConfigPath)
+    
+    for (const ruleDir of ruleDirs) {
+      try {
+        // Watch for changes in rule directory (including subdirectories)
+        const ruleDirPattern = `${ruleDir}/**/*.{yml,yaml}`
+        const ruleRelativePattern: RelativePattern = {
+          base: workspaceRoot.fsPath,
+          baseUri: workspaceRoot,
+          pattern: ruleDirPattern
+        }
+        const watcher = workspace.createFileSystemWatcher(ruleRelativePattern)
+        
+        const onRuleChange = async () => {
+          console.log(`Rule file changed in ${ruleDir}, restarting ast-grep language server...`)
+          await restart()
+        }
+        
+        watcher.onDidChange(onRuleChange)
+        watcher.onDidCreate(onRuleChange)
+        watcher.onDidDelete(onRuleChange)
+        
+        ruleDirectoryWatchers.push(watcher)
+      } catch (error) {
+        console.error(`Failed to setup watcher for rule directory ${ruleDir}:`, error)
+      }
+    }
+  }
+}
+
+/**
+ * Clean up all file watchers
+ */
+function cleanupFileWatchers(): void {
+  if (configFileWatcher) {
+    configFileWatcher.dispose()
+    configFileWatcher = undefined
+  }
+  
+  for (const watcher of ruleDirectoryWatchers) {
+    watcher.dispose()
+  }
+  ruleDirectoryWatchers = []
+}
+
 /** returns the path to the config file if found */
 async function findConfigFile(): Promise<Found> {
   const userConfig = workspace.getConfiguration('astGrep').get('configPath', '')
@@ -155,6 +299,9 @@ export async function activateLsp(context: ExtensionContext) {
   if (setupOkay.found) {
     // Start the client. This will also launch the server
     client.start()
+    
+    // Set up file watchers for auto-refresh
+    await setupFileWatchers(setupOkay.path)
   } else {
     const path = setupOkay.path || 'sgconfig.yml'
     client.outputChannel.appendLine(
@@ -164,6 +311,11 @@ export async function activateLsp(context: ExtensionContext) {
       'See LSP setup guide https://ast-grep.github.io/guide/tools/editors.html#vscode.',
     )
   }
+
+  // Ensure cleanup happens when extension is deactivated
+  context.subscriptions.push({
+    dispose: cleanupFileWatchers
+  })
 }
 
 async function setupClient() {
@@ -197,12 +349,20 @@ async function setupClient() {
 async function restart(): Promise<void> {
   await deactivate()
   if (client) {
-    await setupClient()
+    const setupOkay = await setupClient()
     await client.start()
+    
+    // Re-setup file watchers after restart
+    if (setupOkay.found) {
+      await setupFileWatchers(setupOkay.path)
+    }
   }
 }
 
 function deactivate(): Promise<void> | undefined {
+  // Clean up file watchers first
+  cleanupFileWatchers()
+  
   if (!client) {
     return undefined
   }
