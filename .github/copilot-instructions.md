@@ -52,6 +52,74 @@ src/
 - **StyleX**: CSS-in-JS for component styling
 - **esbuild**: Build tool for bundling
 
+## Development Environment Setup
+
+### Prerequisites
+- **Node.js** and **pnpm**: Package manager for dependencies
+- **ast-grep CLI**: Required for the extension to function
+
+### Installation Steps
+1. **Install ast-grep globally**:
+   ```bash
+   # Install via npm (recommended)
+   npm install -g @ast-grep/cli
+   
+   # Alternative methods:
+   # Via cargo: cargo install ast-grep
+   # Via homebrew: brew install ast-grep
+   ```
+
+2. **Install project dependencies**:
+   ```bash
+   pnpm install
+   ```
+
+3. **Compile the extension**:
+   ```bash
+   pnpm run compile
+   ```
+
+### Development Commands
+- `pnpm run watch`: Start development mode with file watching
+- `pnpm run compile`: Build the extension
+- `pnpm run typecheck`: Run TypeScript type checking
+- `pnpm run lint`: Run oxlint for code linting
+- `pnpm run format:check`: Check code formatting with dprint
+
+## Testing
+
+The project uses multiple types of testing and validation:
+
+### Static Analysis
+```bash
+# Check code formatting
+pnpm run format:check
+
+# Run linter
+pnpm run lint
+
+# Type checking
+pnpm run typecheck
+```
+
+### VSCode Extension Tests
+```bash
+# Run all tests (includes compilation)
+pnpm test
+
+# Or run individual steps:
+pnpm run compile  # Compile first
+pnpm run test     # Run tests
+```
+
+### Continuous Integration
+The project runs tests on multiple platforms (Ubuntu, macOS, Windows) and includes:
+- Code formatting and linting checks
+- TypeScript compilation and type checking
+- VSCode extension integration tests in headless mode
+
+Tests require the ast-grep binary to be available and test the extension's integration with VSCode's extension host environment.
+
 ## Coding Patterns & Conventions
 
 ### Extension Development
