@@ -196,15 +196,15 @@ async function setupClient() {
 
 async function restart(): Promise<void> {
   await deactivate()
-  if (client) {
-    await setupClient()
+  const configFile = await setupClient()
+  if (configFile.found) {
     await client.start()
   }
 }
 
-function deactivate(): Promise<void> | undefined {
+async function deactivate(): Promise<void> {
   if (!client) {
-    return undefined
+    return
   }
-  return client.stop()
+  await client.stop()
 }
