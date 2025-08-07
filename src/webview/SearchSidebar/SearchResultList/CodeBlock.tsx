@@ -75,8 +75,11 @@ export const CodeBlock = memo(({ match }: CodeBlockProps) => {
     openAction({ filePath: file, locationsToSelect: range })
   }, [file, range])
 
+  // Extract the matched text for the title tooltip
+  const matchedText = displayLine.slice(startIdx, endIdx)
+
   return (
-    <div {...stylex.props(styles.box)} onClick={onClick}>
+    <div {...stylex.props(styles.box)} onClick={onClick} title={matchedText}>
       <MultiLineIndicator lineSpan={lineSpan} />
       {displayLine.slice(0, startIdx)}
       <Highlight {...match} />
