@@ -74,7 +74,7 @@ export const CodeBlock = memo(({ match }: CodeBlockProps) => {
   const onClick = useCallback(() => {
     openAction({ filePath: file, locationsToSelect: range })
   }, [file, range])
-  
+
   // Extract the matched text for the title tooltip
   const matchedText = displayLine.slice(startIdx, endIdx)
 
