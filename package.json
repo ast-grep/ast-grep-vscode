@@ -187,7 +187,7 @@
     "@types/glob": "9.0.0",
     "@types/mocha": "10.0.10",
     "@types/node": "22.17.1",
-    "@types/react": "19.1.9",
+    "@types/react": "19.1.10",
     "@types/react-dom": "19.1.7",
     "@types/vscode": "1.102.0",
     "@vscode/test-electron": "2.5.2",
