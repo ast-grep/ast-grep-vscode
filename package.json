@@ -82,6 +82,22 @@
         }
       },
       {
+        "command": "ast-grep.enableYAML",
+        "title": "Use YAML",
+        "icon": {
+          "light": "media/yaml-light.svg",
+          "dark": "media/yaml-dark.svg"
+        }
+      },
+      {
+        "command": "ast-grep.enablePattern",
+        "title": "Use Pattern",
+        "icon": {
+          "light": "media/pattern-light.svg",
+          "dark": "media/pattern-dark.svg"
+        }
+      },
+      {
         "command": "ast-grep.searchByCode",
         "title": "ast-grep: Search by Code"
       }
@@ -103,6 +119,16 @@
         }
       ],
       "view/title": [
+        {
+          "command": "ast-grep.enableYAML",
+          "when": "view == ast-grep.search.input && !ast-grep.yamlMode",
+          "group": "navigation"
+        },
+        {
+          "command": "ast-grep.enablePattern",
+          "when": "view == ast-grep.search.input && ast-grep.yamlMode",
+          "group": "navigation"
+        },
         {
           "command": "ast-grep.collapseAll",
           "when": "view == ast-grep.search.input && !ast-grep.searchDefaultCollapse",
