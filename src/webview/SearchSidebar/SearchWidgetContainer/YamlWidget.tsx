@@ -1,6 +1,7 @@
 import * as stylex from '@stylexjs/stylex'
 import { VSCodeButton, VSCodeTextArea } from '@vscode/webview-ui-toolkit/react'
 import { useState } from 'react'
+import { postYAML } from '../../hooks/useSearch'
 
 const styles = stylex.create({
   yaml: {
@@ -36,7 +37,7 @@ export default function YamlWidget() {
         appearance="primary"
         onClick={() => {
           // Handle save or apply logic here
-          console.log('YAML Config:', value)
+          postYAML({ yaml: value, includeFile: '' })
         }}
       >
         Search

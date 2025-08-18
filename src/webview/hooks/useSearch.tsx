@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react'
+import { YAMLConfig } from '../../types'
 import {
   childPort,
   commitChange,
@@ -61,6 +62,15 @@ function byFilePath(a: [string, unknown], b: [string, unknown]) {
 function postSearch(searchQuery: SearchQuery) {
   id = (id + 1) % MOD
   childPort.postMessage('search', { id, ...searchQuery })
+  searching = true
+  hasStaleResult = true
+  searchError = null
+  notify()
+}
+
+export function postYAML(config: YAMLConfig) {
+  id = (id + 1) % MOD
+  childPort.postMessage('yaml', { id, ...config })
   searching = true
   hasStaleResult = true
   searchError = null

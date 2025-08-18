@@ -2,7 +2,7 @@ import { type ChildProcessWithoutNullStreams, spawn } from 'node:child_process'
 import path from 'node:path'
 import { commands, type ExtensionContext, window, workspace } from 'vscode'
 
-import type { DisplayResult, SearchQuery, SgSearch } from '../types'
+import type { DisplayResult, SearchQuery, SgSearch, YAMLConfig } from '../types'
 import { normalizeCommandForWindows, parentPort, resolveBinary, streamedPromise } from './common'
 
 /**
@@ -160,6 +160,41 @@ function getPatternRes(query: SearchQuery, handlers: Handlers) {
   return uniqueCommand(proc, handlers.onData)
 }
 
+function buildYAMLCommand(config: YAMLConfig) {
+  const { yaml, includeFile } = config
+  if (!yaml) {
+    return
+  }
+  const command = resolveBinary()
+  const { normalizedCommand, shell } = normalizeCommandForWindows(command)
+  const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
+  const args = ['scan', '--inline-rules', yaml, '--json=stream']
+  const validIncludeFile = includeFile.split(',').filter(Boolean)
+  const hasGlobPattern = validIncludeFile.some(i => i.includes('*'))
+  if (hasGlobPattern) {
+    args.push(...validIncludeFile.map(i => `--globs=${i}`))
+  } else {
+    args.push(...validIncludeFile)
+  }
+  console.debug('scanning', config, normalizedCommand, args)
+  // TODO: multi-workspaces support
+  return spawn(normalizedCommand, args, {
+    shell,
+    cwd: uris[0],
+  })
+}
+
+function getYAMLRes(config: YAMLConfig, handlers: Handlers) {
+  const proc = buildYAMLCommand(config)
+  if (proc) {
+    proc.on('error', error => {
+      console.debug('ast-grep CLI runs error')
+      handlers.onError(error)
+    })
+  }
+  return uniqueCommand(proc, handlers.onData)
+}
+
 parentPort.onMessage('search', async payload => {
   const onData = (ret: SgSearch[]) => {
     parentPort.postMessage('searchResultStreaming', {
@@ -168,6 +203,25 @@ parentPort.onMessage('search', async payload => {
     })
   }
   await getPatternRes(payload, {
+    onData,
+    onError(error) {
+      parentPort.postMessage('error', {
+        error,
+        ...payload,
+      })
+    },
+  })
+  parentPort.postMessage('searchEnd', payload)
+})
+
+parentPort.onMessage('yaml', async payload => {
+  const onData = (ret: SgSearch[]) => {
+    parentPort.postMessage('searchResultStreaming', {
+      ...payload,
+      searchResult: ret.map(splitByHighLightToken),
+    })
+  }
+  await getYAMLRes(payload, {
     onData,
     onError(error) {
       parentPort.postMessage('error', {

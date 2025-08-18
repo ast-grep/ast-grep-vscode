@@ -78,8 +78,14 @@ export interface Diff {
   range: RangeInfo
 }
 
+export interface YAMLConfig {
+  yaml: string
+  includeFile: string
+}
+
 export interface ChildToParent {
   search: WithId<SearchQuery>
+  yaml: WithId<YAMLConfig>
   reload: unknown
   openFile: {
     filePath: string
