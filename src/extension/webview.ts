@@ -125,6 +125,8 @@ function clearSearchResults() {
 }
 
 function enableYAML() {
+  parentPort.postMessage('enableYAML', true)
+  parentPort.postMessage('clearSearchResults', {})
   vscode.commands.executeCommand(
     'setContext',
     'ast-grep.yamlMode',
@@ -133,6 +135,8 @@ function enableYAML() {
 }
 
 function enablePattern() {
+  parentPort.postMessage('enableYAML', false)
+  parentPort.postMessage('clearSearchResults', {})
   vscode.commands.executeCommand(
     'setContext',
     'ast-grep.yamlMode',

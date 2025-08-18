@@ -70,6 +70,7 @@ export interface ParentToChild {
   clearSearchResults: unknown
   toggleAllSearch: unknown
   searchByCode: { text: string }
+  enableYAML: boolean
 }
 
 export interface Diff {
