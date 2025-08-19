@@ -206,7 +206,7 @@
     "*.{ts, js}": "oxlint"
   },
   "devDependencies": {
-    "oxlint": "1.11.1",
+    "oxlint": "1.12.0",
     "dprint": "0.50.1",
     "@stylexjs/esbuild-plugin": "0.11.1",
     "@stylexjs/stylex": "0.15.2",
