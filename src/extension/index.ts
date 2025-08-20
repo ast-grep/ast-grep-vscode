@@ -1,4 +1,5 @@
 import type { ExtensionContext } from 'vscode'
+import { activateCodeLens } from './codelens'
 import { detectDefaultBinaryAtStart } from './common'
 import { activateLsp } from './lsp'
 import { activatePreview } from './preview'
@@ -11,4 +12,5 @@ export async function activate(context: ExtensionContext) {
   activateWebview(context)
   activateSearch(context)
   activatePreview(context)
+  activateCodeLens(context)
 }

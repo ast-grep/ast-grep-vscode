@@ -125,6 +125,12 @@ childPort.onMessage('refreshSearchResult', event => {
   grouped.sort(byFilePath)
   notify()
 })
+childPort.onMessage('searchByYAML', event => {
+  postYAML({
+    yaml: event.text,
+    includeFile: '',
+  })
+})
 
 function groupBy(matches: DisplayResult[]) {
   const groups = new Map<string, DisplayResult[]>()

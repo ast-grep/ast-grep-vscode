@@ -22,26 +22,6 @@ export default function YamlWidget() {
   const [value, setValue] = useState('')
   return (
     <div {...stylex.props(styles.yaml)}>
-      <VSCodeTextArea
-        {...stylex.props(styles.editor)}
-        value={value}
-        placeholder="YAML configuration"
-        resize="vertical"
-        onInput={(e: any) => {
-          const newValue = e.target.value || ''
-          setValue(newValue)
-        }}
-      />
-      <VSCodeButton
-        {...stylex.props(styles.searchButton)}
-        appearance="primary"
-        onClick={() => {
-          // Handle save or apply logic here
-          postYAML({ yaml: value, includeFile: '' })
-        }}
-      >
-        Search
-      </VSCodeButton>
     </div>
   )
 }

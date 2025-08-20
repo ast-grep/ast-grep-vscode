@@ -71,6 +71,7 @@ export interface ParentToChild {
   toggleAllSearch: unknown
   searchByCode: { text: string }
   enableYAML: boolean
+  searchByYAML: { text: string }
 }
 
 export interface Diff {
