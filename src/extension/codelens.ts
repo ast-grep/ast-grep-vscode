@@ -18,6 +18,7 @@ export function activateCodeLens(context: vscode.ExtensionContext) {
       parentPort.postMessage('searchByYAML', {
         text,
       })
+      vscode.commands.executeCommand('ast-grep.search.input.focus')
     },
   )
 

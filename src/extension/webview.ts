@@ -19,8 +19,6 @@ export function activateWebview(context: vscode.ExtensionContext) {
     commands.registerCommand('ast-grep.clearSearchResults', clearSearchResults),
     commands.registerCommand('ast-grep.expandAll', toggleAllSearch),
     commands.registerCommand('ast-grep.collapseAll', toggleAllSearch),
-    commands.registerCommand('ast-grep.enableYAML', enableYAML),
-    commands.registerCommand('ast-grep.enablePattern', enablePattern),
   )
 }
 
@@ -122,26 +120,6 @@ function refreshSearch() {
 
 function clearSearchResults() {
   parentPort.postMessage('clearSearchResults', {})
-}
-
-function enableYAML() {
-  parentPort.postMessage('enableYAML', true)
-  parentPort.postMessage('clearSearchResults', {})
-  vscode.commands.executeCommand(
-    'setContext',
-    'ast-grep.yamlMode',
-    true,
-  )
-}
-
-function enablePattern() {
-  parentPort.postMessage('enableYAML', false)
-  parentPort.postMessage('clearSearchResults', {})
-  vscode.commands.executeCommand(
-    'setContext',
-    'ast-grep.yamlMode',
-    false,
-  )
 }
 
 let defaultCollapse = false
