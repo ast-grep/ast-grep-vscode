@@ -6,7 +6,7 @@ export function activateCodeLens(context: vscode.ExtensionContext) {
   const codelensProvider = new CodelensProvider()
   context.subscriptions.push(
     vscode.languages.registerCodeLensProvider(
-      { language: 'yaml', pattern: '**/*.yml' }, // Only trigger for YAML files
+      { language: 'yaml' }, // Only trigger for YAML files
       codelensProvider,
     ),
   )
