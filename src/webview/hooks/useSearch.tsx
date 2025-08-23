@@ -177,7 +177,7 @@ function getSnapshot() {
 
 function queryHasRewrite() {
   if ('yaml' in queryInFlight) {
-    return /^fix:/.test(queryInFlight.yaml)
+    return /^fix:/m.test(queryInFlight.yaml)
   }
   return !!queryInFlight.rewrite
 }
