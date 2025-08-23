@@ -20,7 +20,7 @@ const MOD = 1e9 + 7
 // maintain the latest search task id and callback
 let id = 0
 let grouped: [string, DisplayResult[]][] = []
-let queryInFlight: SearchQuery = {
+let queryInFlight: SearchQuery | YAMLConfig = {
   pattern: '',
   includeFile: '',
   rewrite: '',
@@ -175,11 +175,18 @@ function getSnapshot() {
   return version // symbolic snapshot for react
 }
 
+function queryHasRewrite() {
+  if ('yaml' in queryInFlight) {
+    return /^fix:/.test(queryInFlight.yaml)
+  }
+  return !!queryInFlight.rewrite
+}
+
 /**
  * Either open a file or preview the diff
  */
 export function openAction(payload: OpenPayload) {
-  if (!queryInFlight.rewrite) {
+  if (!queryHasRewrite()) {
     openFile(payload)
     return
   }

@@ -20,13 +20,22 @@ import {
   window,
   workspace,
 } from 'vscode'
-import type { ChildToParent, Diff, DisplayResult, SearchQuery, SgSearch } from '../types'
+import type {
+  ChildToParent,
+  Diff,
+  DisplayResult,
+  PatternQuery,
+  SearchQuery,
+  SgSearch,
+  YAMLQuery,
+} from '../types'
 import { parentPort, streamedPromise } from './common'
 import { buildCommand, splitByHighLightToken } from './search'
 
 const SCHEME = 'sgpreview'
 let lastPattern = ''
 let lastRewrite = ''
+let lastYAML = ''
 
 /**
  * NB A file will only have one preview at a time
@@ -169,7 +178,15 @@ function closeAllDiffs() {
   }
 }
 
-function refreshDiff(query: SearchQuery) {
+function refreshYAMLDiff(query: YAMLQuery) {
+  if (query.yaml === lastYAML) {
+    return
+  }
+  previewContents.clear()
+  closeAllDiffs()
+}
+
+function refreshPatternDiff(query: PatternQuery) {
   try {
     // Clear cache if pattern/rewrite changed
     if (query.pattern !== lastPattern || query.rewrite !== lastRewrite) {
@@ -190,6 +207,15 @@ function refreshDiff(query: SearchQuery) {
     lastRewrite = query.rewrite
   }
 }
+
+function refreshDiff(query: SearchQuery) {
+  if ('yaml' in query) {
+    return refreshYAMLDiff(query)
+  } else {
+    return refreshPatternDiff(query)
+  }
+}
+
 parentPort.onMessage('openFile', openFile)
 parentPort.onMessage('previewDiff', previewDiff)
 parentPort.onMessage('dismissDiff', dismissDiff)
@@ -206,34 +232,25 @@ async function onReplaceAll(payload: ChildToParent['replaceAll']) {
   if (confirmed !== 'Replace') {
     return
   }
-  const { id, pattern, rewrite, selector, strictness, lang } = payload
-  for (const change of payload.changes) {
+  const { changes, ...other } = payload
+  for (const change of changes) {
     // TODO: chunk change
     await onCommitChange({
-      id,
-      pattern,
-      rewrite,
-      selector,
-      strictness,
-      lang,
+      ...other,
       ...change,
     })
   }
 }
 
 async function onCommitChange(payload: ChildToParent['commitChange']) {
-  const { filePath, pattern, rewrite, strictness, selector, lang } = payload
+  const { filePath, ...fields } = payload
   const fileUri = workspaceUriFromFilePath(filePath)
   if (!fileUri) {
     return
   }
   await doChange(fileUri, payload)
   await refreshSearchResult(payload.id, fileUri, {
-    pattern,
-    rewrite,
-    strictness,
-    selector,
-    lang,
+    ...fields,
     includeFile: filePath,
   })
 }

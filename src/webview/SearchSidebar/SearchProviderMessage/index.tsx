@@ -20,10 +20,15 @@ const codeStyle = {
 } as const
 
 function Empty({ query }: { query: SearchQuery }) {
-  const { pattern, includeFile } = query
-  if (!pattern) {
-    return null
+  if ('yaml' in query) {
+    const id = /id:\s*([^,\n]+)/.exec(query.yaml)?.[1]
+    return (
+      <div style={style}>
+        No results found for YAML <code style={codeStyle}>{id}</code>
+      </div>
+    )
   }
+  const { pattern, includeFile } = query
   return (
     <div style={style}>
       No results found for <code style={codeStyle}>{pattern}</code>

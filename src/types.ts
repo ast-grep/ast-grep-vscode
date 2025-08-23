@@ -27,7 +27,7 @@ export interface DisplayResult {
   language: string
 }
 
-interface SearchQueryBasic {
+interface PatternhQueryBasic {
   pattern: string
   rewrite: string
   strictness: string
@@ -35,9 +35,21 @@ interface SearchQueryBasic {
   lang: string
 }
 
-export interface SearchQuery extends SearchQueryBasic {
+export type PatternQuery = PatternhQueryBasic & {
   includeFile: string
 }
+
+interface YAMLQueryBasic {
+  yaml: string
+}
+
+export type YAMLQuery = YAMLQueryBasic & {
+  includeFile: string
+}
+
+export type SearchQueryBasic = PatternhQueryBasic | YAMLQueryBasic
+
+export type SearchQuery = PatternQuery | YAMLQuery
 
 export type SgSearch = {
   text: string
@@ -82,6 +94,7 @@ export interface Diff {
 export interface YAMLConfig {
   yaml: string
   includeFile: string
+  rewrite?: boolean
 }
 
 export interface ChildToParent {

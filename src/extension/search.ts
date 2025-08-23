@@ -2,7 +2,7 @@ import { type ChildProcessWithoutNullStreams, spawn } from 'node:child_process'
 import path from 'node:path'
 import { commands, type ExtensionContext, window, workspace } from 'vscode'
 
-import type { DisplayResult, SearchQuery, SgSearch, YAMLConfig } from '../types'
+import type { DisplayResult, PatternQuery, SearchQuery, SgSearch, YAMLConfig } from '../types'
 import { normalizeCommandForWindows, parentPort, resolveBinary, streamedPromise } from './common'
 
 /**
@@ -109,6 +109,14 @@ async function uniqueCommand(
 
 // TODO: add unit test for commandBuilder
 export function buildCommand(query: SearchQuery) {
+  if ('yaml' in query) {
+    return buildYAMLCommand(query)
+  } else {
+    return buildPatternCommand(query)
+  }
+}
+
+function buildPatternCommand(query: PatternQuery) {
   const { pattern, includeFile, strictness } = query
   if (!pattern) {
     return

@@ -1,7 +1,4 @@
 import * as stylex from '@stylexjs/stylex'
-import { VSCodeButton, VSCodeTextArea } from '@vscode/webview-ui-toolkit/react'
-import { useState } from 'react'
-import { postYAML } from '../../hooks/useSearch'
 
 const styles = stylex.create({
   yaml: {
@@ -19,7 +16,6 @@ const styles = stylex.create({
 })
 
 export default function YamlWidget() {
-  const [value, setValue] = useState('')
   return (
     <div {...stylex.props(styles.yaml)}>
     </div>

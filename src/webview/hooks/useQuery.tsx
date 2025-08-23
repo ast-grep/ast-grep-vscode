@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useBoolean, useDebounce, useLocalStorage } from 'react-use'
-import { SearchQuery } from '../../types'
+import { PatternQuery, SearchQuery } from '../../types'
 import { childPort } from '../postMessage'
 export { SearchQuery }
 // this is the single sole point of communication
 // between search query and search result
 import { postSearch } from './useSearch'
 
-const searchQuery: Record<keyof SearchQuery, string> = {
+const searchQuery: Record<keyof PatternQuery, string> = {
   pattern: '',
   strictness: 'smart',
   selector: '',
@@ -18,7 +18,7 @@ const searchQuery: Record<keyof SearchQuery, string> = {
 
 type PatternKeys = 'selector'
 
-const LS_KEYS: Record<Exclude<keyof SearchQuery, PatternKeys>, string> = {
+const LS_KEYS: Record<Exclude<keyof PatternQuery, PatternKeys>, string> = {
   pattern: 'ast-grep-search-panel-input-value',
   includeFile: 'ast-grep-search-panel-include-value',
   rewrite: 'ast-grep-search-panel-rewrite-value',
