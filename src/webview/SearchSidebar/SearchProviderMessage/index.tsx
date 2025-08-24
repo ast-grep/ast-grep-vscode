@@ -19,14 +19,43 @@ const codeStyle = {
   fontSize: 'var(--vscode-font-size)',
 } as const
 
+function EmptyYaml({ id }: { id: string | undefined }) {
+  return (
+    <div style={style}>
+      No results found for YAML <code style={codeStyle}>{id}</code>.
+      <br />
+      If this is unexpected, you can try:
+      <ul style={ulStyle}>
+        <li>
+          Simplify the rule and code. Start from a minimal example.
+        </li>
+        <li>
+          <VSCodeLink href="https://ast-grep.github.io/advanced/faq.html#why-is-rule-matching-order-sensitive">
+            Rule order
+          </VSCodeLink>{' '}
+          can be important. Try using <code>all</code>.
+        </li>
+        <li>
+          <VSCodeLink href="https://ast-grep.github.io/guide/rule-config/relational-rule.html#stopby">
+            Relational rules
+          </VSCodeLink>{' '}
+          like <code>has</code>/<code>inside</code>) needs <code>stopBy: end</code>.
+        </li>
+        <li>
+          Adjust your gitignore files.{' '}
+          <VSCodeLink href="https://ast-grep.github.io/reference/cli/run.html#no-ignore-file-type">
+            See doc
+          </VSCodeLink>
+        </li>
+      </ul>
+    </div>
+  )
+}
+
 function Empty({ query }: { query: SearchQuery }) {
   if ('yaml' in query) {
     const id = /id:\s*([^,\n]+)/.exec(query.yaml)?.[1]
-    return (
-      <div style={style}>
-        No results found for YAML <code style={codeStyle}>{id}</code>
-      </div>
-    )
+    return <EmptyYaml id={id} />
   }
   const { pattern, includeFile } = query
   return (
