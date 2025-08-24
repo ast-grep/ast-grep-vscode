@@ -33,13 +33,14 @@ function EmptyYaml({ id }: { id: string | undefined }) {
           <VSCodeLink href="https://ast-grep.github.io/advanced/faq.html#why-is-rule-matching-order-sensitive">
             Rule order
           </VSCodeLink>{' '}
-          can be important. Try using <code>all</code>.
+          can be important. Try using <code style={codeStyle}>all</code>.
         </li>
         <li>
           <VSCodeLink href="https://ast-grep.github.io/guide/rule-config/relational-rule.html#stopby">
             Relational rules
           </VSCodeLink>{' '}
-          like <code>has</code>/<code>inside</code>) needs <code>stopBy: end</code>.
+          like <code style={codeStyle}>has</code>/<code style={codeStyle}>inside</code>) needs{' '}
+          <code style={codeStyle}>stopBy: end</code>.
         </li>
         <li>
           Adjust your gitignore files.{' '}
