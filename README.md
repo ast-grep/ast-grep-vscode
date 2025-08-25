@@ -22,9 +22,11 @@ It includes two parts: a UI for ast-grep CLI and a client for ast-grep LSP.
 
 Use [pattern](https://ast-grep.github.io/guide/pattern-syntax.html) to structural search your codebase.
 
-|Search Pattern|Search In Folder|
+|Feature|Screenshot|
 |--|--|
-|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/main/readme/search-pattern.png?raw=true">|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/main/readme/search-in-folder.png?raw=true">|
+|Search Pattern|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/main/readme/search-pattern.png?raw=true">|
+|Search YAML|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/main/readme/search-yaml.png?raw=true">|
+|Search In Folder|<img src="https://github.com/ast-grep/ast-grep-vscode/blob/main/readme/search-in-folder.png?raw=true">|
 
 ### Code Replace
 
@@ -60,9 +62,9 @@ Also see the [quickstart guide](https://ast-grep.github.io/guide/quick-start.htm
 
 ### For Contributors
 
-> **⚠️ Important for development**: This repository uses **pnpm** as the package manager. 
+> **⚠️ Important for development**: This repository uses **pnpm** as the package manager.
 > If you're contributing to this project, you must use `pnpm` instead of `npm` or `yarn`.
-> 
+>
 > Install pnpm: `npm install -g pnpm` or use `corepack enable && corepack prepare pnpm@latest --activate`
 
 - (optional) setting up ast-grep [project](https://ast-grep.github.io/guide/scan-project.html).
