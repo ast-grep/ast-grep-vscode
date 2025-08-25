@@ -2,26 +2,7 @@ import * as assert from 'node:assert'
 import * as path from 'node:path'
 import * as vscode from 'vscode'
 
-export let doc: vscode.TextDocument
 export let editor: vscode.TextEditor
-
-/**
- * Compare actual and expected diagnostics reported by the language server
- * sort them so that order doesn't matter
- */
-export const assertDiagnosticsEqual = (
-  actual: vscode.Diagnostic[],
-  expected: vscode.Diagnostic[],
-) => {
-  assert.equal(actual.length, expected.length)
-  actual.sort((a, b) => a.message === b.message ? 0 : a.message > b.message ? 1 : -1)
-  expected.sort((a, b) => a.message === b.message ? 0 : a.message > b.message ? 1 : -1)
-  actual.forEach((actualElement, i) => {
-    assert.equal(actualElement.message, expected[i].message)
-    assert.deepEqual(actualElement.range, expected[i].range)
-    assert.equal(actualElement.severity, expected[i].severity)
-  })
-}
 
 /**
  * @param ms The number of milliseconds to sleep
@@ -35,14 +16,6 @@ export const getDocPath = (p: string) => {
 }
 export const getDocUri = (p: string) => {
   return vscode.Uri.file(getDocPath(p))
-}
-
-export async function setTestContent(content: string): Promise<boolean> {
-  const all = new vscode.Range(
-    doc.positionAt(0),
-    doc.positionAt(doc.getText().length),
-  )
-  return editor.edit(eb => eb.replace(all, content))
 }
 
 export async function testDiagnostics(
