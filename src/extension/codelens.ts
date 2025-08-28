@@ -14,11 +14,21 @@ export function activateCodeLens(context: vscode.ExtensionContext) {
   // Register the command that the CodeLens will execute
   const runRuleCommand = vscode.commands.registerCommand(
     'ast-grep.runRule',
-    (text: string) => {
-      parentPort.postMessage('searchByYAML', {
-        text,
-      })
-      vscode.commands.executeCommand('ast-grep.search.input.focus')
+    async (text: string) => {
+      await vscode.commands.executeCommand('ast-grep.search.input.focus')
+      // if the input box is not ready, retry after a short delay
+      // since unport is not set up yet
+      try {
+        parentPort.postMessage('searchByYAML', {
+          text,
+        })
+      } catch (_e) {
+        // wait for input box to show up
+        await new Promise(r => setTimeout(r, 300))
+        parentPort.postMessage('searchByYAML', {
+          text,
+        })
+      }
     },
   )
 
