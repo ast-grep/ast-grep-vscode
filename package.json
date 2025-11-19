@@ -200,7 +200,7 @@
     "esbuild": "0.25.10",
     "glob": "11.0.3",
     "husky": "9.1.7",
-    "lint-staged": "16.1.5",
+    "lint-staged": "16.2.7",
     "mocha": "11.7.2",
     "react": "19.2.0",
     "react-dom": "19.2.0",
