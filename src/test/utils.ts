@@ -81,13 +81,14 @@ export async function getActualCodeActions(
   range: vscode.Range,
 ): Promise<vscode.CodeAction[]> {
   try {
-    const executedCommand = await vscode.commands.executeCommand(
+    const executedCommand: vscode.CodeAction[] = await vscode.commands.executeCommand(
       'vscode.executeCodeActionProvider',
       docUri,
       range,
       'quickfix',
     )
-    return executedCommand as vscode.CodeAction[]
+    // Filter out any copilot suggestions that may interfere with tests
+    return executedCommand.filter(action => !action.kind?.value.includes('copilot'))
   } catch (e) {
     console.error('Failed to get code actions.')
     throw e
