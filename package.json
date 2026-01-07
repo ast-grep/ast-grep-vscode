@@ -190,7 +190,7 @@
     "@stylexjs/stylex": "0.15.3",
     "@types/glob": "9.0.0",
     "@types/mocha": "10.0.10",
-    "@types/node": "22.18.10",
+    "@types/node": "22.19.3",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "@types/vscode": "1.103.0",
