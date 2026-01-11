@@ -116,6 +116,10 @@ suite('Search - Pattern Mode', () => {
 })
 
 suite('Search - YAML Mode', () => {
+  if (process.platform === 'win32') {
+    // Skip due to windows do not handle newline in command line arg
+    return
+  }
   suiteSetup(async () => {
     await detectDefaultBinaryAtStart()
   })
