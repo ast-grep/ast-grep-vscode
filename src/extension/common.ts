@@ -57,14 +57,19 @@ export function normalizeCommandForWindows(command: string) {
 
 export async function testBinaryExist(command: string) {
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
-  return spawn(
-    command,
-    ['-h'],
-    {
-      // for windows
-      cwd: uris[0],
-    },
-  )
+  try {
+    await spawn(
+      command,
+      ['-h'],
+      {
+        // for windows
+        cwd: uris[0],
+      },
+    )
+  } catch (_e) {
+    return false
+  }
+  return true
 }
 
 export const parentPort: ParentPort = new Unport()
