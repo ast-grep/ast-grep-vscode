@@ -1,6 +1,6 @@
 {
   "name": "ast-grep-vscode",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "description": "ast-grep VSCode is a structural search and replace extension for many languages.",
   "keywords": [
     "ast",
@@ -28,7 +28,7 @@
   "license": "MIT",
   "main": "./out/extension.js",
   "engines": {
-    "vscode": "^1.102.0"
+    "vscode": "^1.103.0"
   },
   "icon": "media/favicon.png",
   "categories": ["Linters", "Programming Languages", "Other"],
