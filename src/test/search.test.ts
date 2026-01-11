@@ -21,7 +21,8 @@ suite('Search - Pattern Mode', () => {
 
   testAndRetry('finds simple pattern matches', async () => {
     const query: PatternQuery = {
-      pattern: 'console.log($$$)',
+      // Add spaces to test windows arg handling
+      pattern: 'console.log( $$$ )',
       rewrite: '',
       strictness: 'smart',
       selector: '',
