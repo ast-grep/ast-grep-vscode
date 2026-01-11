@@ -43,18 +43,6 @@ export function resolveBinary() {
   return config
 }
 
-// see https://github.com/ast-grep/ast-grep-vscode/pull/448 for more information
-// TL;DR: windows needs shell: true for non-exe command and quotation for command with space
-export function normalizeCommandForWindows(command: string) {
-  const isExe = command.toLowerCase().endsWith('.exe')
-  // windows user may input space in command
-  const normalizedCommand = /\s/.test(command) && !isExe ? `"${command}"` : command
-  return {
-    normalizedCommand,
-    shell: process.platform === 'win32' && !isExe,
-  }
-}
-
 export async function testBinaryExist(command: string) {
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
   try {

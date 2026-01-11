@@ -3,7 +3,7 @@ import path from 'node:path'
 import { commands, type ExtensionContext, window, workspace } from 'vscode'
 
 import type { DisplayResult, PatternQuery, SearchQuery, SgSearch, YAMLConfig } from '../types'
-import { normalizeCommandForWindows, parentPort, resolveBinary, streamedPromise } from './common'
+import { parentPort, resolveBinary, streamedPromise } from './common'
 
 /**
  * Set up search query handling and search commands
@@ -123,7 +123,6 @@ function buildPatternCommand(query: PatternQuery) {
     return
   }
   const command = resolveBinary()
-  const { normalizedCommand, shell } = normalizeCommandForWindows(command)
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
   const args = ['run', '--pattern', pattern, '--json=stream']
   if (query.selector) {
@@ -145,10 +144,9 @@ function buildPatternCommand(query: PatternQuery) {
   } else {
     args.push(...validIncludeFile)
   }
-  console.debug('running', query, normalizedCommand, args)
+  console.debug('running', query, command, args)
   // TODO: multi-workspaces support
-  return spawn(normalizedCommand, args, {
-    shell,
+  return spawn(command, args, {
     cwd: uris[0],
   })
 }
@@ -176,7 +174,6 @@ function buildYAMLCommand(config: YAMLConfig) {
     return
   }
   const command = resolveBinary()
-  const { normalizedCommand, shell } = normalizeCommandForWindows(command)
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
   const args = ['scan', '--inline-rules', yaml, '--json=stream']
   const validIncludeFile = includeFile.split(',').filter(Boolean)
@@ -186,10 +183,9 @@ function buildYAMLCommand(config: YAMLConfig) {
   } else {
     args.push(...validIncludeFile)
   }
-  console.debug('scanning', config, normalizedCommand, args)
+  console.debug('scanning', config, command, args)
   // TODO: multi-workspaces support
-  return spawn(normalizedCommand, args, {
-    shell,
+  return spawn(command, args, {
     cwd: uris[0],
   })
 }
