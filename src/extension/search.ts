@@ -1,4 +1,4 @@
-import { type ChildProcessWithoutNullStreams, spawn } from 'node:child_process'
+import spawn, { type Subprocess } from 'nano-spawn'
 import path from 'node:path'
 import { commands, type ExtensionContext, window, workspace } from 'vscode'
 
@@ -82,15 +82,16 @@ function handleReplacement(replacement?: string) {
 }
 
 type StreamingHandler = (r: SgSearch[]) => void
-let child: ChildProcessWithoutNullStreams | undefined
+let child: Subprocess | undefined
 
 async function uniqueCommand(
-  proc: ChildProcessWithoutNullStreams | undefined,
+  proc: Subprocess | undefined,
   handler: StreamingHandler,
 ) {
   // kill previous search
   if (child) {
-    child.kill('SIGTERM')
+    const childProc = await child.nodeChildProcess
+    childProc.kill('SIGTERM')
   }
   if (!proc) {
     return Promise.resolve()
@@ -157,10 +158,11 @@ interface Handlers {
   onError: (e: Error) => void
 }
 
-function getPatternRes(query: SearchQuery, handlers: Handlers) {
+async function getPatternRes(query: SearchQuery, handlers: Handlers) {
   const proc = buildCommand(query)
   if (proc) {
-    proc.on('error', error => {
+    const childProc = await proc.nodeChildProcess
+    childProc.on('error', (error: Error) => {
       console.debug('ast-grep CLI runs error')
       handlers.onError(error)
     })
@@ -192,10 +194,11 @@ function buildYAMLCommand(config: YAMLConfig) {
   })
 }
 
-function getYAMLRes(config: YAMLConfig, handlers: Handlers) {
+async function getYAMLRes(config: YAMLConfig, handlers: Handlers) {
   const proc = buildYAMLCommand(config)
   if (proc) {
-    proc.on('error', error => {
+    const childProc = await proc.nodeChildProcess
+    childProc.on('error', (error: Error) => {
       console.debug('ast-grep CLI runs error')
       handlers.onError(error)
     })

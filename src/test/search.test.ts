@@ -1,11 +1,11 @@
+import type { Subprocess } from 'nano-spawn'
 import * as assert from 'node:assert'
-import type { ChildProcessWithoutNullStreams } from 'node:child_process'
 import { detectDefaultBinaryAtStart, streamedPromise } from '../extension/common'
 import { buildCommand } from '../extension/search'
 import type { PatternQuery, SgSearch, YAMLConfig } from '../types'
 import { getDocPath, testAndRetry } from './utils'
 
-function collectResults(proc: ChildProcessWithoutNullStreams): Promise<SgSearch[]> {
+function collectResults(proc: Subprocess): Promise<SgSearch[]> {
   const results: SgSearch[] = []
   return streamedPromise<SgSearch>(proc, batch => {
     results.push(...batch)

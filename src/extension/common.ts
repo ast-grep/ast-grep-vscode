@@ -1,5 +1,4 @@
-import type { ChildProcessWithoutNullStreams } from 'node:child_process'
-import { execFile } from 'node:child_process'
+import spawn, { type Subprocess } from 'nano-spawn'
 import { Unport } from 'unport'
 import { workspace } from 'vscode'
 import type { ParentPort } from '../types'
@@ -58,34 +57,31 @@ export function normalizeCommandForWindows(command: string) {
 
 export async function testBinaryExist(command: string) {
   const uris = workspace.workspaceFolders?.map(i => i.uri?.fsPath) ?? []
-  const { normalizedCommand, shell } = normalizeCommandForWindows(command)
-  return new Promise(r => {
-    execFile(
-      normalizedCommand,
-      ['-h'],
-      {
-        shell,
-        // for windows
-        cwd: uris[0],
-      },
-      err => {
-        r(!err)
-      },
-    )
-  })
+  return spawn(
+    command,
+    ['-h'],
+    {
+      // for windows
+      cwd: uris[0],
+    },
+  )
 }
 
 export const parentPort: ParentPort = new Unport()
 
-export function streamedPromise<T>(
-  proc: ChildProcessWithoutNullStreams,
+export async function streamedPromise<T>(
+  proc: Subprocess,
   handler: (r: T[]) => void,
 ): Promise<number> {
   // don't concatenate a single string/buffer
   // only maintain the last trailing line
   let trailingLine = ''
+
+  // Get the underlying Node.js child process
+  const childProcess = await proc.nodeChildProcess
+
   // stream parsing JSON
-  proc.stdout.on('data', (data: string) => {
+  childProcess.stdout?.on('data', (data: string) => {
     // collect results in this batch
     const result: T[] = []
     const lines = (trailingLine + data).split(/\r?\n/)
@@ -102,8 +98,9 @@ export function streamedPromise<T>(
     }
     handler(result)
   })
+
   return new Promise((resolve, reject) =>
-    proc.on('exit', (code, signal) => {
+    childProcess.on('exit', (code: number | null, signal: NodeJS.Signals | null) => {
       // exit without signal, search ends correctly
       // TODO: is it correct now?
       if (!signal && code === 0) {
