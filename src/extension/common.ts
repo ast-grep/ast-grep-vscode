@@ -95,8 +95,8 @@ export async function streamedPromise<T>(
   return new Promise((resolve, reject) =>
     childProcess.on('exit', (code: number | null, signal: NodeJS.Signals | null) => {
       // exit without signal, search ends correctly
-      // TODO: is it correct now?
-      if (!signal && code === 0) {
+      // code === 1 means no result found for ast-grep
+      if (!signal && (code === 0 || code === 1)) {
         resolve(code)
       } else {
         reject([code, signal])
