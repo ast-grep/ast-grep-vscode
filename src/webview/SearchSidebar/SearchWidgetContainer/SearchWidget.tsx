@@ -1,12 +1,13 @@
 import * as stylex from '@stylexjs/stylex'
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
+import { useRef } from 'react'
 import { VscChevronDown, VscChevronRight, VscReplaceAll } from 'react-icons/vsc'
 import { useBoolean, useEffectOnce } from 'react-use'
 import { hasInitialRewrite, refreshResult, useSearchField } from '../../hooks/useQuery'
 import { acceptAllChanges, useSearchResult } from '../../hooks/useSearch'
 import { childPort } from '../../postMessage'
 import { LangSelect } from './LangSelect'
-import { SearchInput } from './SearchInput'
+import { SearchInput, type SearchInputHandle } from './SearchInput'
 
 const styles = stylex.create({
   container: {
@@ -77,10 +78,15 @@ function ReplaceBar() {
 function SearchWidgetContainer() {
   const [pattern, setPattern] = useSearchField('pattern')
   const [isExpanded, toggleIsExpanded] = useBoolean(hasInitialRewrite())
+  const searchInputRef = useRef<SearchInputHandle>(null)
+
   // sadly unport does not support unsub
   useEffectOnce(() => {
     childPort.onMessage('clearSearchResults', () => {
       setPattern('')
+    })
+    childPort.onMessage('focusSearchInput', () => {
+      searchInputRef.current?.focus()
     })
   })
   return (
@@ -90,6 +96,7 @@ function SearchWidgetContainer() {
       </div>
       <div {...stylex.props(styles.inputs)}>
         <SearchInput
+          ref={searchInputRef}
           placeholder="Search"
           value={pattern}
           onChange={setPattern}

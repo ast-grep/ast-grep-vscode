@@ -65,6 +65,13 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.html = this.getHtmlForWebview(webviewView.webview)
     setupParentPort(webviewView)
+
+    // Listen for visibility changes and focus input when visible
+    webviewView.onDidChangeVisibility(() => {
+      if (webviewView.visible) {
+        parentPort.postMessage('focusSearchInput', {})
+      }
+    })
   }
 
   private getHtmlForWebview(webview: vscode.Webview) {

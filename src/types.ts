@@ -84,6 +84,7 @@ export interface ParentToChild {
   searchByCode: { text: string }
   enableYAML: boolean
   searchByYAML: { text: string }
+  focusSearchInput: unknown
 }
 
 export interface Diff {

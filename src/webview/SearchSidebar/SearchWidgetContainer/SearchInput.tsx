@@ -1,5 +1,9 @@
 import { VSCodeTextArea, VSCodeTextField } from '@vscode/webview-ui-toolkit/react'
-import { useCallback } from 'react'
+import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
+
+export interface SearchInputHandle {
+  focus: () => void
+}
 
 interface SearchInputProps {
   placeholder: string
@@ -25,13 +29,31 @@ function hackTextareaPadding(vscodeInput: any) {
   }
 }
 
-const SearchInput = ({
+const SearchInput = forwardRef<SearchInputHandle, SearchInputProps>(({
   value,
   onChange,
   onKeyEnterUp,
   placeholder,
   isSingleLine = false,
-}: SearchInputProps) => {
+}, ref) => {
+  const textAreaRef = useRef<HTMLElement>(null)
+  const textFieldRef = useRef<HTMLElement>(null)
+
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      // Access the actual input element from the shadow DOM
+      const element = isSingleLine ? textFieldRef.current : textAreaRef.current
+      if (element) {
+        // VSCode UI Toolkit components use shadow DOM, need to access internal input
+        const shadowRoot = (element as any).shadowRoot
+        const input = shadowRoot?.querySelector('textarea, input') as HTMLInputElement | HTMLTextAreaElement
+        if (input) {
+          input.focus()
+        }
+      }
+    },
+  }))
+
   const handleInput = useCallback(
     // I know any better
     // biome-ignore lint/suspicious/noExplicitAny: onInput event has wrong type signature.
@@ -51,6 +73,12 @@ const SearchInput = ({
     [onKeyEnterUp],
   )
   const rows = value.split(/\r?\n/).length
+
+  const combinedTextAreaRef = useCallback((node: any) => {
+    hackTextareaPadding(node)
+    textAreaRef.current = node
+  }, [])
+
   if (isSingleLine) {
     return (
       <VSCodeTextField
@@ -59,6 +87,7 @@ const SearchInput = ({
         placeholder={placeholder}
         onInput={handleInput}
         onKeyDown={onKeyDown}
+        ref={textFieldRef as any}
       />
     )
   }
@@ -71,9 +100,9 @@ const SearchInput = ({
       placeholder={placeholder}
       onInput={handleInput}
       onKeyDown={onKeyDown}
-      ref={hackTextareaPadding}
+      ref={combinedTextAreaRef}
     />
   )
-}
+})
 
 export { SearchInput }
