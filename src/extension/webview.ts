@@ -47,6 +47,7 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
 
   // @ts-expect-error
   private _view?: vscode.WebviewView
+  private _disposables: vscode.Disposable[] = []
 
   constructor(private readonly _extensionUri: vscode.Uri) {}
 
@@ -67,11 +68,20 @@ class SearchSidebarProvider implements vscode.WebviewViewProvider {
     setupParentPort(webviewView)
 
     // Listen for visibility changes and focus input when visible
-    webviewView.onDidChangeVisibility(() => {
-      if (webviewView.visible) {
-        parentPort.postMessage('focusSearchInput', {})
-      }
-    })
+    this._disposables.push(
+      webviewView.onDidChangeVisibility(() => {
+        if (webviewView.visible) {
+          parentPort.postMessage('focusSearchInput', {})
+        }
+      }),
+    )
+  }
+
+  public dispose() {
+    for (const disposable of this._disposables) {
+      disposable.dispose()
+    }
+    this._disposables = []
   }
 
   private getHtmlForWebview(webview: vscode.Webview) {

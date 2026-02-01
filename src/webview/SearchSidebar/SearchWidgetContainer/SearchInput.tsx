@@ -36,19 +36,21 @@ const SearchInput = forwardRef<SearchInputHandle, SearchInputProps>(({
   placeholder,
   isSingleLine = false,
 }, ref) => {
-  const textAreaRef = useRef<HTMLElement>(null)
-  const textFieldRef = useRef<HTMLElement>(null)
+  const textAreaRef = useRef<any>(null)
+  const textFieldRef = useRef<any>(null)
 
   useImperativeHandle(ref, () => ({
     focus: () => {
       // Access the actual input element from the shadow DOM
       const element = isSingleLine ? textFieldRef.current : textAreaRef.current
       if (element) {
-        // VSCode UI Toolkit components use shadow DOM, need to access internal input
-        const shadowRoot = (element as any).shadowRoot
-        const input = shadowRoot?.querySelector('textarea, input') as HTMLInputElement | HTMLTextAreaElement
-        if (input) {
-          input.focus()
+        // VSCode UI Toolkit components use shadow DOM
+        const shadowRoot = element.shadowRoot
+        if (shadowRoot) {
+          const input = shadowRoot.querySelector('textarea, input') as HTMLInputElement | HTMLTextAreaElement
+          if (input) {
+            input.focus()
+          }
         }
       }
     },
@@ -87,7 +89,7 @@ const SearchInput = forwardRef<SearchInputHandle, SearchInputProps>(({
         placeholder={placeholder}
         onInput={handleInput}
         onKeyDown={onKeyDown}
-        ref={textFieldRef as any}
+        ref={textFieldRef}
       />
     )
   }
