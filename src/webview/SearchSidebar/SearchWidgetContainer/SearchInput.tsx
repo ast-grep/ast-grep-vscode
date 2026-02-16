@@ -1,5 +1,5 @@
 import { VSCodeTextArea, VSCodeTextField } from '@vscode/webview-ui-toolkit/react'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 interface SearchInputProps {
   placeholder: string
@@ -7,6 +7,7 @@ interface SearchInputProps {
   onChange: (val: string) => void
   onKeyEnterUp: () => void
   isSingleLine?: boolean
+  focusOnWindowFocus?: boolean
 }
 
 const style = {
@@ -25,13 +26,57 @@ function hackTextareaPadding(vscodeInput: any) {
   }
 }
 
+// focus input when window receives focus, and select all text if there's content
+function useFocusOnWindowFocus(enabled: boolean) {
+  // biome-ignore lint/suspicious/noExplicitAny: web component ref
+  const inputRef = useRef<any>(null)
+
+  useEffect(() => {
+    if (!enabled) return
+    const handleFocus = () => {
+      const el = inputRef.current
+      const inner = el?.shadowRoot?.querySelector('textarea') ??
+        el?.shadowRoot?.querySelector('input')
+      if (!inner) return
+      inner.focus()
+      if (inner.value) {
+        inner.select()
+      }
+    }
+    window.addEventListener('focus', handleFocus)
+    return () => window.removeEventListener('focus', handleFocus)
+  }, [enabled])
+
+  const setRef = useCallback(
+    // biome-ignore lint/suspicious/noExplicitAny: web component ref
+    (el: any) => {
+      inputRef.current = el
+    },
+    [],
+  )
+
+  return setRef
+}
+
 const SearchInput = ({
   value,
   onChange,
   onKeyEnterUp,
   placeholder,
   isSingleLine = false,
+  focusOnWindowFocus = false,
 }: SearchInputProps) => {
+  const focusRef = useFocusOnWindowFocus(focusOnWindowFocus)
+  const setRef = useCallback(
+    (el: any) => {
+      focusRef(el)
+      if (!isSingleLine) {
+        hackTextareaPadding(el)
+      }
+    },
+    [focusRef, isSingleLine],
+  )
+
   const handleInput = useCallback(
     // I know any better
     // biome-ignore lint/suspicious/noExplicitAny: onInput event has wrong type signature.
@@ -54,6 +99,7 @@ const SearchInput = ({
   if (isSingleLine) {
     return (
       <VSCodeTextField
+        ref={setRef}
         style={{ width: '100%' }}
         value={value}
         placeholder={placeholder}
@@ -71,7 +117,7 @@ const SearchInput = ({
       placeholder={placeholder}
       onInput={handleInput}
       onKeyDown={onKeyDown}
-      ref={hackTextareaPadding}
+      ref={setRef}
     />
   )
 }

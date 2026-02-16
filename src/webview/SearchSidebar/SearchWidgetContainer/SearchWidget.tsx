@@ -94,6 +94,7 @@ function SearchWidgetContainer() {
           value={pattern}
           onChange={setPattern}
           onKeyEnterUp={refreshResult}
+          focusOnWindowFocus
         />
         <LangSelect />
         {isExpanded ? <ReplaceBar /> : null}
