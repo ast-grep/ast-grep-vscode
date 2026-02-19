@@ -84,10 +84,6 @@
       {
         "command": "ast-grep.searchByCode",
         "title": "ast-grep: Search by Code"
-      },
-      {
-        "command": "ast-grep.runRule",
-        "title": "Run ast-grep Rule"
       }
     ],
     "menus": {
