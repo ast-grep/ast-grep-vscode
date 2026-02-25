@@ -181,7 +181,7 @@
   },
   "devDependencies": {
     "oxlint": "1.49.0",
-    "dprint": "0.51.1",
+    "dprint": "0.52.0",
     "@stylexjs/esbuild-plugin": "0.11.1",
     "@stylexjs/stylex": "0.17.5",
     "@types/glob": "9.0.0",
