@@ -11,6 +11,7 @@
     "strict": true,
     "sourceMap": true,
     "skipLibCheck": true,
+    "types": ["mocha"],
     "jsx": "react-jsx"
   },
   "include": ["src"],
