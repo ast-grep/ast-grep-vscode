@@ -78,8 +78,8 @@ importers:
         specifier: 17.6.0
         version: 17.6.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react-virtuoso:
-        specifier: 4.18.3
-        version: 4.18.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        specifier: 4.18.4
+        version: 4.18.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       tslib:
         specifier: 2.8.1
         version: 2.8.1
@@ -205,36 +205,43 @@ packages:
     resolution: {integrity: sha512-xmZ8oyKX2zb1ZbJZVXN4y6IlzsDEH46iPj0w+bzlS0v7ggAQrZhZ2KmZUmxtKFIGHZuKx81Lj+gNmw/zf4tpyA==}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@dprint/linux-arm64-musl@0.53.1':
     resolution: {integrity: sha512-xIxUZxvgaWDQSpcVN9R1I6w+njgWuYVaTq+0Xt/oyMESaIpPsJTZP18qjQDDEXvXJ0cEbaoi3nuud1CvtJheXQ==}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@dprint/linux-loong64-glibc@0.53.1':
     resolution: {integrity: sha512-tTvoHRsiOV9Ttx3bc7/i5KR98izFEBVkT0rM/HyFUMuTz6mMZhqGY9dZAN3cDwaLHAnxuSprag2PVaa6v5eL/g==}
     cpu: [loong64]
     os: [linux]
+    libc: [glibc]
 
   '@dprint/linux-loong64-musl@0.53.1':
     resolution: {integrity: sha512-TW7ZWZvShuyMMmFm/bgCV5jldDUwZZQTLFYMqugIAIcCGE3Bs6m02CgpWiUBueudPk9Gb0nz17Y4PXAv3Sg3GQ==}
     cpu: [loong64]
     os: [linux]
+    libc: [musl]
 
   '@dprint/linux-riscv64-glibc@0.53.1':
     resolution: {integrity: sha512-Q8BDW+EWxzF4Es4KFOrJ8Y2bFL1nYcnwOX69kOo6bZgzQeRqr2WuEbFV70GClPy1xeBQLgKwAwYDmYjAxT75kQ==}
     cpu: [riscv64]
     os: [linux]
+    libc: [glibc]
 
   '@dprint/linux-x64-glibc@0.53.1':
     resolution: {integrity: sha512-3nrrZjsBObS6OF50yvn0flXbbeMaP8lJrrpGSJ8+B6qKySZJ9ugDTCGMgXyD4y1MzuTj45zBwudJKywhRZ7pRw==}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@dprint/linux-x64-musl@0.53.1':
     resolution: {integrity: sha512-T2JZr/b8YZYyEnunZuXx7h09ngqTNx9sH2VaKwqRf4/CC7oR1RTAAyHaTFsL2/Ce+WTYb/LF/a1BkJEH2Q2LZw==}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@dprint/win32-arm64@0.53.1':
     resolution: {integrity: sha512-FF2U+1Uke8/uQ0xwIJc75MtysAophXjFvhVbywGl+arjmChlpyb1KHB6l8eobjt/zXMyoNOOCm3mi8Zh9bQivg==}
@@ -642,48 +649,56 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@oxlint/binding-linux-arm64-musl@1.57.0':
     resolution: {integrity: sha512-i66WyEPVEvq9bxRUCJ/MP5EBfnTDN3nhwEdFZFTO5MmLLvzngfWEG3NSdXQzTT3vk5B9i6C2XSIYBh+aG6uqyg==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@oxlint/binding-linux-ppc64-gnu@1.57.0':
     resolution: {integrity: sha512-oMZDCwz4NobclZU3pH+V1/upVlJZiZvne4jQP+zhJwt+lmio4XXr4qG47CehvrW1Lx2YZiIHuxM2D4YpkG3KVA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [ppc64]
     os: [linux]
+    libc: [glibc]
 
   '@oxlint/binding-linux-riscv64-gnu@1.57.0':
     resolution: {integrity: sha512-uoBnjJ3MMEBbfnWC1jSFr7/nSCkcQYa72NYoNtLl1imshDnWSolYCjzb8LVCwYCCfLJXD+0gBLD7fyC14c0+0g==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [riscv64]
     os: [linux]
+    libc: [glibc]
 
   '@oxlint/binding-linux-riscv64-musl@1.57.0':
     resolution: {integrity: sha512-BdrwD7haPZ8a9KrZhKJRSj6jwCor+Z8tHFZ3PT89Y3Jq5v3LfMfEePeAmD0LOTWpiTmzSzdmyw9ijneapiVHKQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [riscv64]
     os: [linux]
+    libc: [musl]
 
   '@oxlint/binding-linux-s390x-gnu@1.57.0':
     resolution: {integrity: sha512-BNs+7ZNsRstVg2tpNxAXfMX/Iv5oZh204dVyb8Z37+/gCh+yZqNTlg6YwCLIMPSk5wLWIGOaQjT0GUOahKYImw==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [s390x]
     os: [linux]
+    libc: [glibc]
 
   '@oxlint/binding-linux-x64-gnu@1.57.0':
     resolution: {integrity: sha512-AghS18w+XcENcAX0+BQGLiqjpqpaxKJa4cWWP0OWNLacs27vHBxu7TYkv9LUSGe5w8lOJHeMxcYfZNOAPqw2bg==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@oxlint/binding-linux-x64-musl@1.57.0':
     resolution: {integrity: sha512-E/FV3GB8phu/Rpkhz5T96hAiJlGzn91qX5yj5gU754P5cmVGXY1Jw/VSjDSlZBCY3VHjsVLdzgdkJaomEmcNOg==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@oxlint/binding-openharmony-arm64@1.57.0':
     resolution: {integrity: sha512-xvZ2yZt0nUVfU14iuGv3V25jpr9pov5N0Wr28RXnHFxHCRxNDMtYPHV61gGLhN9IlXM96gI4pyYpLSJC5ClLCQ==}
@@ -1327,8 +1342,8 @@ packages:
       react: '*'
       react-dom: '*'
 
-  react-virtuoso@4.18.3:
-    resolution: {integrity: sha512-fLz/peHAx4Eu0DLHurFEEI7Y6n5CqEoxBh04rgJM9yMuOJah2a9zWg/MUOmZLcp7zuWYorXq5+5bf3IRgkNvWg==}
+  react-virtuoso@4.18.4:
+    resolution: {integrity: sha512-DNM4Wy2tMA/J6ejMaDdqecOug31rOwgSRg4C/Dw6Iox4dJe9qwcx32M8HdhkE5uHEVVZh7h0koYwAsCSNdxGfQ==}
     peerDependencies:
       react: '>=16 || >=17 || >= 18 || >= 19'
       react-dom: '>=16 || >=17 || >= 18 || >=19'
@@ -2721,7 +2736,7 @@ snapshots:
       ts-easing: 0.2.0
       tslib: 2.8.1
 
-  react-virtuoso@4.18.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+  react-virtuoso@4.18.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
