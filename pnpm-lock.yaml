@@ -60,8 +60,8 @@ importers:
         specifier: 11.7.5
         version: 11.7.5
       nano-spawn:
-        specifier: 2.0.0
-        version: 2.0.0
+        specifier: 2.1.0
+        version: 2.1.0
       oxlint:
         specifier: 1.57.0
         version: 1.57.0
@@ -1410,8 +1410,8 @@ packages:
       react: '*'
       react-dom: '*'
 
-  nano-spawn@2.0.0:
-    resolution: {integrity: sha512-tacvGzUY5o2D8CBh2rrwxyNojUsZNU2zjNTzKQrkgGJQTbGAfArVWXSKMBokBeeg6C7OLRGUEyoFlYbfeWQIqw==}
+  nano-spawn@2.1.0:
+    resolution: {integrity: sha512-yTW+2okrElHiH4fsiz/+/zc0EDo9BDDoC3iKk8dpv1GeRc9nUWzUZHx6TofMWErchhUQR8hY9/Eu1Uja9x1nqA==}
     engines: {node: '>=20.17'}
 
   node-releases@2.0.18:
@@ -2891,7 +2891,7 @@ snapshots:
       stacktrace-js: 2.0.2
       stylis: 4.3.1
 
-  nano-spawn@2.0.0: {}
+  nano-spawn@2.1.0: {}
 
   node-releases@2.0.18: {}
 
