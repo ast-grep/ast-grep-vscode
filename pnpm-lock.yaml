@@ -12,8 +12,8 @@ importers:
         specifier: 0.11.1
         version: 0.11.1(supports-color@8.1.1)
       '@stylexjs/stylex':
-        specifier: 0.19.0
-        version: 0.19.0
+        specifier: 0.19.2
+        version: 0.19.2
       '@types/glob':
         specifier: 9.0.0
         version: 9.0.0
@@ -934,8 +934,8 @@ packages:
   '@stylexjs/stylex@0.11.1':
     resolution: {integrity: sha512-1OofsiCP2DYV+Cw/iIuHYTAJRy34TtxQt0FDuQGTnNH915hb6NkPmX6iPa++9t4KP3HWR9oVRmAHkpP58BIYbw==}
 
-  '@stylexjs/stylex@0.19.0':
-    resolution: {integrity: sha512-CnUFp7YMaDLDeemsWOfJgoC/gKM5P/yBNMcpJaE6ChJmXr7s0DJwSeGTTlHJcqqwN9OW1qGtmARWLFhGZN1pTA==}
+  '@stylexjs/stylex@0.19.2':
+    resolution: {integrity: sha512-l0fRhOBZ4rFiZ0GntYSlp4lYO5dPT11F3mLb7O4ShK6eE1WOjHtv9GHGQZuzHJbQkjcEaRjPSpBn6itI7yXc3Q==}
 
   '@types/glob@9.0.0':
     resolution: {integrity: sha512-00UxlRaIUvYm4R4W9WYkN8/J+kV8fmOQ7okeH6YFtGWFMt3odD45tpG5yA5wnL7HE6lLgjaTW5n14ju2hl2NNA==}
@@ -2365,10 +2365,8 @@ snapshots:
       invariant: 2.2.4
       styleq: 0.2.1
 
-  '@stylexjs/stylex@0.19.0':
+  '@stylexjs/stylex@0.19.2':
     dependencies:
-      css-mediaquery: 0.1.2
-      invariant: 2.2.4
       styleq: 0.2.1
 
   '@types/glob@9.0.0':
